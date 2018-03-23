@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ImageService.Modal.Event
 {
-    class DirectoryCloseEventArgs : EventArgs
+    public class DirectoryCloseEventArgs : EventArgs
     {
         public string DirectoryPath { get; set; }
         public string Message { get; set; } //the message that goes to the logger

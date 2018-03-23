@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ImageService.Modal
 {
-    class ImageServiceModal : IImageServiceModal
+    public class ImageServiceModal : IImageServiceModal
     {
         public string AddFile(string path, out bool result)
         {

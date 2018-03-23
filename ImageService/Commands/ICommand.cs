@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImageService.Modal.Event
+namespace ImageService.Commands
 {
-    interface EventArgs
+    public interface ICommand
     {
+        string Execute(string[] args, out bool result);
     }
 }

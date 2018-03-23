@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImageService.Modal
+namespace ImageService.Infrastructure.Enums
 {
-    public interface IImageServiceModal
+    public enum CommandEnum : int
     {
-        string AddFile(string path, out bool result);
+        NewFileCommand,
+        CloseCommand
     }
 }

@@ -1,0 +1,10 @@
+C:\Users\rschu\source\repos\ImageService\ImageService\bin\Debug\ImageService.exe.config
+C:\Users\rschu\source\repos\ImageService\ImageService\bin\Debug\ImageService.exe
+C:\Users\rschu\source\repos\ImageService\ImageService\bin\Debug\ImageService.pdb
+C:\Users\rschu\source\repos\ImageService\ImageService\obj\Debug\ImageService.csprojResolveAssemblyReference.cache
+C:\Users\rschu\source\repos\ImageService\ImageService\obj\Debug\ImageService.ImageService.resources
+C:\Users\rschu\source\repos\ImageService\ImageService\obj\Debug\ImageService.ProjectInstaller.resources
+C:\Users\rschu\source\repos\ImageService\ImageService\obj\Debug\ImageService.csproj.GenerateResource.cache
+C:\Users\rschu\source\repos\ImageService\ImageService\obj\Debug\ImageService.csproj.CoreCompileInputs.cache
+C:\Users\rschu\source\repos\ImageService\ImageService\obj\Debug\ImageService.exe
+C:\Users\rschu\source\repos\ImageService\ImageService\obj\Debug\ImageService.pdb
