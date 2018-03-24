@@ -37,6 +37,8 @@ namespace ImageService.Controller
                     resultSuccesful = true;
                     return "";
                 }
+
+
                 resultSuccesful = false;
                 return "ID not found";
             } catch (Exception e) {
