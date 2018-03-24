@@ -1,4 +1,4 @@
-﻿using ImageService.Modal;
+﻿using ImageService.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,17 +9,27 @@ namespace ImageService.Commands
 {
     public class NewFileCommand : ICommand
     {
-        private IImageServiceModal m_modal;
+        private IImageServiceModel m_model;
 
-        public NewFileCommand(IImageServiceModal modal)
+        public NewFileCommand(IImageServiceModel model)
         {
-            m_modal = modal;
+            m_model = model;
         }
 
         public string Execute(string[] args, out bool result)
         {
-            throw new NotImplementedException();
-            //string returns the new path if the result == true, and returns the error message
+            string path = args[0];
+            try
+            {
+                m_model.AddFile(path, out result);
+                result = true;
+            } catch (Exception e)
+            {
+                result = false;
+                return e.ToString();
+            }
+            return "";
+
         }
     }
 }

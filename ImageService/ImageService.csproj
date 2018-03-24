@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\CloseCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\NewFileCommand.cs" />
     <Compile Include="Controller\Handlers\DirectoryHandler.cs" />
@@ -63,12 +64,12 @@
     <Compile Include="Infrastructure\Enums\CommandEnum.cs" />
     <Compile Include="Logging\ILoggingService.cs" />
     <Compile Include="Logging\LoggingService.cs" />
-    <Compile Include="Logging\Modal\MessageReceivedEventArgs.cs" />
-    <Compile Include="Logging\Modal\MessageTypeEnum.cs" />
-    <Compile Include="Modal\Event\CommandReceivedEventArgs.cs" />
-    <Compile Include="Modal\Event\DirectoryCloseEventArgs.cs" />
-    <Compile Include="Modal\ImageServiceModal.cs" />
-    <Compile Include="Modal\IImageServiceModal.cs" />
+    <Compile Include="Logging\Model\MessageReceivedEventArgs.cs" />
+    <Compile Include="Logging\Model\MessageTypeEnum.cs" />
+    <Compile Include="Model\Event\CommandReceivedEventArgs.cs" />
+    <Compile Include="Model\Event\DirectoryCloseEventArgs.cs" />
+    <Compile Include="Model\ImageServiceModel.cs" />
+    <Compile Include="Model\IImageServiceModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>

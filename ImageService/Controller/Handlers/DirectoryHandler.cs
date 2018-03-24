@@ -1,6 +1,6 @@
 ﻿using ImageService.Logging;
-using ImageService.Modal;
-using ImageService.Modal.Event;
+using ImageService.Model;
+using ImageService.Model.Event;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,14 +16,18 @@ namespace ImageService.Controller.Handlers
         private IImageController m_controller; //the image processing controller
         private ILoggingService m_logging;
         private FileSystemWatcher m_dirWatcher; //the path of the directory
+        private string direcPath;
         //end region
+        public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;
+        
 
-        public event EventHandler<DirectoryCloseEventArgs> DirectoryClose //the event that notifies that the directory is being closed
+        public DirectoryHandler(string path, IImageController controller)
         {
-            add { }
-            remove { }
+            direcPath = path;
+            m_controller = controller;
         }
 
+    
         public void OnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
             throw new NotImplementedException();
