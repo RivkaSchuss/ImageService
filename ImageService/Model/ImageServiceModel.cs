@@ -9,7 +9,7 @@ namespace ImageService.Model
 {
     public class ImageServiceModel : IImageServiceModel
     {
-        private DirectoryInfo outputDir = null;
+        public DirectoryInfo outputDir = null;
         public string AddFile(string path, out bool result)
         {
            
@@ -18,12 +18,15 @@ namespace ImageService.Model
                 outputDir.Create();
             }
             DateTime creation = File.GetCreationTime(path);
+            int year = creation.Year;
+            String fullYearPath = outputDir.FullName + "/" + year.ToString();
+            DirectoryInfo subYear = CreateFolder(fullYearPath);
             int month = creation.Month;
-            String fullPath = outputDir.FullName + "/" + month.ToString();
-            DirectoryInfo sub = CreateFolder(fullPath);
+            String fullMonthPath = subYear.FullName + "/" + month.ToString();
+            DirectoryInfo subMonth = CreateFolder(fullMonthPath);
             try
             {
-                MoveFile(path, sub.FullName);
+                MoveFile(path, subMonth.FullName);
                 result = true;
             } catch (Exception e)
             {

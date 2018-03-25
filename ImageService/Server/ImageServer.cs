@@ -26,11 +26,12 @@ namespace ImageService.Server
         {
             IImageServiceModel serviceModel = new ImageServiceModel();
             m_controller = new ImageController(serviceModel);
+            m_logging = new LoggingService();
         }
 
         public void createHandler(string directory)
         {
-            handler = new DirectoryHandler(directory, m_controller);
+            handler = new DirectoryHandler(m_controller, m_logging);
             CommandReceived += handler.OnCommandReceived;
             handler.DirectoryClose += onCloseServer;
         }
