@@ -1,5 +1,6 @@
 ﻿using ImageService.Controller;
 using ImageService.Controller.Handlers;
+using ImageService.Infrastructure.Enums;
 using ImageService.Logging;
 using ImageService.Model;
 using ImageService.Model.Event;
@@ -16,38 +17,35 @@ namespace ImageService.Server
         //regionMembers
         private IImageController m_controller;
         private ILoggingService m_logging;
-        private DirectoryHandler handler;
         //endregion
-
-        //regionProperties
+        
         public event EventHandler<CommandReceivedEventArgs> CommandReceived; //event notfies about a new command being received
         //endregion
-        public ImageServer()
+        public ImageServer(ILoggingService logging)
         {
             IImageServiceModel serviceModel = new ImageServiceModel();
             m_controller = new ImageController(serviceModel);
-            m_logging = new LoggingService();
+            m_logging = logging;
         }
 
         public void createHandler(string directory)
         {
-            handler = new DirectoryHandler(m_controller, m_logging);
+            DirectoryHandler handler = new DirectoryHandler(m_controller, m_logging);
             CommandReceived += handler.OnCommandReceived;
             handler.DirectoryClose += onCloseServer;
+            handler.StartHandleDirectory(directory);
         }
 
-        public void sendCommand(int id, string[] args, string path)
+        public void sendCommand()
         {
-            CommandReceived("*", new CommandReceivedEventArgs(id, args, path));
+            string[] args = { "*" };
+            CommandReceived.Invoke(this, new CommandReceivedEventArgs((int)CommandEnum.CloseCommand,args, ""));
         }
 
         public void onCloseServer(object sender, DirectoryCloseEventArgs e)
         {
-            handler = (DirectoryHandler)sender;
+            DirectoryHandler handler = (DirectoryHandler)sender;
             CommandReceived -= handler.OnCommandReceived;
-            handler.DirectoryClose -= onCloseServer;
         }
-
-
     }
 }

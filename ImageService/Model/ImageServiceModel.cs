@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,40 +11,71 @@ namespace ImageService.Model
     public class ImageServiceModel : IImageServiceModel
     {
         public DirectoryInfo outputDir = null;
-        public string AddFile(string path, out bool result)
+        public string AddFile(string path, DateTime dateTime, out bool result)
         {
-           
-           if (!outputDir.Exists)
+            if (!outputDir.Exists)
             {
                 outputDir.Create();
             }
-            DateTime creation = File.GetCreationTime(path);
-            int year = creation.Year;
-            String fullYearPath = outputDir.FullName + "/" + year.ToString();
-            DirectoryInfo subYear = CreateFolder(fullYearPath);
-            int month = creation.Month;
-            String fullMonthPath = subYear.FullName + "/" + month.ToString();
-            DirectoryInfo subMonth = CreateFolder(fullMonthPath);
+            int year = dateTime.Year;
+            string yearPath = year.ToString();
+            string[] subs = Directory.GetDirectories(outputDir.FullName);
+            if (!subs.Contains(yearPath))
+            {
+                outputDir.CreateSubdirectory(yearPath);
+            }
+            int month = dateTime.Month;
+            string monthPath = month.ToString();
+            subs = Directory.GetDirectories(yearPath);
+            if (!subs.Contains(monthPath))
+            {
+                outputDir.CreateSubdirectory(monthPath);
+            }
             try
             {
-                MoveFile(path, subMonth.FullName);
+                MoveFile(path, monthPath);
                 result = true;
+                return "Adding a new file succeeded";
             } catch (Exception e)
             {
                 result = false;
                 return e.ToString();
             }
-            return "";
         }
 
         public void MoveFile(String source, String destination)
         {
             File.Move(source, destination);
+            Image image = Image.FromFile(destination);
+            Size thumbnailSize = GetThumbnailSize(image);
+            Image thumbnail = image.GetThumbnailImage(thumbnailSize.Width, thumbnailSize.Height, null, IntPtr.Zero);
+            thumbnail.Save(destination);
         }
 
-        public DirectoryInfo CreateFolder(String fullPath)
+        public static Size GetThumbnailSize(Image original)
         {
-            return outputDir.CreateSubdirectory(fullPath);
+            const int maxPixels = 40;
+            // Width and height.
+            int originalWidth = original.Width;
+            int originalHeight = original.Height;
+            
+            double factor;
+            if (originalWidth > originalHeight)
+            {
+                factor = (double)maxPixels / originalWidth;
+            }
+            else
+            {
+                factor = (double)maxPixels / originalHeight;
+            }
+
+            // Return thumbnail size.
+            return new Size((int)(originalWidth * factor), (int)(originalHeight * factor));
+        }
+
+        public DirectoryInfo CreateFolder(DirectoryInfo root, String name)
+        {
+            return root.CreateSubdirectory(name);
         }
     }
 }

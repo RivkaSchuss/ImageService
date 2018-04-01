@@ -1,4 +1,6 @@
-﻿using ImageService.Logging;
+﻿using ImageService.Infrastructure.Enums;
+using ImageService.Logging;
+using ImageService.Logging.Model;
 using ImageService.Model;
 using ImageService.Model.Event;
 using System;
@@ -23,7 +25,6 @@ namespace ImageService.Controller.Handlers
         //end region
         public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;
         
-
         public DirectoryHandler(IImageController controller, ILoggingService logging)
         {
             m_controller = controller;
@@ -33,27 +34,29 @@ namespace ImageService.Controller.Handlers
         public void StartHandleDirectory(string dirPath)
         {
             direcPath = dirPath;
-            m_watcher = new FileSystemWatcher(direcPath);
-            m_watcher.Created += new FileSystemEventHandler(NewPicture);
-            m_watcher.Changed += new FileSystemEventHandler(NewPicture);
-            m_watcher.EnableRaisingEvents = true;
+            m_watcher = new FileSystemWatcher();
+            m_watcher.Path = dirPath;
+            //Register a handler that gets called when a file is created
+            m_watcher.Changed += onCreated;
+            m_watcher.EnableRaisingEvents = true; //starts monitoring
         }
 
-        public void NewPicture(object sender, FileSystemEventArgs e)
+        public void onCreated(object sender, FileSystemEventArgs e)
         {
             string[] filters = { ".jpg", ".png", ".gif", ".bmp" };
             if (filters.Contains(Path.GetExtension(e.FullPath)))
             {
-                    DateTime dateTime = GetDateAndTime();
-                    
+                DateTime dateTime = GetDateAndTime(e.FullPath);
+                string[] args = { e.FullPath, dateTime.ToString() };
+                bool result;
+                m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, args, out result);
             }
-            
         }
 
-        public DateTime GetDateAndTime()
+        public DateTime GetDateAndTime(string path)
         {
             Regex r = new Regex(":");
-            using (FileStream fs = new FileStream(direcPath, FileMode.Open, FileAccess.Read))
+            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
             using (Image myImage = Image.FromStream(fs, false, false))
             {
                 PropertyItem propItem = myImage.GetPropertyItem(36867);
@@ -61,19 +64,40 @@ namespace ImageService.Controller.Handlers
                 return DateTime.Parse(dateTaken);
             }
         }
-
-    
+            
         public void OnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            if(direcPath.Equals(e.RequestDirPath))
+            if (e.CommandID == (int)CommandEnum.CloseCommand)
             {
-                bool result;
-                m_controller.ExecuteCommand(e.CommandID, e.Args, out result);
+
+            } else
+            {
+                if (e.RequestDirPath.Equals(direcPath))
+                {
+                    DateTime dateTime = GetDateAndTime(e.RequestDirPath);
+                    string dateString = dateTime.ToString();
+                    string[] args = { e.RequestDirPath, dateString };
+                    bool result;
+                    string succeed = m_controller.ExecuteCommand(e.CommandID, args, out result);
+                    MessageReceivedEventArgs message = new MessageReceivedEventArgs();
+                    message.Message = succeed;
+                    if (result)
+                    {
+                        message.Status = MessageTypeEnum.INFO;
+                        m_logging.Log(message, MessageTypeEnum.INFO);
+                    } else
+                    {
+                        message.Status = MessageTypeEnum.FAIL;
+                        m_logging.Log(message, MessageTypeEnum.FAIL);
+                    }
+                }
             }
         }
 
         public void closeHandler()
         {
+            m_watcher.Changed -= onCreated;
+            m_watcher.EnableRaisingEvents = false; //stops monitoring
             m_watcher.Dispose();
             DirectoryClose.Invoke(this, new DirectoryCloseEventArgs(direcPath, ""));
         }

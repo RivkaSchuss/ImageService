@@ -21,15 +21,12 @@ namespace ImageService.Commands
             string path = args[0];
             try
             {
-                m_model.AddFile(path, out result);
-                result = true;
+                return m_model.AddFile(path, DateTime.Parse(args[1]), out result);
             } catch (Exception e)
             {
                 result = false;
                 return e.ToString();
             }
-            return "";
-
         }
     }
 }

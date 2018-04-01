@@ -8,6 +8,11 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using ImageService.Server;
+using ImageService.Logging;
+using ImageService.Logging.Model;
+using ImageService.Model;
+using ImageService.Infrastructure.Enums;
 
 namespace ImageService
 {
@@ -38,6 +43,8 @@ namespace ImageService
     public partial class ImageService : ServiceBase
     {
         private int eventId = 1;
+        private ImageServer server;
+        private ILoggingService m_logging;
         public ImageService(string[] args)
         {
             InitializeComponent();
@@ -79,6 +86,9 @@ namespace ImageService
             // Update the service state to Running.
             serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+            m_logging = new LoggingService();
+            server = new ImageServer(m_logging);
+            m_logging.MessageReceived += onMsg;
         }
 
         public void OnTimer(object sender, System.Timers.ElapsedEventArgs args)
@@ -90,12 +100,17 @@ namespace ImageService
         protected override void OnStop()
         {
             eventLog1.WriteEntry("In onStop.");
-
+            //Closes all the handlers.
+            server.sendCommand();
         }
 
         protected override void OnContinue()
         {
             eventLog1.WriteEntry("In OnContinue.");
+        }
+        public void onMsg(object sender, MessageReceivedEventArgs message)
+        {
+            eventLog1.WriteEntry(message.Message);
         }
     }
 }

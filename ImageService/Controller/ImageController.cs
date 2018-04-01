@@ -19,9 +19,7 @@ namespace ImageService.Controller
             m_model = model; //storing the model of the system
             commands = new Dictionary<int, ICommand>()
             {
-                {(int)CommandEnum.NewFileCommand, new NewFileCommand(m_model) },
-                { (int)CommandEnum.CloseCommand, new CloseCommand(m_model) }
-                //NEW_FILE_COMMAND
+                {(int)CommandEnum.NewFileCommand, new NewFileCommand(m_model) }
             };
         }
 
@@ -33,17 +31,14 @@ namespace ImageService.Controller
                 if (commands.ContainsKey(commandID))
                 {
                     toExecute = commands[commandID];
-                    toExecute.Execute(args, out resultSuccesful);
-                    resultSuccesful = true;
-                    return "";
+                    return toExecute.Execute(args, out resultSuccesful);
                 }
                 resultSuccesful = false;
-                return "ID not found";
+                return "Command not found";
             } catch (Exception e) {
                 resultSuccesful = false;
                 return e.ToString();
             }
         }
-
     }
 }

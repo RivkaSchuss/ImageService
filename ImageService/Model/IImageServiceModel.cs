@@ -8,6 +8,6 @@ namespace ImageService.Model
 {
     public interface IImageServiceModel
     {
-        string AddFile(string path, out bool result);
+        string AddFile(string path, DateTime dateTime, out bool result);
     }
 }
