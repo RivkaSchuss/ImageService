@@ -10,72 +10,74 @@ namespace ImageService.Model
 {
     public class ImageServiceModel : IImageServiceModel
     {
-        public DirectoryInfo outputDir = null;
-        public string AddFile(string path, DateTime dateTime, out bool result)
+        private string outputDir = null;
+        private int thumbnailSize;
+
+        public ImageServiceModel(string outputDir, int thumbnailSize)
         {
-            if (!outputDir.Exists)
+            this.outputDir = outputDir;
+            this.thumbnailSize = thumbnailSize;
+        }
+
+        public string AddFile(string path, out bool result)
+        {
+            if (File.Exists(path))
             {
-                outputDir.Create();
-            }
-            int year = dateTime.Year;
-            string yearPath = year.ToString();
-            string[] subs = Directory.GetDirectories(outputDir.FullName);
-            if (!subs.Contains(yearPath))
-            {
-                outputDir.CreateSubdirectory(yearPath);
-            }
-            int month = dateTime.Month;
-            string monthPath = month.ToString();
-            subs = Directory.GetDirectories(yearPath);
-            if (!subs.Contains(monthPath))
-            {
-                outputDir.CreateSubdirectory(monthPath);
-            }
-            try
-            {
-                MoveFile(path, monthPath);
-                result = true;
-                return "Adding a new file succeeded";
-            } catch (Exception e)
+                try
+                {
+                    //creating the output directory if it's not already exist
+                    Directory.CreateDirectory(outputDir);
+
+                    //crating the thumbnails directory in the output directory:
+                    //getting the path to the thumbnails path
+                    string thumbPath = System.IO.Path.Combine(outputDir.ToString(), "Thumbnails");
+                    Directory.CreateDirectory(thumbPath);
+
+                    //creating the year and month directories:
+                    //getting the creation time of the image file
+                    DateTime dateTime = File.GetCreationTime(path);
+                    //getting the path to the year and the month as strings
+                    string year = dateTime.Year.ToString();
+                    string month = dateTime.Month.ToString();
+                    //getting the path to the year and the month directories in the output directory.
+                    string yearPath = System.IO.Path.Combine(outputDir.ToString(), year);
+                    string monthPath = System.IO.Path.Combine(yearPath, month);
+                    Directory.CreateDirectory(monthPath);
+                    //getting the path to the year and the month directories in the thumbnails directory.
+                    string thumbYear = System.IO.Path.Combine(thumbPath, yearPath);
+                    string thumbMonth = System.IO.Path.Combine(thumbYear, monthPath);
+                    Directory.CreateDirectory(thumbMonth);
+
+                    //copying the file if it's not already exist:
+                    //getting the full destinated path of the image
+                    string imageFullPath = System.IO.Path.Combine(monthPath, Path.GetFileName(path));
+                    if (!File.Exists(imageFullPath))
+                    {
+                        File.Copy(path, imageFullPath);
+                    }
+
+                    //creating a thumbnail for the file if it's not already exist:
+                    //getting the full destinated path of the thumbnail of the image
+                    string thumbnailFullPath = System.IO.Path.Combine(thumbMonth, Path.GetFileName(path));
+                    if (!File.Exists(thumbnailFullPath))
+                    {
+                        Image image = Image.FromFile(path);
+                        Image thumbnail = image.GetThumbnailImage(this.thumbnailSize, this.thumbnailSize, () => false, IntPtr.Zero);
+                        thumbnail.Save(thumbnailFullPath);
+                    }
+
+                    result = true;
+                    return "";
+                } catch(Exception e)
+                {
+                    result = false;
+                    return e.ToString();
+                }
+            } else
             {
                 result = false;
-                return e.ToString();
+                return "File does not exist";
             }
-        }
-
-        public void MoveFile(String source, String destination)
-        {
-            File.Move(source, destination);
-            Image image = Image.FromFile(destination);
-            Size thumbnailSize = GetThumbnailSize(image);
-            Image thumbnail = image.GetThumbnailImage(thumbnailSize.Width, thumbnailSize.Height, null, IntPtr.Zero);
-            thumbnail.Save(destination);
-        }
-
-        public static Size GetThumbnailSize(Image original)
-        {
-            const int maxPixels = 40;
-            // Width and height.
-            int originalWidth = original.Width;
-            int originalHeight = original.Height;
-            
-            double factor;
-            if (originalWidth > originalHeight)
-            {
-                factor = (double)maxPixels / originalWidth;
-            }
-            else
-            {
-                factor = (double)maxPixels / originalHeight;
-            }
-
-            // Return thumbnail size.
-            return new Size((int)(originalWidth * factor), (int)(originalHeight * factor));
-        }
-
-        public DirectoryInfo CreateFolder(DirectoryInfo root, String name)
-        {
-            return root.CreateSubdirectory(name);
         }
     }
 }

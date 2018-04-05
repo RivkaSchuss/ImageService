@@ -21,7 +21,7 @@ namespace ImageService.Commands
             string path = args[0];
             try
             {
-                return m_model.AddFile(path, DateTime.Parse(args[1]), out result);
+                return m_model.AddFile(path, out result);
             } catch (Exception e)
             {
                 result = false;

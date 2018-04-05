@@ -46,22 +46,9 @@ namespace ImageService.Controller.Handlers
             string[] filters = { ".jpg", ".png", ".gif", ".bmp" };
             if (filters.Contains(Path.GetExtension(e.FullPath)))
             {
-                DateTime dateTime = GetDateAndTime(e.FullPath);
-                string[] args = { e.FullPath, dateTime.ToString() };
+                string[] args = { e.FullPath};
                 bool result;
                 m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, args, out result);
-            }
-        }
-
-        public DateTime GetDateAndTime(string path)
-        {
-            Regex r = new Regex(":");
-            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-            using (Image myImage = Image.FromStream(fs, false, false))
-            {
-                PropertyItem propItem = myImage.GetPropertyItem(36867);
-                string dateTaken = r.Replace(Encoding.UTF8.GetString(propItem.Value), "-", 2);
-                return DateTime.Parse(dateTaken);
             }
         }
             
