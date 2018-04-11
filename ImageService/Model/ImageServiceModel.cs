@@ -25,10 +25,10 @@ namespace ImageService.Model
             {
                 try
                 {
-                    //creating the output directory if it's not already exist
+                    //creating the output directory if it doesn't already exist
                     Directory.CreateDirectory(outputDir);
 
-                    //crating the thumbnails directory in the output directory:
+                    //creating the thumbnails directory in the output directory:
                     //getting the path to the thumbnails path
                     string thumbPath = System.IO.Path.Combine(outputDir.ToString(), "Thumbnails");
                     Directory.CreateDirectory(thumbPath);
@@ -44,24 +44,24 @@ namespace ImageService.Model
                     string monthPath = System.IO.Path.Combine(yearPath, month);
                     Directory.CreateDirectory(monthPath);
                     //getting the path to the year and the month directories in the thumbnails directory.
-                    string thumbYear = System.IO.Path.Combine(thumbPath, yearPath);
-                    string thumbMonth = System.IO.Path.Combine(thumbYear, monthPath);
+                    string thumbYear = System.IO.Path.Combine(thumbPath, year);
+                    string thumbMonth = System.IO.Path.Combine(thumbYear, month);
                     Directory.CreateDirectory(thumbMonth);
 
-                    //copying the file if it's not already exist:
-                    //getting the full destinated path of the image
+                    //copying the file if it doesn't already exist:
+                    //getting the full path for the destination of the image
                     string imageFullPath = System.IO.Path.Combine(monthPath, Path.GetFileName(path));
                     if (!File.Exists(imageFullPath))
                     {
-                        File.Copy(path, imageFullPath);
+                        File.Move(path, imageFullPath);
                     }
 
-                    //creating a thumbnail for the file if it's not already exist:
-                    //getting the full destinated path of the thumbnail of the image
+                    //creating a thumbnail for the file if it doesn't already exist:
+                    //getting the full path for the destination of the thumbnail of the image
                     string thumbnailFullPath = System.IO.Path.Combine(thumbMonth, Path.GetFileName(path));
                     if (!File.Exists(thumbnailFullPath))
                     {
-                        Image image = Image.FromFile(path);
+                        Image image = Image.FromFile(imageFullPath);
                         Image thumbnail = image.GetThumbnailImage(this.thumbnailSize, this.thumbnailSize, () => false, IntPtr.Zero);
                         thumbnail.Save(thumbnailFullPath);
                     }

@@ -6,8 +6,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using System.Configuration;
 using ImageService.Server;
 using ImageService.Logging;
 using ImageService.Logging.Model;
@@ -45,11 +47,26 @@ namespace ImageService
         private int eventId = 1;
         private ImageServer server;
         private ILoggingService m_logging;
+        private string outputDir;
+        private string handler;
+        private string thumbnailSize;
         public ImageService(string[] args)
         {
+            handler = ConfigurationManager.AppSettings["Handler"];
+            outputDir = ConfigurationManager.AppSettings["OutputDir"];
+            string eventSourceName = ConfigurationManager.AppSettings["SourceName"];
+            string logName = ConfigurationManager.AppSettings["LogName"];
+            thumbnailSize = ConfigurationManager.AppSettings["ThumbnailSize"];
             InitializeComponent();
-            string eventSourceName = "MySource";
-            string logName = "MyNewLog";
+            
+            if (eventSourceName == null)
+            {
+                eventSourceName = "Source";
+            }
+            if (logName == null)
+            {
+                logName = "NewLog";
+            }
             if (args.Count() > 0)
             {
                 eventSourceName = args[0];
@@ -58,14 +75,14 @@ namespace ImageService
             {
                 logName = args[1];
             }
-            eventLog1 = new System.Diagnostics.EventLog();
-            if (!System.Diagnostics.EventLog.SourceExists(eventSourceName))
+            eventLog1 = new EventLog();
+            if (!EventLog.SourceExists(eventSourceName))
             {
-                System.Diagnostics.EventLog.CreateEventSource(
-                    eventSourceName, logName);
+                EventLog.CreateEventSource(eventSourceName, logName);
             }
             eventLog1.Source = eventSourceName;
             eventLog1.Log = logName;
+            
         }
 
         [DllImport("advapi32.dll", SetLastError = true)]
@@ -74,21 +91,30 @@ namespace ImageService
         protected override void OnStart(string[] args)
         {
             // Update the service state to Start Pending.
-            ServiceStatus serviceStatus = new ServiceStatus();
-            serviceStatus.dwCurrentState = ServiceState.SERVICE_START_PENDING;
-            serviceStatus.dwWaitHint = 100000;
-            SetServiceStatus(this.ServiceHandle, ref serviceStatus);
-            eventLog1.WriteEntry("In OnStart");
-            System.Timers.Timer timer = new System.Timers.Timer();
-            timer.Interval = 60000; // 60 seconds  
-            timer.Elapsed += new System.Timers.ElapsedEventHandler(this.OnTimer);
-            timer.Start();
-            // Update the service state to Running.
-            serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
-            SetServiceStatus(this.ServiceHandle, ref serviceStatus);
-            m_logging = new LoggingService();
-            server = new ImageServer(m_logging);
-            m_logging.MessageReceived += onMsg;
+            try
+            {
+                Thread.Sleep(10000);
+                ServiceStatus serviceStatus = new ServiceStatus();
+                serviceStatus.dwCurrentState = ServiceState.SERVICE_START_PENDING;
+                serviceStatus.dwWaitHint = 100000;
+                SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+                eventLog1.WriteEntry("In OnStart");
+                System.Timers.Timer timer = new System.Timers.Timer();
+                timer.Interval = 60000; // 60 seconds  
+                timer.Elapsed += new System.Timers.ElapsedEventHandler(this.OnTimer);
+                timer.Start();
+                // Update the service state to Running.
+                serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
+                SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+                m_logging = new LoggingService();
+                server = new ImageServer(m_logging, outputDir, int.Parse(thumbnailSize));
+                server.createHandler(handler);
+                m_logging.MessageReceived += onMsg;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+            }
         }
 
         public void OnTimer(object sender, System.Timers.ElapsedEventArgs args)

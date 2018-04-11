@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -34,21 +35,24 @@ namespace ImageService.Controller.Handlers
         public void StartHandleDirectory(string dirPath)
         {
             direcPath = dirPath;
-            m_watcher = new FileSystemWatcher();
-            m_watcher.Path = dirPath;
+            m_watcher = new FileSystemWatcher(dirPath);
+            //m_watcher.Path = dirPath;
             //Register a handler that gets called when a file is created
-            m_watcher.Changed += onCreated;
+            m_watcher.Created += new FileSystemEventHandler(onCreated);
+            m_watcher.Changed += new FileSystemEventHandler(onCreated);
             m_watcher.EnableRaisingEvents = true; //starts monitoring
         }
 
         public void onCreated(object sender, FileSystemEventArgs e)
         {
+            Thread.Sleep(100);
             string[] filters = { ".jpg", ".png", ".gif", ".bmp" };
             if (filters.Contains(Path.GetExtension(e.FullPath)))
             {
                 string[] args = { e.FullPath};
                 bool result;
-                m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, args, out result);
+                string succeeded = m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, args, out result);
+               // OnCommandReceived(this, new CommandReceivedEventArgs())
             }
         }
             
@@ -61,9 +65,7 @@ namespace ImageService.Controller.Handlers
             {
                 if (e.RequestDirPath.Equals(direcPath))
                 {
-                    DateTime dateTime = GetDateAndTime(e.RequestDirPath);
-                    string dateString = dateTime.ToString();
-                    string[] args = { e.RequestDirPath, dateString };
+                    string[] args = { e.RequestDirPath};
                     bool result;
                     string succeed = m_controller.ExecuteCommand(e.CommandID, args, out result);
                     MessageReceivedEventArgs message = new MessageReceivedEventArgs();

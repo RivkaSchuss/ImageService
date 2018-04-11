@@ -19,11 +19,11 @@ namespace ImageService.Server
         private ILoggingService m_logging;
         //endregion
         
-        public event EventHandler<CommandReceivedEventArgs> CommandReceived; //event notfies about a new command being received
+        public event EventHandler<CommandReceivedEventArgs> CommandReceived; //event notifies about a new command being received
         //endregion
-        public ImageServer(ILoggingService logging)
+        public ImageServer(ILoggingService logging, string outputDir, int thumbnailSize)
         {
-            IImageServiceModel serviceModel = new ImageServiceModel();
+            IImageServiceModel serviceModel = new ImageServiceModel(outputDir, thumbnailSize);
             m_controller = new ImageController(serviceModel);
             m_logging = logging;
         }
