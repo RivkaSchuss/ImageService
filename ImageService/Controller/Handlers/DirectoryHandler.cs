@@ -23,6 +23,7 @@ namespace ImageService.Controller.Handlers
         private ILoggingService m_logging;
         private FileSystemWatcher m_watcher;
         private string direcPath;
+        private string[] filters = { ".jpg", ".png", ".gif", ".bmp" };
         //end region
         public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;
         
@@ -45,14 +46,11 @@ namespace ImageService.Controller.Handlers
 
         public void onCreated(object sender, FileSystemEventArgs e)
         {
-            Thread.Sleep(100);
-            string[] filters = { ".jpg", ".png", ".gif", ".bmp" };
-            if (filters.Contains(Path.GetExtension(e.FullPath)))
+            if (filters.Contains(Path.GetExtension(e.FullPath).ToLower()))
             {
-                string[] args = { e.FullPath};
-                bool result;
-                string succeeded = m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, args, out result);
-               // OnCommandReceived(this, new CommandReceivedEventArgs())
+                string[] args = { e.FullPath };
+                CommandReceivedEventArgs commmandArgs = new CommandReceivedEventArgs((int)CommandEnum.NewFileCommand, args, direcPath);
+                OnCommandReceived(this, commmandArgs);
             }
         }
             
@@ -60,24 +58,24 @@ namespace ImageService.Controller.Handlers
         {
             if (e.CommandID == (int)CommandEnum.CloseCommand)
             {
-
+                m_logging.Log("Close command", MessageTypeEnum.INFO);
+                closeHandler();
+                return;
             } else
             {
                 if (e.RequestDirPath.Equals(direcPath))
                 {
                     string[] args = { e.RequestDirPath};
                     bool result;
-                    string succeed = m_controller.ExecuteCommand(e.CommandID, args, out result);
-                    MessageReceivedEventArgs message = new MessageReceivedEventArgs();
-                    message.Message = succeed;
+                    string message = m_controller.ExecuteCommand(e.CommandID, e.Args, out result);
                     if (result)
                     {
-                        message.Status = MessageTypeEnum.INFO;
-                        m_logging.Log(message, MessageTypeEnum.INFO);
+                        //succeed
+                        m_logging.Log("Command of ID: " + e.CommandID + " executed successfully", MessageTypeEnum.INFO);
                     } else
                     {
-                        message.Status = MessageTypeEnum.FAIL;
-                        m_logging.Log(message, MessageTypeEnum.FAIL);
+                        //fail
+                        m_logging.Log("Error on executing: " + message, MessageTypeEnum.FAIL);
                     }
                 }
             }
@@ -85,10 +83,16 @@ namespace ImageService.Controller.Handlers
 
         public void closeHandler()
         {
-            m_watcher.Changed -= onCreated;
-            m_watcher.EnableRaisingEvents = false; //stops monitoring
-            m_watcher.Dispose();
-            DirectoryClose.Invoke(this, new DirectoryCloseEventArgs(direcPath, ""));
+            try
+            {
+                m_watcher.EnableRaisingEvents = false; //stops monitoring
+                m_watcher.Created -= new FileSystemEventHandler(onCreated);
+                m_watcher.Changed -= new FileSystemEventHandler(onCreated);
+            } catch(Exception e)
+            {
+                m_logging.Log(e.Message, MessageTypeEnum.FAIL);   
+            }
+            DirectoryClose?.Invoke(this, new DirectoryCloseEventArgs(direcPath, "Directory " + this.direcPath + " closed"));
         }
 
 

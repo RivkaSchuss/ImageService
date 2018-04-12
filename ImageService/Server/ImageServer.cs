@@ -26,6 +26,11 @@ namespace ImageService.Server
             IImageServiceModel serviceModel = new ImageServiceModel(outputDir, thumbnailSize);
             m_controller = new ImageController(serviceModel);
             m_logging = logging;
+            string[] directoriesToHandle = outputDir.Split(';');
+            foreach(string direcPath in directoriesToHandle)
+            {
+                createHandler(direcPath);
+            }
         }
 
         public void createHandler(string directory)
@@ -39,7 +44,7 @@ namespace ImageService.Server
         public void sendCommand()
         {
             string[] args = { "*" };
-            CommandReceived.Invoke(this, new CommandReceivedEventArgs((int)CommandEnum.CloseCommand,args, ""));
+            CommandReceived?.Invoke(this, new CommandReceivedEventArgs((int)CommandEnum.CloseCommand,args, ""));
         }
 
         public void onCloseServer(object sender, DirectoryCloseEventArgs e)

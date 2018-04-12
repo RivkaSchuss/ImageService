@@ -82,7 +82,9 @@ namespace ImageService
             }
             eventLog1.Source = eventSourceName;
             eventLog1.Log = logName;
-            
+            //craeting the logger
+            m_logging = new LoggingService();
+            m_logging.MessageReceived += onMsg;
         }
 
         [DllImport("advapi32.dll", SetLastError = true)]
@@ -106,10 +108,8 @@ namespace ImageService
                 // Update the service state to Running.
                 serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
                 SetServiceStatus(this.ServiceHandle, ref serviceStatus);
-                m_logging = new LoggingService();
-                server = new ImageServer(m_logging, outputDir, int.Parse(thumbnailSize));
-                server.createHandler(handler);
-                m_logging.MessageReceived += onMsg;
+                //creating the server
+                server = new ImageServer(m_logging, outputDir, Int32.Parse(thumbnailSize));
             }
             catch (Exception e)
             {
@@ -125,9 +125,21 @@ namespace ImageService
 
         protected override void OnStop()
         {
+            // Updating the service state to stop Pending.  
+            ServiceStatus serviceStatus = new ServiceStatus();
+            serviceStatus.dwCurrentState = ServiceState.SERVICE_STOP_PENDING;
+            serviceStatus.dwWaitHint = 100000;
+            SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+
+            // writing stop to event log
             eventLog1.WriteEntry("In onStop.");
-            //Closes all the handlers.
-            server.sendCommand();
+
+            // close the server
+            this.server.;
+
+            // Updating the service state to Running.  
+            serviceStatus.dwCurrentState = ServiceState.SERVICE_STOPPED;
+            SetServiceStatus(this.ServiceHandle, ref serviceStatus);
         }
 
         protected override void OnContinue()
@@ -136,6 +148,14 @@ namespace ImageService
         }
         public void onMsg(object sender, MessageReceivedEventArgs message)
         {
+            EventLogEntryType type;
+            switch(message.Status)
+            {
+                case MessageTypeEnum.FAIL: type = EventLogEntryType.Error; break;
+                case MessageTypeEnum.INFO: type = EventLogEntryType.Information; break;
+                case MessageTypeEnum.WARNING: type = EventLogEntryType.Warning; break;
+                default: type = EventLogEntryType.Information; break;
+            }
             eventLog1.WriteEntry(message.Message);
         }
     }

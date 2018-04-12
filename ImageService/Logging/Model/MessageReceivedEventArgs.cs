@@ -8,6 +8,11 @@ namespace ImageService.Logging.Model
 {
     public class MessageReceivedEventArgs : EventArgs
     {
+        public MessageReceivedEventArgs(string message, MessageTypeEnum type)
+        {
+            Status = type;
+            Message = message;
+        }
         public MessageTypeEnum Status { get; set; }
         public string Message { get; set; }
     }
