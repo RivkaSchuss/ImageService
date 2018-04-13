@@ -69,7 +69,7 @@ namespace ImageService.Model
                     }
 
                     result = true;
-                    return "";
+                    return "The image: " + imageFullPath + " has been moved";
                 } catch(Exception e)
                 {
                     result = false;

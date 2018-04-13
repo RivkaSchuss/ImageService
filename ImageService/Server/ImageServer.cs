@@ -2,6 +2,7 @@
 using ImageService.Controller.Handlers;
 using ImageService.Infrastructure.Enums;
 using ImageService.Logging;
+using ImageService.Logging.Model;
 using ImageService.Model;
 using ImageService.Model.Event;
 using System;
@@ -39,20 +40,27 @@ namespace ImageService.Server
             Thread.Sleep(1000);
             DirectoryHandler handler = new DirectoryHandler(m_controller, m_logging);
             CommandReceived += handler.OnCommandReceived;
-            handler.DirectoryClose += onCloseServer;
+            handler.DirectoryClose += removeHandler;
             handler.StartHandleDirectory(directory);
         }
 
-        public void sendCommand()
+        public void sendCommand(CommandReceivedEventArgs e)
         {
-            string[] args = { "*" };
-            CommandReceived?.Invoke(this, new CommandReceivedEventArgs((int)CommandEnum.CloseCommand,args, ""));
+            CommandReceived?.Invoke(this, e);
         }
 
-        public void onCloseServer(object sender, DirectoryCloseEventArgs e)
+        public void onCloseServer()
         {
-            DirectoryHandler handler = (DirectoryHandler)sender;
-            CommandReceived -= handler.OnCommandReceived;
+            sendCommand(new CommandReceivedEventArgs((int)CommandEnum.CloseCommand, null, null));
         }
+
+        public void removeHandler(object sender, DirectoryCloseEventArgs e)
+        {
+            DirectoryHandler handler = (DirectoryHandler) sender;
+            CommandReceived -= handler.OnCommandReceived;
+            handler.DirectoryClose -= removeHandler;
+            m_logging.Log("The " + e.Message + " directory has been closed.", MessageTypeEnum.INFO);
+        }
+
     }
 }

@@ -87,7 +87,7 @@ namespace ImageService.Controller.Handlers
             {
                 m_watcher.EnableRaisingEvents = false; //stops monitoring
                 m_watcher.Created -= new FileSystemEventHandler(onCreated);
-                m_watcher.Changed -= new FileSystemEventHandler(onCreated);
+               // m_watcher.Changed -= new FileSystemEventHandler(onCreated);
             } catch(Exception e)
             {
                 m_logging.Log(e.Message, MessageTypeEnum.FAIL);   
