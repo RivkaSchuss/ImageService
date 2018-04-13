@@ -40,7 +40,7 @@ namespace ImageService.Controller.Handlers
             //m_watcher.Path = dirPath;
             //Register a handler that gets called when a file is created
             m_watcher.Created += new FileSystemEventHandler(onCreated);
-            m_watcher.Changed += new FileSystemEventHandler(onCreated);
+            //m_watcher.Changed += new FileSystemEventHandler(onCreated);
             m_watcher.EnableRaisingEvents = true; //starts monitoring
         }
 

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ImageService.Model
@@ -21,6 +22,7 @@ namespace ImageService.Model
 
         public string AddFile(string path, out bool result)
         {
+            
             if (File.Exists(path))
             {
                 try

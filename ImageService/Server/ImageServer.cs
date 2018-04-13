@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ImageService.Server
@@ -21,20 +22,21 @@ namespace ImageService.Server
         
         public event EventHandler<CommandReceivedEventArgs> CommandReceived; //event notifies about a new command being received
         //endregion
-        public ImageServer(ILoggingService logging, string outputDir, int thumbnailSize)
+        public ImageServer(ILoggingService logging, string outputDir, int thumbnailSize, string handler)
         {
             IImageServiceModel serviceModel = new ImageServiceModel(outputDir, thumbnailSize);
             m_controller = new ImageController(serviceModel);
             m_logging = logging;
-            string[] directoriesToHandle = outputDir.Split(';');
-            foreach(string direcPath in directoriesToHandle)
+            string[] directoriesToHandle = handler.Split(';');
+            foreach(string path in directoriesToHandle)
             {
-                createHandler(direcPath);
+                createHandler(path);
             }
         }
 
         public void createHandler(string directory)
         {
+            Thread.Sleep(1000);
             DirectoryHandler handler = new DirectoryHandler(m_controller, m_logging);
             CommandReceived += handler.OnCommandReceived;
             handler.DirectoryClose += onCloseServer;

@@ -109,7 +109,7 @@ namespace ImageService
                 serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
                 SetServiceStatus(this.ServiceHandle, ref serviceStatus);
                 //creating the server
-                server = new ImageServer(m_logging, outputDir, Int32.Parse(thumbnailSize));
+                server = new ImageServer(m_logging, outputDir, Int32.Parse(thumbnailSize), handler);
             }
             catch (Exception e)
             {
@@ -135,7 +135,7 @@ namespace ImageService
             eventLog1.WriteEntry("In onStop.");
 
             // close the server
-            this.server.;
+            //this.server.;
 
             // Updating the service state to Running.  
             serviceStatus.dwCurrentState = ServiceState.SERVICE_STOPPED;
