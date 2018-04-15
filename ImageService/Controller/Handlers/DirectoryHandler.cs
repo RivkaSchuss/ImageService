@@ -16,6 +16,10 @@ using System.Threading.Tasks;
 
 namespace ImageService.Controller.Handlers
 {
+    /// <summary>
+    /// the directory handler class.
+    /// </summary>
+    /// <seealso cref="ImageService.Controller.Handlers.IDirectoryHandler" />
     public class DirectoryHandler : IDirectoryHandler
     {
         //region members
@@ -26,13 +30,22 @@ namespace ImageService.Controller.Handlers
         private string[] filters = { ".jpg", ".png", ".gif", ".bmp" };
         //end region
         public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DirectoryHandler"/> class.
+        /// </summary>
+        /// <param name="controller">The controller.</param>
+        /// <param name="logging">The logging.</param>
         public DirectoryHandler(IImageController controller, ILoggingService logging)
         {
             m_controller = controller;
             m_logging = logging;
         }
 
+        /// <summary>
+        /// Starts the handle directory.
+        /// </summary>
+        /// <param name="dirPath">The dir path.</param>
         public void StartHandleDirectory(string dirPath)
         {
             direcPath = dirPath;
@@ -44,6 +57,11 @@ namespace ImageService.Controller.Handlers
             m_watcher.EnableRaisingEvents = true; //starts monitoring
         }
 
+        /// <summary>
+        /// when a new file is created, this function is implemented.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="FileSystemEventArgs"/> instance containing the event data.</param>
         public void onCreated(object sender, FileSystemEventArgs e)
         {
             if (filters.Contains(Path.GetExtension(e.FullPath).ToLower()))
@@ -53,7 +71,12 @@ namespace ImageService.Controller.Handlers
                 OnCommandReceived(this, commmandArgs);
             }
         }
-            
+
+        /// <summary>
+        /// Called when [command received].
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="CommandReceivedEventArgs"/> instance containing the event data.</param>
         public void OnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
             if (e.CommandID == (int)CommandEnum.CloseCommand)
@@ -81,6 +104,9 @@ namespace ImageService.Controller.Handlers
             }
         }
 
+        /// <summary>
+        /// Closes the handler.
+        /// </summary>
         public void closeHandler()
         {
             try

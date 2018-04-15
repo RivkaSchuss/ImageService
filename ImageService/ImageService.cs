@@ -15,6 +15,7 @@ using ImageService.Logging;
 using ImageService.Logging.Model;
 using ImageService.Model;
 using ImageService.Infrastructure.Enums;
+using System.IO;
 
 namespace ImageService
 {
@@ -42,6 +43,10 @@ namespace ImageService
         public int dwWaitHint;
     };
 
+    /// <summary>
+    /// the image service base class.
+    /// </summary>
+    /// <seealso cref="System.ServiceProcess.ServiceBase" />
     public partial class ImageService : ServiceBase
     {
         private int eventId = 1;
@@ -50,9 +55,15 @@ namespace ImageService
         private string outputDir;
         private string handler;
         private string thumbnailSize;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImageService"/> class.
+        /// </summary>
+        /// <param name="args">The arguments.</param>
+        /// <exception cref="FileNotFoundException"></exception>
         public ImageService(string[] args)
         {
             handler = ConfigurationManager.AppSettings["Handler"];
+           
             outputDir = ConfigurationManager.AppSettings["OutputDir"];
             string eventSourceName = ConfigurationManager.AppSettings["SourceName"];
             string logName = ConfigurationManager.AppSettings["LogName"];
@@ -90,6 +101,11 @@ namespace ImageService
         [DllImport("advapi32.dll", SetLastError = true)]
         private static extern bool SetServiceStatus(IntPtr handle, ref ServiceStatus serviceStatus);
 
+        /// <summary>
+        /// When implemented in a derived class, executes when a Start command is sent to the service by the Service Control Manager (SCM) or
+        /// when the operating system starts (for a service that starts automatically). Specifies actions to take when the service starts.
+        /// </summary>
+        /// <param name="args">Data passed by the start command.</param>
         protected override void OnStart(string[] args)
         {
             // Update the service state to Start Pending.
@@ -117,12 +133,20 @@ namespace ImageService
             }
         }
 
+        /// <summary>
+        /// Called when [timer].
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="System.Timers.ElapsedEventArgs"/> instance containing the event data.</param>
         public void OnTimer(object sender, System.Timers.ElapsedEventArgs args)
         {
             // TODO: Insert monitoring activities here.  
             eventLog1.WriteEntry("Monitoring the System", EventLogEntryType.Information, eventId++);
         }
 
+        /// <summary>
+        /// When implemented in a derived class, executes when a Stop command is sent to the service by the Service Control Manager (SCM). Specifies actions to take when a service stops running.
+        /// </summary>
         protected override void OnStop()
         {
             // Updating the service state to stop Pending.  
@@ -142,10 +166,19 @@ namespace ImageService
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
         }
 
+        /// <summary>
+        /// When implemented in a derived class, <see cref="M:System.ServiceProcess.ServiceBase.OnContinue" /> runs when a Continue command is sent to the service by the 
+        /// Service Control Manager (SCM). Specifies actions to take when a service resumes normal functioning after being paused.
+        /// </summary>
         protected override void OnContinue()
         {
             eventLog1.WriteEntry("In OnContinue.");
         }
+        /// <summary>
+        /// when a message is received, this function is implemented.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="message">The <see cref="MessageReceivedEventArgs"/> instance containing the event data.</param>
         public void onMsg(object sender, MessageReceivedEventArgs message)
         {
             EventLogEntryType type;

@@ -9,17 +9,32 @@ using System.Threading.Tasks;
 
 namespace ImageService.Model
 {
+    /// <summary>
+    /// the image service model class.
+    /// </summary>
+    /// <seealso cref="ImageService.Model.IImageServiceModel" />
     public class ImageServiceModel : IImageServiceModel
     {
         private string outputDir = null;
         private int thumbnailSize;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImageServiceModel"/> class.
+        /// </summary>
+        /// <param name="outputDir">The output dir.</param>
+        /// <param name="thumbnailSize">Size of the thumbnail.</param>
         public ImageServiceModel(string outputDir, int thumbnailSize)
         {
             this.outputDir = outputDir;
             this.thumbnailSize = thumbnailSize;
         }
 
+        /// <summary>
+        /// Adds the file.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="result">if set to <c>true</c> [result].</param>
+        /// <returns></returns>
         public string AddFile(string path, out bool result)
         {
             
@@ -28,7 +43,12 @@ namespace ImageService.Model
                 try
                 {
                     //creating the output directory if it doesn't already exist
-                    Directory.CreateDirectory(outputDir);
+                    if (!Directory.Exists(outputDir))
+                    {
+                        DirectoryInfo outputDirectory = Directory.CreateDirectory(outputDir);
+                        //setting the output directory to be hidden
+                        outputDirectory.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
+                    }
 
                     //creating the thumbnails directory in the output directory:
                     //getting the path to the thumbnails path

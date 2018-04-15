@@ -6,8 +6,17 @@ using System.Threading.Tasks;
 
 namespace ImageService.Model
 {
+    /// <summary>
+    /// the image service model interface.
+    /// </summary>
     public interface IImageServiceModel
     {
+        /// <summary>
+        /// Adds the file.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="result">if set to <c>true</c> [result].</param>
+        /// <returns></returns>
         string AddFile(string path, out bool result);
     }
 }

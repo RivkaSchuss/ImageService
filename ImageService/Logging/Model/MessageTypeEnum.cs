@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace ImageService.Logging.Model
 {
+    /// <summary>
+    /// the message type enum.
+    /// </summary>
     public enum MessageTypeEnum : int
     {
         INFO,

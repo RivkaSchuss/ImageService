@@ -9,11 +9,19 @@ using System.Threading.Tasks;
 
 namespace ImageService.Controller
 {
+    /// <summary>
+    /// the image controller class.
+    /// </summary>
+    /// <seealso cref="ImageService.Controller.IImageController" />
     public class ImageController : IImageController
     {
         private IImageServiceModel m_model; //the model object
-        private Dictionary<int, ICommand> commands; 
+        private Dictionary<int, ICommand> commands;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImageController"/> class.
+        /// </summary>
+        /// <param name="model">The model.</param>
         public ImageController(IImageServiceModel model)
         {
             m_model = model; //storing the model of the system
@@ -23,6 +31,13 @@ namespace ImageService.Controller
             };
         }
 
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="commandID">The command identifier.</param>
+        /// <param name="args">The arguments.</param>
+        /// <param name="resultSuccesful">if set to <c>true</c> [result succesful].</param>
+        /// <returns></returns>
         public string ExecuteCommand(int commandID, string[] args, out bool resultSuccesful)
         {
             ICommand toExecute;
