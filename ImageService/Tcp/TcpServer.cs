@@ -22,7 +22,7 @@ namespace ImageService.Tcp
 
         public void Start()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.01"), port);
+            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
             listener = new TcpListener(ep);
             listener.Start();
             Console.WriteLine("Waiting for connections...");
