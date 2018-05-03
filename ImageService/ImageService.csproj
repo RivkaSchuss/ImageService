@@ -83,6 +83,9 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server\ImageServer.cs" />
+    <Compile Include="Tcp\ClientHandler.cs" />
+    <Compile Include="Tcp\IClientHandler.cs" />
+    <Compile Include="Tcp\TcpServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
