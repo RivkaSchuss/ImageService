@@ -16,6 +16,7 @@ using ImageService.Logging.Model;
 using ImageService.Model;
 using ImageService.Infrastructure.Enums;
 using System.IO;
+using ImageService.Tcp;
 
 namespace ImageService
 {
@@ -125,7 +126,7 @@ namespace ImageService
                 serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
                 SetServiceStatus(this.ServiceHandle, ref serviceStatus);
                 //creating the server
-                server = new ImageServer(m_logging, outputDir, Int32.Parse(thumbnailSize), handler);
+                server = new ImageServer(m_logging, outputDir, Int32.Parse(thumbnailSize), handler, 8000);
             }
             catch (Exception e)
             {

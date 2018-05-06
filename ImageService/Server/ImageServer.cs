@@ -5,10 +5,13 @@ using ImageService.Logging;
 using ImageService.Logging.Model;
 using ImageService.Model;
 using ImageService.Model.Event;
+using ImageService.Tcp;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,8 +26,12 @@ namespace ImageService.Server
         //regionMembers
         private IImageController m_controller;
         private ILoggingService m_logging;
+        private int port;
+        private TcpListener tcpListener;
+        private IClientHandler ch;
+
         //endregion
-        
+
         public event EventHandler<CommandReceivedEventArgs> CommandReceived; //event notifies about a new command being received
         //endregion
         /// <summary>
@@ -34,7 +41,7 @@ namespace ImageService.Server
         /// <param name="outputDir">The output dir.</param>
         /// <param name="thumbnailSize">Size of the thumbnail.</param>
         /// <param name="handler">The handler.</param>
-        public ImageServer(ILoggingService logging, string outputDir, int thumbnailSize, string handler)
+        public ImageServer(ILoggingService logging, string outputDir, int thumbnailSize, string handler, int port)
         {
             IImageServiceModel serviceModel = new ImageServiceModel(outputDir, thumbnailSize);
             m_controller = new ImageController(serviceModel);
@@ -44,6 +51,8 @@ namespace ImageService.Server
             {
                 createHandler(path);
             }
+            this.port = port;
+            this.ch = new ClientHandler();
         }
 
         /// <summary>
@@ -92,6 +101,38 @@ namespace ImageService.Server
             CommandReceived -= handler.OnCommandReceived;
             handler.DirectoryClose -= removeHandler;
             m_logging.Log("The " + e.Message + " directory has been closed.", MessageTypeEnum.INFO);
+        }
+
+        public void Start()
+        {
+            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
+            tcpListener = new TcpListener(ep);
+            tcpListener.Start();
+            Console.WriteLine("Waiting for connections...");
+
+            Task task = new Task(() =>
+            {
+                while (true)
+                {
+                    try
+                    {
+                        TcpClient client = tcpListener.AcceptTcpClient();
+                        Console.WriteLine("Got new connection");
+                        ch.HandleClient(client);
+                    }
+                    catch (SocketException)
+                    {
+                        break;
+                    }
+                }
+                Console.WriteLine("Server stopped");
+            });
+            task.Start();
+        }
+
+        public void Stop()
+        {
+            tcpListener.Stop();
         }
 
     }
