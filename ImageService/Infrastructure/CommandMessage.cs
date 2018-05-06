@@ -7,7 +7,7 @@ using Newtonsoft.Json.Linq;
 
 namespace ImageService.Infrastructure
 {
-    class CommandMessage
+    public class CommandMessage
     {
         public int CommandID { get; set; }
 

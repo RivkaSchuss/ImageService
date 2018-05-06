@@ -53,6 +53,7 @@ namespace ImageService.Server
             }
             this.port = port;
             this.ch = new ClientHandler();
+            this.Start();
         }
 
         /// <summary>
