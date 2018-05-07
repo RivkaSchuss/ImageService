@@ -106,6 +106,7 @@ namespace ImageService.Server
 
         public void Start()
         {
+            Thread.Sleep(100);
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
             tcpListener = new TcpListener(ep);
             tcpListener.Start();
