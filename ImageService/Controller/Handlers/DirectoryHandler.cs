@@ -42,6 +42,14 @@ namespace ImageService.Controller.Handlers
             m_logging = logging;
         }
 
+        public FileSystemWatcher Watcher
+        {
+            get
+            {
+                return this.m_watcher;
+            }
+        }
+
         /// <summary>
         /// Starts the handle directory.
         /// </summary>
@@ -52,7 +60,7 @@ namespace ImageService.Controller.Handlers
             m_watcher = new FileSystemWatcher(dirPath);
             //m_watcher.Path = dirPath;
             //Register a handler that gets called when a file is created
-            m_watcher.Created += new FileSystemEventHandler(onCreated);
+            m_watcher.Created += new FileSystemEventHandler(OnCreated);
             //m_watcher.Changed += new FileSystemEventHandler(onCreated);
             m_watcher.EnableRaisingEvents = true; //starts monitoring
         }
@@ -62,7 +70,7 @@ namespace ImageService.Controller.Handlers
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="FileSystemEventArgs"/> instance containing the event data.</param>
-        public void onCreated(object sender, FileSystemEventArgs e)
+        public void OnCreated(object sender, FileSystemEventArgs e)
         {
             if (filters.Contains(Path.GetExtension(e.FullPath).ToLower()))
             {
@@ -79,48 +87,31 @@ namespace ImageService.Controller.Handlers
         /// <param name="e">The <see cref="CommandReceivedEventArgs"/> instance containing the event data.</param>
         public void OnCommandReceived(object sender, CommandReceivedEventArgs e)
         {
-            if (e.CommandID == (int)CommandEnum.CloseCommand)
+
+            if (e.RequestDirPath.Equals(direcPath))
             {
-                m_logging.Log("Close command", MessageTypeEnum.INFO);
-                closeHandler();
-                return;
-            } else
-            {
-                if (e.RequestDirPath.Equals(direcPath))
+                string[] args = { e.RequestDirPath };
+                bool result;
+                string message = m_controller.ExecuteCommand(e.CommandID, e.Args, out result);
+                if (result)
                 {
-                    string[] args = { e.RequestDirPath};
-                    bool result;
-                    string message = m_controller.ExecuteCommand(e.CommandID, e.Args, out result);
-                    if (result)
-                    {
-                        //succeed
-                        m_logging.Log("Command of ID: " + e.CommandID + " executed successfully", MessageTypeEnum.INFO);
-                    } else
-                    {
-                        //fail
-                        m_logging.Log("Error on executing: " + message, MessageTypeEnum.FAIL);
-                    }
+                    //succeed
+                    m_logging.Log("Command of ID: " + e.CommandID + " executed successfully", MessageTypeEnum.INFO);
+                }
+                else
+                {
+                    //fail
+                    m_logging.Log("Error on executing: " + message, MessageTypeEnum.FAIL);
                 }
             }
         }
-
         /// <summary>
         /// Closes the handler.
         /// </summary>
-        public void closeHandler()
+        public void InvokeCloseEvent()
         {
-            try
-            {
-                m_watcher.EnableRaisingEvents = false; //stops monitoring
-                m_watcher.Created -= new FileSystemEventHandler(onCreated);
-               // m_watcher.Changed -= new FileSystemEventHandler(onCreated);
-            } catch(Exception e)
-            {
-                m_logging.Log(e.Message, MessageTypeEnum.FAIL);   
-            }
             DirectoryClose?.Invoke(this, new DirectoryCloseEventArgs(direcPath, "Directory " + this.direcPath + " closed"));
         }
-
-
     }
 }
+

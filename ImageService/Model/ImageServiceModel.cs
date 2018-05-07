@@ -1,5 +1,11 @@
-﻿using System;
+﻿using ImageService.Controller.Handlers;
+using ImageService.Infrastructure;
+using ImageService.Infrastructure.Enums;
+using ImageService.Model.Event;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -99,6 +105,50 @@ namespace ImageService.Model
             {
                 result = false;
                 return "File does not exist";
+            }
+        }
+
+        public string BuildConfig(out bool result)
+        {
+            try
+            {
+                CommandMessage msg = new CommandMessage();
+                msg.CommandID = (int)CommandEnum.GetConfigCommand;
+                JObject jObj = new JObject();
+                jObj["OutputDirectory"] = ConfigurationManager.AppSettings["OutputDir"];
+                jObj["SourceName"] = ConfigurationManager.AppSettings["SourceName"];
+                jObj["LogName"] = ConfigurationManager.AppSettings["LogName"];
+                jObj["ThumbnailSize"] = ConfigurationManager.AppSettings["ThumbnailSize"];
+                JArray arr = new JArray();
+                string[] handlers = ConfigurationManager.AppSettings["Handler"].Split(';');
+                arr = JArray.FromObject(handlers);
+                jObj["Handlers"] = arr;
+                msg.CommandArgs = jObj;
+                string config = msg.ToJSON();
+                result = true;
+                return config;
+            }
+            catch (Exception e)
+            {
+                result = false;
+                return e.ToString();
+            }
+        }
+
+        public string CloseHandler(IDirectoryHandler handler, out bool result)
+        {
+            try
+            {
+                handler.Watcher.EnableRaisingEvents = false;
+                handler.Watcher.Created -= new FileSystemEventHandler(handler.OnCreated);
+                handler.InvokeCloseEvent();
+                result = true;
+                return "Success";
+            }
+            catch (Exception e)
+            {
+                result = false;
+                return e.ToString();
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using ImageService.Commands;
 using ImageService.Infrastructure.Enums;
 using ImageService.Model;
+using ImageService.Server;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace ImageService.Controller
     {
         private IImageServiceModel m_model; //the model object
         private Dictionary<int, ICommand> commands;
+        private ImageServer server;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageController"/> class.
@@ -27,10 +29,25 @@ namespace ImageService.Controller
             m_model = model; //storing the model of the system
             commands = new Dictionary<int, ICommand>()
             {
-                {(int)CommandEnum.NewFileCommand, new NewFileCommand(m_model) }
+                {(int)CommandEnum.NewFileCommand, new NewFileCommand(m_model) } ,
+                { (int)CommandEnum.GetConfigCommand, new GetConfigCommand(m_model) },
+                { (int)CommandEnum.LogCommand, new LogCommand()} ,
+                { (int) CommandEnum.CloseCommand, new CloseCommand(m_model, Server.Handlers)}
             };
         }
 
+        public ImageServer Server
+        {
+            get
+            {
+                return this.server;
+            }
+            set
+            {
+                this.server = value;
+            }
+
+        }
         /// <summary>
         /// Executes the command.
         /// </summary>

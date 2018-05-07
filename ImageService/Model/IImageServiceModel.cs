@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ImageService.Controller.Handlers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,5 +19,7 @@ namespace ImageService.Model
         /// <param name="result">if set to <c>true</c> [result].</param>
         /// <returns></returns>
         string AddFile(string path, out bool result);
+        string BuildConfig(out bool result);
+        string CloseHandler(IDirectoryHandler handler, out bool result);
     }
 }

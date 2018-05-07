@@ -160,7 +160,7 @@ namespace ImageService
             eventLog1.WriteEntry("In onStop.");
 
             // close the server
-            this.server.onCloseServer();
+            this.server.OnCloseServer();
 
             // Updating the service state to Running.  
             serviceStatus.dwCurrentState = ServiceState.SERVICE_STOPPED;

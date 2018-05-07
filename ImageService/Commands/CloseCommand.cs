@@ -1,4 +1,7 @@
-﻿using System;
+﻿using ImageService.Controller.Handlers;
+using ImageService.Model;
+using ImageService.Server;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -9,6 +12,15 @@ namespace ImageService.Commands
 {
     class CloseCommand : ICommand
     {
+        private IImageServiceModel model;
+        Dictionary<string, IDirectoryHandler> handlers;
+
+        public CloseCommand(IImageServiceModel model, Dictionary<string, IDirectoryHandler> handlers)
+        {
+            this.model = model;
+            this.handlers = handlers;
+        }
+
         public string Execute(string[] args, out bool result)
         {
             try
@@ -17,10 +29,9 @@ namespace ImageService.Commands
                 {
                     throw new Exception("invalid args");
                 }
-                string handlerToDelete = args[0];
-                string[] directories = (ConfigurationManager.AppSettings.Get("Handler").Split(';'));
-                result = true;
-                return "";
+                IDirectoryHandler handler = handlers[args[0]];
+                string message = model.CloseHandler(handler, out result);
+                return message;
 
             } catch (Exception e)
             {

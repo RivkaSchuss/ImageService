@@ -29,6 +29,7 @@ namespace ImageService.Server
         private int port;
         private TcpListener tcpListener;
         private IClientHandler ch;
+        private Dictionary<string, IDirectoryHandler> handlers;
 
         //endregion
 
@@ -45,22 +46,29 @@ namespace ImageService.Server
         {
             IImageServiceModel serviceModel = new ImageServiceModel(outputDir, thumbnailSize);
             m_controller = new ImageController(serviceModel);
+            m_controller.Server = this;
+            handlers = new Dictionary<string, IDirectoryHandler>();
             m_logging = logging;
             string[] directoriesToHandle = handler.Split(';');
             foreach(string path in directoriesToHandle)
             {
-                createHandler(path);
+                CreateHandler(path);
             }
             this.port = port;
             this.ch = new ClientHandler();
             this.Start();
         }
 
+        public Dictionary<string, IDirectoryHandler> Handlers
+        {
+            get { return this.handlers; }
+        }
+
         /// <summary>
         /// Creates the handler.
         /// </summary>
         /// <param name="directory">The directory.</param>
-        public void createHandler(string directory)
+        public void CreateHandler(string directory)
         {
             Thread.Sleep(1000);
             if (!Directory.Exists(directory))
@@ -69,8 +77,9 @@ namespace ImageService.Server
                throw new FileNotFoundException();
             }
             DirectoryHandler handler = new DirectoryHandler(m_controller, m_logging);
+            handlers[directory] = handler;
             CommandReceived += handler.OnCommandReceived;
-            handler.DirectoryClose += removeHandler;
+            handler.DirectoryClose += RemoveHandler;
             handler.StartHandleDirectory(directory);
         }
 
@@ -78,7 +87,7 @@ namespace ImageService.Server
         /// Sends the command.
         /// </summary>
         /// <param name="e">The <see cref="CommandReceivedEventArgs"/> instance containing the event data.</param>
-        public void sendCommand(CommandReceivedEventArgs e)
+        public void SendCommand(CommandReceivedEventArgs e)
         {
             CommandReceived?.Invoke(this, e);
         }
@@ -86,9 +95,9 @@ namespace ImageService.Server
         /// <summary>
         /// deals with closing the server.
         /// </summary>
-        public void onCloseServer()
+        public void OnCloseServer()
         {
-            sendCommand(new CommandReceivedEventArgs((int)CommandEnum.CloseCommand, null, null));
+            SendCommand(new CommandReceivedEventArgs((int)CommandEnum.CloseCommand, null, null));
         }
 
         /// <summary>
@@ -96,11 +105,11 @@ namespace ImageService.Server
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="DirectoryCloseEventArgs"/> instance containing the event data.</param>
-        public void removeHandler(object sender, DirectoryCloseEventArgs e)
+        public void RemoveHandler(object sender, DirectoryCloseEventArgs e)
         {
             DirectoryHandler handler = (DirectoryHandler) sender;
             CommandReceived -= handler.OnCommandReceived;
-            handler.DirectoryClose -= removeHandler;
+            handler.DirectoryClose -= RemoveHandler;
             m_logging.Log("The " + e.Message + " directory has been closed.", MessageTypeEnum.INFO);
         }
 
@@ -120,7 +129,7 @@ namespace ImageService.Server
                     {
                         TcpClient client = tcpListener.AcceptTcpClient();
                         Console.WriteLine("Got new connection");
-                        ch.HandleClient(client);
+                        ch.HandleClient(client, m_controller);
                     }
                     catch (SocketException)
                     {
