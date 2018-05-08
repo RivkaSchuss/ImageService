@@ -46,7 +46,7 @@ namespace ImageService.Server
         {
             IImageServiceModel serviceModel = new ImageServiceModel(outputDir, thumbnailSize);
             m_controller = new ImageController(serviceModel);
-            m_controller.Server = this;
+            //m_controller.Server = this;
             handlers = new Dictionary<string, IDirectoryHandler>();
             m_clients = new ObservableCollection<IClientHandler>();
             m_logging = logging;
@@ -143,6 +143,7 @@ namespace ImageService.Server
                         Console.WriteLine("Got new connection");
                         IClientHandler ch = new ClientHandler();
                         Clients.Add(ch);
+                        this.m_controller.Server = this;
                         ch.HandleClient(client, m_controller, Clients.IndexOf(ch));
                         client.Close();
                     }
