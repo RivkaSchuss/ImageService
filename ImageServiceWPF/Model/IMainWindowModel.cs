@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ImageServiceWPF.Client;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace ImageServiceWPF.Model
     interface IMainWindowModel :INotifyPropertyChanged
     {
         bool IsConnected { get; set; }
+        IClientConnection Client { get; }
     }
 }

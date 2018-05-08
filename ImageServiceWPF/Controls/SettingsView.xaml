@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel>
-        <Label HorizontalAlignment="Center" Content="Settings" FontSize="25" FontWeight="Bold" Foreground="Blue"/>
+        <Label HorizontalAlignment="Center" Content="Settings" FontSize="25" FontWeight="Bold" Foreground="Blue" Padding="10"/>
         <Grid TextBlock.FontSize="14">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

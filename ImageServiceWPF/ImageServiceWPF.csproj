@@ -83,6 +83,7 @@
     <Compile Include="Model\ISettingsModel.cs" />
     <Compile Include="Model\LogsModel.cs" />
     <Compile Include="Model\SettingsModel.cs" />
+    <Compile Include="Controls\LogConvert.cs" />
     <Compile Include="VModel\ILogsViewModel.cs" />
     <Compile Include="VModel\IMainWindowViewModel.cs" />
     <Compile Include="VModel\ISettingsViewModel.cs" />

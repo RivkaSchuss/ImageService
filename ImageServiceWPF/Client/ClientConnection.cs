@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using Infrastructure;
+using Infrastructure.Enums;
 using Infrastructure.Event;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -22,6 +23,11 @@ namespace ImageServiceWPF.Client
         private bool isStopped;
         NetworkStream stream;
         private bool isConnected;
+
+        private ClientConnection()
+        {
+            this.IsConnected = this.Connect();
+        }
 
         public static ClientConnection Instance
         {
@@ -72,6 +78,8 @@ namespace ImageServiceWPF.Client
         {
             try
             {
+                CommandReceivedEventArgs eventArgs = new CommandReceivedEventArgs((int)CommandEnum.CloseGUI, null, null);
+                this.Write(eventArgs);
                 client.Close();
                 isConnected = false;
             }

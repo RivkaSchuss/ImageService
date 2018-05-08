@@ -15,12 +15,12 @@ namespace ImageServiceWPF.Model
     class LogsModel : ILogsModel
     {
 
-        private ObservableCollection<string> logMessages;
+        private ObservableCollection<string> logEntries;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public LogsModel()
         {
-            this.logMessages = new ObservableCollection<string>();
+            this.logEntries = new ObservableCollection<string>();
             this.Connection.DataReceived += OnDataReceived;
         }
 
@@ -31,15 +31,21 @@ namespace ImageServiceWPF.Model
                 return ClientConnection.Instance;
             }
         }
-        public ObservableCollection<string> LogMessages
+        public ObservableCollection<string> LogEntries
         {
-            get { return this.logMessages; }
+            get { return this.logEntries; }
             set
             {
-                throw new NotImplementedException();
+                this.logEntries = value;
+                NotifyPropertyChanged("LogEntries");
             }
         }
 
+        private void NotifyPropertyChanged(string propName)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+        }
+    
         public void OnDataReceived(object sender, CommandMessage message)
         {
 

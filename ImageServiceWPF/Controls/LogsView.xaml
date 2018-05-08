@@ -6,24 +6,24 @@
              xmlns:local="clr-namespace:ImageServiceWPF.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <local:LogConvert x:Key="LogConvert"></local:LogConvert>
+    </UserControl.Resources>
     <StackPanel>
-        <Label HorizontalAlignment="Center" Content="Logs" FontSize="25" FontWeight="Bold" Foreground="Blue"/>
-        <DataGrid>
+        <Label HorizontalAlignment="Center" Content="Logs" FontSize="25" FontWeight="Bold" Foreground="Blue" Padding="10"/>
+        <DataGrid ItemsSource="{Binding VM_LogEntries}">
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="Type" IsReadOnly="True">
-                <DataGridTemplateColumn.CellTemplate>
-                    <DataTemplate>
-                 
-                    </DataTemplate>
-                </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Message" Width ="*" IsReadOnly="True">
-                <DataGridTemplateColumn.CellTemplate>
-                    <DataTemplate>
-                        
-                    </DataTemplate>
-                </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Type" Width="Auto" IsReadOnly="True" Binding="{Binding Path=Type}">
+                <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Background" Value="{Binding Path=Type, Converter={StaticResource LogConvert}}">
+                            </Setter>
+                        </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>
+                <DataGridTextColumn Header="Message" Width ="*" IsReadOnly="True" Binding ="{Binding Message}">
+                
+            </DataGridTextColumn>
         </DataGrid.Columns>
         </DataGrid>
     </StackPanel>

@@ -10,6 +10,6 @@ namespace ImageServiceWPF.Model
 {
     interface ILogsModel : INotifyPropertyChanged
     {
-        ObservableCollection<string> LogMessages { get; set; }
+        ObservableCollection<string> LogEntries { get; set; }
     }
 }

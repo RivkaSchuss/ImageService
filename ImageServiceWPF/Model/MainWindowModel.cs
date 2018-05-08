@@ -12,11 +12,20 @@ namespace ImageServiceWPF.Model
     {
         private bool isConnected;
         public event PropertyChangedEventHandler PropertyChanged;
+        IClientConnection client;
 
         public MainWindowModel()
         {
-            IClientConnection client = ClientConnection.Instance;
+            client = ClientConnection.Instance;
             IsConnected = client.IsConnected;
+        }
+
+        IClientConnection Client
+        {
+            get
+            {
+                return this.Client;
+            }
         }
 
         public bool IsConnected
