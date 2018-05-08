@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ImageServiceWPF.Client
 {
-    interface IClientConnection
+    public interface IClientConnection
     {
         bool Connect();
         void Disconnect();

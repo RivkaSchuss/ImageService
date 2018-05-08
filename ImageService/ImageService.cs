@@ -16,7 +16,6 @@ using ImageService.Logging.Model;
 using ImageService.Model;
 using Infrastructure.Enums;
 using System.IO;
-using ImageService.Tcp;
 
 namespace ImageService
 {

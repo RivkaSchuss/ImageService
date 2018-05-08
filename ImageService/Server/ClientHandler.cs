@@ -14,39 +14,61 @@ using ImageService.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Infrastructure.Event;
+using System.Threading;
 
-namespace ImageService.Tcp
+namespace ImageService.Server
 {
-    class ClientHandler : IClientHandler
+    public class ClientHandler : IClientHandler
     {
-        public void HandleClient(TcpClient client, IImageController controller)
+        private CancellationTokenSource tokenSource;
+
+        public ClientHandler()
+        {
+            this.tokenSource = new CancellationTokenSource();
+        }
+
+        public void HandleClient(TcpClient client, IImageController controller, int index)
         {
 
             new Task(() =>
             {
-
-                NetworkStream stream = client.GetStream();
-                StreamReader reader = new StreamReader(stream);
-                StreamWriter writer = new StreamWriter(stream);
-                bool result;
+                try
                 {
-                    string input = reader.ReadLine();
-                    while (reader.Peek() > 0)
+                    while (true)
                     {
-                        input += reader.ReadLine();
+                        NetworkStream stream = client.GetStream();
+                        StreamReader reader = new StreamReader(stream);
+                        StreamWriter writer = new StreamWriter(stream);
+                        bool result;
+                        string input = reader.ReadLine();
+                        while (reader.Peek() > 0)
+                        {
+                            input += reader.ReadLine();
+                        }
+                        if (input != null)
+                        {
+                            CommandReceivedEventArgs commandReceived = JsonConvert.DeserializeObject<CommandReceivedEventArgs>(input);
+                            if (commandReceived.CommandID.Equals((int)CommandEnum.CloseGUI))
+                            {
+                                commandReceived.Args[0] = index.ToString();
+                            }
+                            string message = controller.ExecuteCommand(commandReceived.CommandID, commandReceived.Args, out result);
+                            writer.WriteLine(message);
+                            writer.Flush();
+                        }
                     }
-                    if (input != null)
-                    {
-                        CommandReceivedEventArgs commandReceived = JsonConvert.DeserializeObject<CommandReceivedEventArgs>(input);
-                        string message = controller.ExecuteCommand(commandReceived.CommandID, commandReceived.Args, out result);
-                        writer.WriteLine(message);
-                        writer.Flush();
-                    }
-                    //log
-
                 }
-                client.Close();
-            }).Start();
+                catch (Exception e)
+                {
+                    this.tokenSource.Cancel();
+                    Console.WriteLine(e.Message.ToString());
+                }
+            },this.tokenSource.Token).Start();
+        }
+
+        public void Close()
+        {
+            this.tokenSource.Cancel();
         }
 
 

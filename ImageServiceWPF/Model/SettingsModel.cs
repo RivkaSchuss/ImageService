@@ -24,10 +24,8 @@ namespace ImageServiceWPF.Model
         private string outputDirectory;
         private string sourceName;
         private string logName;
-        private string toSend;
         private int thumbnailSize;
         private string selectedHandler;
-        private IClientConnection connection;
         private bool isConnected;
 
         public SettingsModel()

@@ -14,19 +14,19 @@ using Newtonsoft.Json.Linq;
 
 namespace ImageServiceWPF.Client
 {
-    class ClientConnection : IClientConnection
+    public class ClientConnection : IClientConnection
     {
         public event EventHandler<CommandMessage> DataReceived;
         private static ClientConnection clientInstance;
         private TcpClient client;
         private IPEndPoint ep;
-        private bool isStopped;
+
         NetworkStream stream;
         private bool isConnected;
 
         private ClientConnection()
         {
-            this.IsConnected = this.Connect();
+            this.isConnected = this.Connect();
         }
 
         public static ClientConnection Instance

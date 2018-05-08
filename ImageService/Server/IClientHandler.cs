@@ -6,10 +6,11 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImageService.Tcp
+namespace ImageService.Server
 {
-    interface IClientHandler
+    public interface IClientHandler
     {
-        void HandleClient(TcpClient client, IImageController controller);
+        void HandleClient(TcpClient client, IImageController controller, int index);
+        void Close();
     }
 }

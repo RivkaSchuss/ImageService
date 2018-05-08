@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace ImageServiceWPF.Model
 {
-    class MainWindowModel : IMainWindowModel
+    public class MainWindowModel : IMainWindowModel
     {
         private bool isConnected;
         public event PropertyChangedEventHandler PropertyChanged;
-        IClientConnection client;
+        private IClientConnection client;
 
         public MainWindowModel()
         {
@@ -20,11 +20,11 @@ namespace ImageServiceWPF.Model
             IsConnected = client.IsConnected;
         }
 
-        IClientConnection Client
+        public IClientConnection Client
         {
             get
             {
-                return this.Client;
+                return this.client;
             }
         }
 

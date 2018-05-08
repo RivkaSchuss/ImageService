@@ -21,8 +21,6 @@ namespace ImageServiceWPF.Controls
     /// </summary>
     public partial class SettingsView : UserControl
     {
-        private ISettingsViewModel vm;
-
         public SettingsView()
         {
             InitializeComponent();

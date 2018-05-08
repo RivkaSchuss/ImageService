@@ -5,7 +5,6 @@ using ImageService.Logging;
 using ImageService.Logging.Model;
 using ImageService.Model;
 using Infrastructure.Event;
-using ImageService.Tcp;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +14,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
 namespace ImageService.Server
 {
@@ -28,8 +28,8 @@ namespace ImageService.Server
         private ILoggingService m_logging;
         private int port;
         private TcpListener tcpListener;
-        private IClientHandler ch;
         private Dictionary<string, IDirectoryHandler> handlers;
+        private ObservableCollection<IClientHandler> m_clients;
 
         //endregion
 
@@ -48,6 +48,7 @@ namespace ImageService.Server
             m_controller = new ImageController(serviceModel);
             m_controller.Server = this;
             handlers = new Dictionary<string, IDirectoryHandler>();
+            m_clients = new ObservableCollection<IClientHandler>();
             m_logging = logging;
             string[] directoriesToHandle = handler.Split(';');
             foreach(string path in directoriesToHandle)
@@ -55,13 +56,24 @@ namespace ImageService.Server
                 CreateHandler(path);
             }
             this.port = port;
-            this.ch = new ClientHandler();
             this.Start();
         }
 
         public Dictionary<string, IDirectoryHandler> Handlers
         {
             get { return this.handlers; }
+        }
+
+        public ObservableCollection<IClientHandler> Clients
+        {
+            get
+            {
+                return m_clients;
+            }
+            set
+            {
+                this.m_clients = value;
+            }
         }
 
         /// <summary>
@@ -129,7 +141,10 @@ namespace ImageService.Server
                     {
                         TcpClient client = tcpListener.AcceptTcpClient();
                         Console.WriteLine("Got new connection");
-                        ch.HandleClient(client, m_controller);
+                        IClientHandler ch = new ClientHandler();
+                        Clients.Add(ch);
+                        ch.HandleClient(client, m_controller, Clients.IndexOf(ch));
+                        client.Close();
                     }
                     catch (SocketException)
                     {
@@ -141,7 +156,7 @@ namespace ImageService.Server
             task.Start();
         }
 
-        public void Stop()
+        public void StopServer()
         {
             tcpListener.Stop();
         }

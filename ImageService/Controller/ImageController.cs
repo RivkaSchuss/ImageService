@@ -32,7 +32,8 @@ namespace ImageService.Controller
                 {(int)CommandEnum.NewFileCommand, new NewFileCommand(m_model) } ,
                 { (int)CommandEnum.GetConfigCommand, new GetConfigCommand(m_model) },
                 { (int)CommandEnum.LogCommand, new LogCommand()} ,
-                { (int) CommandEnum.CloseCommand, new CloseCommand(m_model, Server.Handlers)}
+                { (int) CommandEnum.CloseCommand, new CloseCommand(m_model, Server.Handlers)} ,
+                { (int) CommandEnum.CloseGUI, new CloseGUI(m_model, Server) }
             };
         }
 
