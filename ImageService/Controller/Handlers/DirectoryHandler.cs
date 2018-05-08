@@ -1,8 +1,8 @@
-﻿using ImageService.Infrastructure.Enums;
+﻿using Infrastructure.Enums;
 using ImageService.Logging;
 using ImageService.Logging.Model;
 using ImageService.Model;
-using ImageService.Model.Event;
+using Infrastructure.Event;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

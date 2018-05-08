@@ -68,14 +68,10 @@
     <Compile Include="ImageService.Designer.cs">
       <DependentUpon>ImageService.cs</DependentUpon>
     </Compile>
-    <Compile Include="Infrastructure\CommandMessage.cs" />
-    <Compile Include="Infrastructure\Enums\CommandEnum.cs" />
     <Compile Include="Logging\ILoggingService.cs" />
     <Compile Include="Logging\LoggingService.cs" />
     <Compile Include="Logging\Model\MessageReceivedEventArgs.cs" />
     <Compile Include="Logging\Model\MessageTypeEnum.cs" />
-    <Compile Include="Model\Event\CommandReceivedEventArgs.cs" />
-    <Compile Include="Model\Event\DirectoryCloseEventArgs.cs" />
     <Compile Include="Model\ImageServiceModel.cs" />
     <Compile Include="Model\IImageServiceModel.cs" />
     <Compile Include="Program.cs" />
@@ -103,6 +99,12 @@
     <EmbeddedResource Include="ProjectInstaller.resx">
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj">
+      <Project>{cf974890-f3d6-4fe1-8417-0b4ab850666b}</Project>
+      <Name>Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

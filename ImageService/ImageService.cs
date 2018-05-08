@@ -14,7 +14,7 @@ using ImageService.Server;
 using ImageService.Logging;
 using ImageService.Logging.Model;
 using ImageService.Model;
-using ImageService.Infrastructure.Enums;
+using Infrastructure.Enums;
 using System.IO;
 using ImageService.Tcp;
 

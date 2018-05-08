@@ -1,7 +1,7 @@
 ﻿using ImageService.Controller.Handlers;
-using ImageService.Infrastructure;
-using ImageService.Infrastructure.Enums;
-using ImageService.Model.Event;
+using Infrastructure;
+using Infrastructure.Enums;
+using Infrastructure.Event;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;

@@ -1,5 +1,5 @@
 ﻿using ImageService.Model;
-using ImageService.Model.Event;
+using Infrastructure.Event;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -34,3 +34,5 @@ C:\Users\IEUser\source\repos\ImageService\ImageService\obj\Debug\ImageService.cs
 C:\Users\IEUser\source\repos\ImageService\ImageService\obj\Debug\ImageService.exe
 C:\Users\IEUser\source\repos\ImageService\ImageService\obj\Debug\ImageService.pdb
 C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\ImageService.pdb
+C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\Infrastructure.dll
+C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\Infrastructure.pdb
