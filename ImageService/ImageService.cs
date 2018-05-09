@@ -16,6 +16,7 @@ using ImageService.Logging.Model;
 using ImageService.Model;
 using Infrastructure.Enums;
 using System.IO;
+using ImageService.Controller;
 
 namespace ImageService
 {
@@ -63,7 +64,6 @@ namespace ImageService
         public ImageService(string[] args)
         {
             handler = ConfigurationManager.AppSettings["Handler"];
-           
             outputDir = ConfigurationManager.AppSettings["OutputDir"];
             string eventSourceName = ConfigurationManager.AppSettings["SourceName"];
             string logName = ConfigurationManager.AppSettings["LogName"];
@@ -125,11 +125,16 @@ namespace ImageService
                 serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
                 SetServiceStatus(this.ServiceHandle, ref serviceStatus);
                 //creating the server
-                server = new ImageServer(m_logging, outputDir, Int32.Parse(thumbnailSize), handler, 8000);
+                IImageServiceModel serviceModel = new ImageServiceModel(outputDir, Int32.Parse(thumbnailSize));
+                IImageController m_controller = new ImageController(serviceModel);
+                server = new ImageServer(m_logging, m_controller, outputDir, Int32.Parse(thumbnailSize), handler);
+                m_controller.Server = server;
+                IServerConnection connection = new ServerConnection(m_controller, m_logging, 8000);
+                connection.Start();
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.StackTrace);
+                this.m_logging.Log(e.ToString(), MessageTypeEnum.FAIL);
             }
         }
 

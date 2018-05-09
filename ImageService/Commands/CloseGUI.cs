@@ -26,9 +26,9 @@ namespace ImageService.Commands
             try
             {
                 int indexToRemove = Int32.Parse(args[0]);
-                IClientHandler toRemove = server.Clients[indexToRemove];
-                toRemove.Close();
-                server.Clients.Remove(toRemove);
+                //IClientHandler toRemove = server.Clients[indexToRemove];
+                //toRemove.Close();
+                //server.Clients.Remove(toRemove);
                 result = true;
                 return "success";
             } catch (Exception e)

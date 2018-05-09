@@ -20,6 +20,5 @@ namespace ImageService.Model
         /// <returns></returns>
         string AddFile(string path, out bool result);
         string BuildConfig(out bool result);
-        string CloseHandler(IDirectoryHandler handler, out bool result);
     }
 }

@@ -13,12 +13,12 @@ namespace ImageService.Commands
     class CloseCommand : ICommand
     {
         private IImageServiceModel model;
-        Dictionary<string, IDirectoryHandler> handlers;
+        private ImageServer server;
 
-        public CloseCommand(IImageServiceModel model, Dictionary<string, IDirectoryHandler> handlers)
+        public CloseCommand(IImageServiceModel model, ImageServer server)
         {
             this.model = model;
-            this.handlers = handlers;
+            this.server = server;
         }
 
         public string Execute(string[] args, out bool result)
@@ -29,9 +29,24 @@ namespace ImageService.Commands
                 {
                     throw new Exception("invalid args");
                 }
-                IDirectoryHandler handler = handlers[args[0]];
-                string message = model.CloseHandler(handler, out result);
-                return message;
+
+
+                server.CloseSpecifiedHandler(args[0]);
+
+                //removing the handler from the app config file
+                StringBuilder sb = new StringBuilder();
+                string[] handlersString = ConfigurationManager.AppSettings.Get("Handler").Split(';');
+                foreach (string handlerString in handlersString)
+                {
+                    if (string.Compare(args[0], handlerString) != 0)
+                    {
+                        sb.Append(handlerString);
+                        sb.Append(";");
+                    }
+                }
+                ConfigurationManager.AppSettings.Set("Handler", sb.ToString());
+                result = true;
+                return args[0];
 
             } catch (Exception e)
             {

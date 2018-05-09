@@ -105,13 +105,21 @@ namespace ImageService.Controller.Handlers
                 }
             }
         }
-        /// <summary>
-        /// Closes the handler.
-        /// </summary>
-        public void InvokeCloseEvent()
+
+        public void OnCloseHandler(object sender, DirectoryCloseEventArgs e)
         {
-            DirectoryClose?.Invoke(this, new DirectoryCloseEventArgs(direcPath, "Directory " + this.direcPath + " closed"));
+            try
+            {
+                this.m_watcher.EnableRaisingEvents = false;
+                Watcher.Created -= new FileSystemEventHandler(OnCreated);
+                DirectoryClose?.Invoke(this, new DirectoryCloseEventArgs(direcPath, "Directory " + this.direcPath + " closed"));
+            }
+            catch (Exception ex)
+            {
+                this.m_logging.Log("Error closing the handler: " + this.direcPath + "due to " + ex.Message, MessageTypeEnum.FAIL);
+            }
         }
+
     }
 }
 

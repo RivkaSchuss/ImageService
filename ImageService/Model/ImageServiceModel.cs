@@ -134,22 +134,5 @@ namespace ImageService.Model
                 return e.ToString();
             }
         }
-
-        public string CloseHandler(IDirectoryHandler handler, out bool result)
-        {
-            try
-            {
-                handler.Watcher.EnableRaisingEvents = false;
-                handler.Watcher.Created -= new FileSystemEventHandler(handler.OnCreated);
-                handler.InvokeCloseEvent();
-                result = true;
-                return "Success";
-            }
-            catch (Exception e)
-            {
-                result = false;
-                return e.ToString();
-            }
-        }
     }
 }

@@ -86,6 +86,8 @@
     <Compile Include="Server\ImageServer.cs" />
     <Compile Include="Server\ClientHandler.cs" />
     <Compile Include="Server\IClientHandler.cs" />
+    <Compile Include="Server\IServerConnection.cs" />
+    <Compile Include="Server\ServerConnection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

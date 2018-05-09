@@ -26,14 +26,12 @@ namespace ImageService.Server
         //regionMembers
         private IImageController m_controller;
         private ILoggingService m_logging;
-        private int port;
-        private TcpListener tcpListener;
         private Dictionary<string, IDirectoryHandler> handlers;
-        private ObservableCollection<IClientHandler> m_clients;
 
         //endregion
 
         public event EventHandler<CommandReceivedEventArgs> CommandReceived; //event notifies about a new command being received
+        public event EventHandler<DirectoryCloseEventArgs> CloseServer;
         //endregion
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageServer"/> class.
@@ -42,38 +40,31 @@ namespace ImageService.Server
         /// <param name="outputDir">The output dir.</param>
         /// <param name="thumbnailSize">Size of the thumbnail.</param>
         /// <param name="handler">The handler.</param>
-        public ImageServer(ILoggingService logging, string outputDir, int thumbnailSize, string handler, int port)
+        public ImageServer(ILoggingService logging, IImageController controller, string outputDir, int thumbnailSize, string handler)
         {
             IImageServiceModel serviceModel = new ImageServiceModel(outputDir, thumbnailSize);
             m_controller = new ImageController(serviceModel);
             //m_controller.Server = this;
             handlers = new Dictionary<string, IDirectoryHandler>();
-            m_clients = new ObservableCollection<IClientHandler>();
             m_logging = logging;
             string[] directoriesToHandle = handler.Split(';');
             foreach(string path in directoriesToHandle)
             {
-                CreateHandler(path);
+                try
+                {
+                    CreateHandler(path);
+                }
+                catch (Exception e)
+                {
+                    this.m_logging.Log("Error creating handler for directory: " + path + "due to " + e.Message, MessageTypeEnum.FAIL);
+                }
+                
             }
-            this.port = port;
-            this.Start();
         }
 
         public Dictionary<string, IDirectoryHandler> Handlers
         {
             get { return this.handlers; }
-        }
-
-        public ObservableCollection<IClientHandler> Clients
-        {
-            get
-            {
-                return m_clients;
-            }
-            set
-            {
-                this.m_clients = value;
-            }
         }
 
         /// <summary>
@@ -91,6 +82,7 @@ namespace ImageService.Server
             DirectoryHandler handler = new DirectoryHandler(m_controller, m_logging);
             handlers[directory] = handler;
             CommandReceived += handler.OnCommandReceived;
+            CloseServer += handler.OnCloseHandler;
             handler.DirectoryClose += RemoveHandler;
             handler.StartHandleDirectory(directory);
         }
@@ -109,7 +101,15 @@ namespace ImageService.Server
         /// </summary>
         public void OnCloseServer()
         {
-            SendCommand(new CommandReceivedEventArgs((int)CommandEnum.CloseCommand, null, null));
+            try
+            {
+                CloseServer?.Invoke(this, null);
+                m_logging.Log("Handlers notified.", MessageTypeEnum.INFO);
+            }
+            catch (Exception e)
+            {
+                this.m_logging.Log("Failed to notify handler due to: " + e.Message, MessageTypeEnum.FAIL);
+            }
         }
 
         /// <summary>
@@ -121,46 +121,19 @@ namespace ImageService.Server
         {
             DirectoryHandler handler = (DirectoryHandler) sender;
             CommandReceived -= handler.OnCommandReceived;
+            CloseServer -= handler.OnCloseHandler;
             handler.DirectoryClose -= RemoveHandler;
             m_logging.Log("The " + e.Message + " directory has been closed.", MessageTypeEnum.INFO);
         }
 
-        public void Start()
+        public void CloseSpecifiedHandler(string handlerToDelete)
         {
-            Thread.Sleep(100);
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
-            tcpListener = new TcpListener(ep);
-            tcpListener.Start();
-            Console.WriteLine("Waiting for connections...");
-
-            Task task = new Task(() =>
+            if (handlers.ContainsKey(handlerToDelete))
             {
-                while (true)
-                {
-                    try
-                    {
-                        TcpClient client = tcpListener.AcceptTcpClient();
-                        Console.WriteLine("Got new connection");
-                        IClientHandler ch = new ClientHandler();
-                        Clients.Add(ch);
-                        this.m_controller.Server = this;
-                        ch.HandleClient(client, m_controller, Clients.IndexOf(ch));
-                        client.Close();
-                    }
-                    catch (SocketException)
-                    {
-                        break;
-                    }
-                }
-                Console.WriteLine("Server stopped");
-            });
-            task.Start();
+                IDirectoryHandler handler = handlers[handlerToDelete];
+                this.CloseServer -= handler.OnCloseHandler;
+                handler.OnCloseHandler(this, null);
+            }
         }
-
-        public void StopServer()
-        {
-            tcpListener.Stop();
-        }
-
     }
 }
