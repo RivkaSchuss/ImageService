@@ -55,8 +55,8 @@ namespace ImageService.Server
                     {
                         TcpClient client = tcpListener.AcceptTcpClient();
                         m_logging.Log("Client Connected", MessageTypeEnum.INFO);
-                        //IClientHandler ch = new ClientHandler();
-                        //Clients.Add(ch);
+                        IClientHandler ch = new ClientHandler();
+                        Clients.Add(ch);
                         ch.HandleClient(client, m_controller, Clients.IndexOf(ch));
                         //client.Close();
                     }

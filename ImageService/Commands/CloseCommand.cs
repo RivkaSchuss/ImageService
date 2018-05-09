@@ -32,23 +32,12 @@ namespace ImageService.Commands
 
 
                 server.CloseSpecifiedHandler(args[0]);
-
-                //removing the handler from the app config file
-                StringBuilder sb = new StringBuilder();
-                string[] handlersString = ConfigurationManager.AppSettings.Get("Handler").Split(';');
-                foreach (string handlerString in handlersString)
-                {
-                    if (string.Compare(args[0], handlerString) != 0)
-                    {
-                        sb.Append(handlerString);
-                        sb.Append(";");
-                    }
-                }
-                ConfigurationManager.AppSettings.Set("Handler", sb.ToString());
+               
                 result = true;
-                return args[0];
+                return model.BuildHandlerRemovedMessage(args[0], out result); 
 
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 result = false;
                 return e.ToString();

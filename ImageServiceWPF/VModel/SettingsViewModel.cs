@@ -40,13 +40,12 @@ namespace ImageServiceWPF.VModel
         */
 
         private void OnRemove(object obj)
-        {
-            //get from view what was clicked
-            
+        {            
             string[] args = { this.model.SelectedHandler };
             CommandReceivedEventArgs eventArgs = new CommandReceivedEventArgs((int) CommandEnum.CloseCommand, args, null);
 
             this.model.Connection.Write(eventArgs);
+            //this.model.Connection.Read();
             this.model.Handlers.Remove(this.model.SelectedHandler);
 
             //send to sender

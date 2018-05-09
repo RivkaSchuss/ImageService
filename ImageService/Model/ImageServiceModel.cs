@@ -131,8 +131,40 @@ namespace ImageService.Model
             catch (Exception e)
             {
                 result = false;
-                return e.ToString();
+                return e.Message;
             }
+        }
+
+        public string BuildHandlerRemovedMessage(string handlerRemoved, out bool result)
+        {
+            try
+            {
+                StringBuilder sb = new StringBuilder();
+                string[] handlersString = ConfigurationManager.AppSettings.Get("Handler").Split(';');
+                foreach (string handlerString in handlersString)
+                {
+                    if (string.Compare(handlerRemoved, handlerString) != 0)
+                    {
+                        sb.Append(handlerString);
+                        sb.Append(";");
+                    }
+                }
+                ConfigurationManager.AppSettings.Set("Handler", sb.ToString());
+                CommandMessage msg = new CommandMessage();
+                msg.CommandID = (int)CommandEnum.CloseCommand;
+                JObject jObj = new JObject();
+                jObj["HandlerRemoved"] = handlerRemoved;
+                msg.CommandArgs = jObj;
+                result = true;
+                return msg.ToJSON();  
+            }
+            catch (Exception e)
+            {
+                result = false;
+                return e.Message;
+            }
+            
+
         }
     }
 }

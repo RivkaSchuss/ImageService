@@ -20,5 +20,6 @@ namespace ImageService.Model
         /// <returns></returns>
         string AddFile(string path, out bool result);
         string BuildConfig(out bool result);
+        string BuildHandlerRemovedMessage(string handlerRemoved, out bool result);
     }
 }

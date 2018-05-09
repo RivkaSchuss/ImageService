@@ -71,8 +71,11 @@ namespace ImageServiceWPF.Model
                 foreach (var item in array)
                 {
                     this.handlers.Add(item);
-                }
-                
+                }    
+            }
+            if (message.CommandID.Equals((int) CommandEnum.CloseCommand))
+            {
+                this.handlers.Remove((string) message.CommandArgs["HandlerRemoved"]);
             }
         }   
         
