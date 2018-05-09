@@ -15,16 +15,20 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Infrastructure.Event;
 using System.Threading;
+using ImageService.Logging;
+using ImageService.Logging.Model;
 
 namespace ImageService.Server
 {
     public class ClientHandler : IClientHandler
     {
         private CancellationTokenSource tokenSource;
+        private ILoggingService m_logger;
 
-        public ClientHandler()
+        public ClientHandler(ILoggingService m_logger)
         {
             this.tokenSource = new CancellationTokenSource();
+            this.m_logger = m_logger;
         }
 
         public void HandleClient(TcpClient client, IImageController controller, int index)
@@ -61,7 +65,7 @@ namespace ImageService.Server
                 catch (Exception e)
                 {
                     this.tokenSource.Cancel();
-                    Console.WriteLine(e.Message.ToString());
+                    m_logger.Log("Server failed due to: " + e.Message, MessageTypeEnum.FAIL);
                 }
             },this.tokenSource.Token).Start();
         }

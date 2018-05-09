@@ -25,6 +25,9 @@ namespace ImageService.Commands
         {
             try
             {
+                //TO DO: remove client from list
+
+
                 int indexToRemove = Int32.Parse(args[0]);
                 //IClientHandler toRemove = server.Clients[indexToRemove];
                 //toRemove.Close();
@@ -34,7 +37,7 @@ namespace ImageService.Commands
             } catch (Exception e)
             {
                 result = false;
-                return e.Message.ToString();
+                return e.Message;
             }
             
             

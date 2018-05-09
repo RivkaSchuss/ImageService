@@ -60,22 +60,29 @@ namespace ImageServiceWPF.Model
 
         public void OnDataReceived(object sender, CommandMessage message)
         {
-            if (message.CommandID.Equals((int) CommandEnum.GetConfigCommand))
+            try
             {
-                this.OutputDirectory = (string) message.CommandArgs["OutputDirectory"];
-                this.SourceName = (string) message.CommandArgs["SourceName"];
-                this.LogName = (string) message.CommandArgs["LogName"];
-                this.ThumbnailSize = (int) message.CommandArgs["ThumbnailSize"];
-                JArray arr = (JArray) message.CommandArgs["Handlers"];
-                string[] array = arr.Select(c => (string)c).ToArray();
-                foreach (var item in array)
+                if (message.CommandID.Equals((int)CommandEnum.GetConfigCommand))
                 {
-                    this.handlers.Add(item);
-                }    
+                    this.OutputDirectory = (string)message.CommandArgs["OutputDirectory"];
+                    this.SourceName = (string)message.CommandArgs["SourceName"];
+                    this.LogName = (string)message.CommandArgs["LogName"];
+                    this.ThumbnailSize = (int)message.CommandArgs["ThumbnailSize"];
+                    JArray arr = (JArray)message.CommandArgs["Handlers"];
+                    string[] array = arr.Select(c => (string)c).ToArray();
+                    foreach (var item in array)
+                    {
+                        this.handlers.Add(item);
+                    }
+                }
+                if (message.CommandID.Equals((int)CommandEnum.CloseCommand))
+                {
+                    this.handlers.Remove((string)message.CommandArgs["HandlerRemoved"]);
+                }
             }
-            if (message.CommandID.Equals((int) CommandEnum.CloseCommand))
+            catch(Exception e)
             {
-                this.handlers.Remove((string) message.CommandArgs["HandlerRemoved"]);
+                Console.WriteLine(e.Message);
             }
         }   
         

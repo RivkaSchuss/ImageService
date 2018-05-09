@@ -99,7 +99,7 @@ namespace ImageService.Model
                 } catch(Exception e)
                 {
                     result = false;
-                    return e.ToString();
+                    return e.Message;
                 }
             } else
             {
@@ -149,7 +149,14 @@ namespace ImageService.Model
                         sb.Append(";");
                     }
                 }
-                ConfigurationManager.AppSettings.Set("Handler", sb.ToString());
+                string newHandlers = (sb.ToString()).TrimEnd(';');
+                Configuration configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                configuration.AppSettings.Settings.Remove("Handler");
+                configuration.AppSettings.Settings.Add("Handler", newHandlers);
+                configuration.Save(ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection("appSettings");
+                //TO DO: fix erasing from app config
+
                 CommandMessage msg = new CommandMessage();
                 msg.CommandID = (int)CommandEnum.CloseCommand;
                 JObject jObj = new JObject();

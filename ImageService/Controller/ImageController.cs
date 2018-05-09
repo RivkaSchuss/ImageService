@@ -73,7 +73,7 @@ namespace ImageService.Controller
                 return "Command not found";
             } catch (Exception e) {
                 resultSuccesful = false;
-                return e.ToString();
+                return e.Message;
             }
         }
     }

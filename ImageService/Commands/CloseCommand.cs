@@ -35,7 +35,6 @@ namespace ImageService.Commands
                
                 result = true;
                 return model.BuildHandlerRemovedMessage(args[0], out result); 
-
             }
             catch (Exception e)
             {

@@ -123,11 +123,18 @@ namespace ImageServiceWPF.Client
         {
             Task task = new Task(() =>
             {
-                stream = client.GetStream();
-                StreamWriter writer = new StreamWriter(stream);
-                string toSend = JsonConvert.SerializeObject(e);
-                writer.WriteLine(toSend);
-                writer.Flush();
+                try
+                {
+                    stream = client.GetStream();
+                    StreamWriter writer = new StreamWriter(stream);
+                    string toSend = JsonConvert.SerializeObject(e);
+                    writer.WriteLine(toSend);
+                    writer.Flush();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
 
             });
             task.Start();

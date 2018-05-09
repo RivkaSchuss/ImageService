@@ -39,7 +39,7 @@ namespace ImageService.Commands
             } catch (Exception e)
             {
                 result = false;
-                return e.ToString();
+                return e.Message;
             }
         }
     }
