@@ -1,6 +1,7 @@
 ﻿using ImageService.Logging.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,20 @@ namespace ImageService.Logging
     /// <seealso cref="ImageService.Logging.ILoggingService" />
     public class LoggingService : ILoggingService
     {
+        private EventLog eventLog;
+
+        public LoggingService(EventLog eventLog)
+        {
+            this.eventLog = eventLog;
+        }
+
+        public EventLog Logger
+        {
+            get
+            {
+                return this.eventLog;
+            }
+        }
         /// <summary>
         /// Occurs when [message received].
         /// </summary>

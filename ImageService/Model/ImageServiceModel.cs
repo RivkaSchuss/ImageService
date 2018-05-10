@@ -1,4 +1,6 @@
 ﻿using ImageService.Controller.Handlers;
+using ImageService.Logging;
+using ImageService.Server;
 using Infrastructure;
 using Infrastructure.Enums;
 using Infrastructure.Event;
@@ -6,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -151,8 +154,9 @@ namespace ImageService.Model
                 }
                 string newHandlers = (sb.ToString()).TrimEnd(';');
                 Configuration configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-                configuration.AppSettings.Settings.Remove("Handler");
-                configuration.AppSettings.Settings.Add("Handler", newHandlers);
+                //configuration.AppSettings.Settings.Remove("Handler");
+                //configuration.AppSettings.Settings.Add("Handler", newHandlers);
+                configuration.AppSettings.Settings["Handler"].Value = newHandlers;
                 configuration.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection("appSettings");
                 //TO DO: fix erasing from app config
@@ -170,8 +174,36 @@ namespace ImageService.Model
                 result = false;
                 return e.Message;
             }
-            
+        }
 
+        public string UpdateEntries(ImageServer server, out bool result)
+        {
+            try
+            {
+                ILoggingService logger = server.Logging;
+                CommandMessage msg = new CommandMessage();
+                msg.CommandID = (int)CommandEnum.LogCommand;
+                JObject jObj = new JObject();
+                EventLogEntryCollection entries = logger.Logger.Entries;
+                StringBuilder sb = new StringBuilder();
+                while (entries.GetEnumerator().MoveNext())
+                {
+                    EventLogEntry currentEntry = (EventLogEntry) entries.GetEnumerator().Current;
+                    sb.Append(currentEntry.ToString());
+                    sb.Append(';');
+                }
+                JArray arr = new JArray();
+                arr = JArray.FromObject(sb.ToString());
+                jObj["LogEntries"] = arr;
+                msg.CommandArgs = jObj;
+                result = true;
+                return msg.ToJSON();
+            }
+            catch (Exception e)
+            {
+                result = false;
+                return e.Message;
+            }
         }
     }
 }

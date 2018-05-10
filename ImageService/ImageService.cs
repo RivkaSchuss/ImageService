@@ -94,7 +94,7 @@ namespace ImageService
             eventLog1.Source = eventSourceName;
             eventLog1.Log = logName;
             //craeting the logger
-            m_logging = new LoggingService();
+            m_logging = new LoggingService(eventLog1);
             m_logging.MessageReceived += onMsg;
         }
 
@@ -129,7 +129,7 @@ namespace ImageService
                 IImageController m_controller = new ImageController(serviceModel);
                 server = new ImageServer(m_logging, m_controller, outputDir, Int32.Parse(thumbnailSize), handler);
                 m_controller.Server = server;
-                IServerConnection connection = new ServerConnection(m_controller, m_logging, 8000);
+                IServerConnection connection = new ServerConnection(m_controller, m_logging, 8000, server);
                 connection.Start();
             }
             catch (Exception e)

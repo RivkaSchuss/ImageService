@@ -7,7 +7,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Infrastructure.Enums;
+using Infrastructure.Event;
+using Newtonsoft.Json.Linq;
 
 namespace ImageServiceWPF.Model
 {
@@ -21,6 +23,9 @@ namespace ImageServiceWPF.Model
         {
             this.logEntries = new ObservableCollection<string>();
             this.Connection.DataReceived += OnDataReceived;
+            CommandReceivedEventArgs request = new CommandReceivedEventArgs((int)CommandEnum.LogCommand, null, null);
+            this.Connection.Write(request);
+            this.Connection.Read();
         }
 
         public IClientConnection Connection
@@ -47,7 +52,22 @@ namespace ImageServiceWPF.Model
     
         public void OnDataReceived(object sender, CommandMessage message)
         {
-
+            try
+            {
+                if (message.CommandID.Equals((int)CommandEnum.LogCommand))
+                {
+                    JArray arr = (JArray)message.CommandArgs["LogEntries"];
+                    string[] array = arr.Select(c => (string)c).ToArray();
+                    foreach (var item in array)
+                    {
+                        this.LogEntries.Add(item);
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
 
       

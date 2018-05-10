@@ -37,6 +37,7 @@ namespace ImageServiceWPF.VModel
             CommandReceivedEventArgs eventArgs = new CommandReceivedEventArgs((int) CommandEnum.CloseCommand, args, null);
 
             this.model.Connection.Write(eventArgs);
+            this.model.Connection.Read();
             //this.model.Handlers.Remove(this.model.SelectedHandler);
         }
 

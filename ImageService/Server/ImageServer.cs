@@ -27,6 +27,7 @@ namespace ImageService.Server
         private IImageController m_controller;
         private ILoggingService m_logging;
         private Dictionary<string, IDirectoryHandler> handlers;
+        private ObservableCollection<IClientHandler> clients;
 
         //endregion
 
@@ -48,7 +49,7 @@ namespace ImageService.Server
             handlers = new Dictionary<string, IDirectoryHandler>();
             m_logging = logging;
             string[] directoriesToHandle = handler.Split(';');
-            foreach(string path in directoriesToHandle)
+            foreach (string path in directoriesToHandle)
             {
                 try
                 {
@@ -58,13 +59,24 @@ namespace ImageService.Server
                 {
                     this.m_logging.Log("Error creating handler for directory: " + path + "due to " + e.Message, MessageTypeEnum.FAIL);
                 }
-                
+
             }
+        }
+
+        public ILoggingService Logging
+        {
+            get { return this.m_logging; }
         }
 
         public Dictionary<string, IDirectoryHandler> Handlers
         {
             get { return this.handlers; }
+        }
+
+        public ObservableCollection<IClientHandler> Clients
+        {
+            get { return this.clients; }
+            set { this.clients = value; }
         }
 
         /// <summary>

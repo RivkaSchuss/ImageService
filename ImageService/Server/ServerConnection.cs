@@ -20,14 +20,16 @@ namespace ImageService.Server
         private ILoggingService m_logging;
         private ObservableCollection<IClientHandler> clients;
         private bool isStopped;
+        private ImageServer server;
 
-        public ServerConnection(IImageController m_controller, ILoggingService m_logging, int port)
+        public ServerConnection(IImageController m_controller, ILoggingService m_logging, int port, ImageServer server)
         {
             this.m_controller = m_controller;
             this.m_logging = m_logging;
             this.port = port;
             this.isStopped = false;
             this.clients = new ObservableCollection<IClientHandler>();
+            this.server = server;
         }
 
         public ObservableCollection<IClientHandler> Clients
@@ -55,6 +57,7 @@ namespace ImageService.Server
                         m_logging.Log("Client Connected", MessageTypeEnum.INFO);
                         IClientHandler ch = new ClientHandler(m_logging);
                         Clients.Add(ch);
+                        server.Clients = Clients;
                         ch.HandleClient(client, m_controller, Clients.IndexOf(ch));
                         //client.Close();
                     }

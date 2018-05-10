@@ -111,8 +111,6 @@ namespace ImageServiceWPF.Client
                     Console.WriteLine(e.Message);
                     return null;
                 }
-                
-
             });
             task.Start();
             this.DataReceived?.Invoke(this, task.Result);
