@@ -16,7 +16,7 @@ using Newtonsoft.Json.Linq;
 using Infrastructure.Event;
 using System.Threading;
 using ImageService.Logging;
-using ImageService.Logging.Model;
+using Infrastructure.Model;
 
 namespace ImageService.Server
 {

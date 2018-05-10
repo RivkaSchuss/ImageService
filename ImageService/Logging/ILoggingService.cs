@@ -1,4 +1,4 @@
-﻿using ImageService.Logging.Model;
+﻿using Infrastructure.Model;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,7 +17,7 @@ namespace ImageService.Logging
         /// Occurs when [message received].
         /// </summary>
         event EventHandler<MessageReceivedEventArgs> MessageReceived;
-        EventLog Logger { get; }
+        List<MessageReceivedEventArgs> Logs { get; }
         /// <summary>
         /// Logs the specified message.
         /// </summary>

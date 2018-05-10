@@ -12,11 +12,11 @@ using System.Runtime.InteropServices;
 using System.Configuration;
 using ImageService.Server;
 using ImageService.Logging;
-using ImageService.Logging.Model;
 using ImageService.Model;
 using Infrastructure.Enums;
 using System.IO;
 using ImageService.Controller;
+using Infrastructure.Model;
 
 namespace ImageService
 {
@@ -94,7 +94,7 @@ namespace ImageService
             eventLog1.Source = eventSourceName;
             eventLog1.Log = logName;
             //craeting the logger
-            m_logging = new LoggingService(eventLog1);
+            m_logging = new LoggingService();
             m_logging.MessageReceived += onMsg;
         }
 

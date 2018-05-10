@@ -47,6 +47,8 @@
     <Compile Include="Enums\CommandEnum.cs" />
     <Compile Include="Event\CommandReceivedEventArgs.cs" />
     <Compile Include="Event\DirectoryCloseEventArgs.cs" />
+    <Compile Include="Model\MessageReceivedEventArgs.cs" />
+    <Compile Include="Model\MessageTypeEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

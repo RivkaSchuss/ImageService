@@ -13,10 +13,10 @@
         <Label HorizontalAlignment="Center" Content="Logs" FontSize="25" FontWeight="Bold" Foreground="Blue" Padding="10"/>
         <DataGrid ItemsSource="{Binding VM_LogEntries}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Type" Width="Auto" IsReadOnly="True" Binding="{Binding Path=Type}">
+                <DataGridTextColumn Header="Type" Width="Auto" IsReadOnly="True" Binding="{Binding Path=Status}">
                 <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Property="Background" Value="{Binding Path=Type, Converter={StaticResource LogConvert}}">
+                            <Setter Property="Background" Value="{Binding Path=Status, Converter={StaticResource LogConvert}}">
                             </Setter>
                         </Style>
                 </DataGridTextColumn.ElementStyle>

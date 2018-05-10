@@ -1,6 +1,5 @@
 ﻿using Infrastructure.Enums;
 using ImageService.Logging;
-using ImageService.Logging.Model;
 using ImageService.Model;
 using Infrastructure.Event;
 using System;
@@ -13,6 +12,7 @@ using System.Threading;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Infrastructure.Model;
 
 namespace ImageService.Controller.Handlers
 {

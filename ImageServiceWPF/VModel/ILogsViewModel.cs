@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Infrastructure.Model;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -10,6 +11,6 @@ namespace ImageServiceWPF.VModel
 {
     interface ILogsViewModel : INotifyPropertyChanged
     {
-        ObservableCollection<string> VM_LogEntries { get; }
+        List<MessageReceivedEventArgs> VM_LogEntries { get; }
     }
 }

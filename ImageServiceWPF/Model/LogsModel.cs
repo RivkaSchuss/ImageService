@@ -10,22 +10,35 @@ using System.Threading.Tasks;
 using Infrastructure.Enums;
 using Infrastructure.Event;
 using Newtonsoft.Json.Linq;
+using Infrastructure.Model;
+using Newtonsoft.Json;
 
 namespace ImageServiceWPF.Model
 {
     class LogsModel : ILogsModel
     {
-
-        private ObservableCollection<string> logEntries;
+        private List<MessageReceivedEventArgs> logEntries;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public LogsModel()
         {
-            this.logEntries = new ObservableCollection<string>();
             this.Connection.DataReceived += OnDataReceived;
             CommandReceivedEventArgs request = new CommandReceivedEventArgs((int)CommandEnum.LogCommand, null, null);
             this.Connection.Write(request);
             this.Connection.Read();
+        }
+
+        public List<MessageReceivedEventArgs> LogEntries
+        {
+            get
+            {
+                return this.logEntries;
+            }
+            set
+            {
+                this.logEntries = value;
+                NotifyPropertyChanged("LogEntries");
+            }
         }
 
         public IClientConnection Connection
@@ -35,15 +48,7 @@ namespace ImageServiceWPF.Model
                 return ClientConnection.Instance;
             }
         }
-        public ObservableCollection<string> LogEntries
-        {
-            get { return this.logEntries; }
-            set
-            {
-                this.logEntries = value;
-                NotifyPropertyChanged("LogEntries");
-            }
-        }
+
 
         private void NotifyPropertyChanged(string propName)
         {
@@ -56,12 +61,9 @@ namespace ImageServiceWPF.Model
             {
                 if (message.CommandID.Equals((int)CommandEnum.LogCommand))
                 {
-                    JArray arr = (JArray)message.CommandArgs["LogEntries"];
-                    string[] array = arr.Select(c => (string)c).ToArray();
-                    foreach (var item in array)
-                    {
-                        this.LogEntries.Add(item);
-                    }
+                    string listOfEntries = (string) message.CommandArgs["LogEntries"];
+                    List<MessageReceivedEventArgs> arr = JsonConvert.DeserializeObject<List<MessageReceivedEventArgs>>(listOfEntries);
+                    this.LogEntries = arr;
                 }
             }
             catch(Exception e)

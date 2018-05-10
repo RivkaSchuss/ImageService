@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImageService.Logging.Model
+namespace Infrastructure.Model
 {
     /// <summary>
     /// the message receive event argument class, implements event args

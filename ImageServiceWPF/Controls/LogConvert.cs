@@ -18,7 +18,7 @@ namespace ImageServiceWPF.Controls
                 throw new InvalidOperationException("This needs to be converted to a brush.");
             }
 
-            string type = (string) value;
+            string type = value.ToString();
             if (type.Equals("INFO"))
             {
                 return Brushes.LightGreen;

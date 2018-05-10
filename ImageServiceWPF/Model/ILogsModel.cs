@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Infrastructure.Model;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -10,6 +11,6 @@ namespace ImageServiceWPF.Model
 {
     interface ILogsModel : INotifyPropertyChanged
     {
-        ObservableCollection<string> LogEntries { get; set; }
+        List<MessageReceivedEventArgs> LogEntries { get; set; }
     }
 }

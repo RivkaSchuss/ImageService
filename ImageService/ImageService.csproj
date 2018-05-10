@@ -71,8 +71,6 @@
     </Compile>
     <Compile Include="Logging\ILoggingService.cs" />
     <Compile Include="Logging\LoggingService.cs" />
-    <Compile Include="Logging\Model\MessageReceivedEventArgs.cs" />
-    <Compile Include="Logging\Model\MessageTypeEnum.cs" />
     <Compile Include="Model\ImageServiceModel.cs" />
     <Compile Include="Model\IImageServiceModel.cs" />
     <Compile Include="Program.cs" />

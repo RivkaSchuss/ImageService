@@ -1,6 +1,6 @@
 ﻿using ImageService.Controller;
 using ImageService.Logging;
-using ImageService.Logging.Model;
+using Infrastructure.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

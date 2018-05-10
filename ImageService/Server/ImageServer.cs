@@ -2,7 +2,6 @@
 using ImageService.Controller.Handlers;
 using Infrastructure.Enums;
 using ImageService.Logging;
-using ImageService.Logging.Model;
 using ImageService.Model;
 using Infrastructure.Event;
 using System;
@@ -15,6 +14,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using Infrastructure.Model;
 
 namespace ImageService.Server
 {

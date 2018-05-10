@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ImageServiceWPF.Model;
+using Infrastructure.Model;
 
 namespace ImageServiceWPF.VModel
 {
@@ -13,7 +14,6 @@ namespace ImageServiceWPF.VModel
     {
         private ILogsModel model;
         public event PropertyChangedEventHandler PropertyChanged;
-        private ObservableCollection<string> logEntries;
 
         public LogsViewModel()
         {
@@ -29,15 +29,12 @@ namespace ImageServiceWPF.VModel
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 
-        public ObservableCollection<string> VM_LogEntries
+        public List<MessageReceivedEventArgs> VM_LogEntries
         {
             get
             {
                 return this.model.LogEntries;
             }
         }
-
-
-        
     }
 }

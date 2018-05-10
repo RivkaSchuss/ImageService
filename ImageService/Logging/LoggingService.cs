@@ -1,4 +1,4 @@
-﻿using ImageService.Logging.Model;
+﻿using Infrastructure.Model;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,18 +14,18 @@ namespace ImageService.Logging
     /// <seealso cref="ImageService.Logging.ILoggingService" />
     public class LoggingService : ILoggingService
     {
-        private EventLog eventLog;
+        private List<MessageReceivedEventArgs> logs;
 
-        public LoggingService(EventLog eventLog)
+        public LoggingService()
         {
-            this.eventLog = eventLog;
+            logs = new List<MessageReceivedEventArgs>();
         }
 
-        public EventLog Logger
+        public List<MessageReceivedEventArgs> Logs
         {
             get
             {
-                return this.eventLog;
+                return this.logs;
             }
         }
         /// <summary>
@@ -39,7 +39,10 @@ namespace ImageService.Logging
         /// <param name="type">The type.</param>
         public void Log(string message, MessageTypeEnum type)
         {
-            MessageReceived.Invoke(this, new MessageReceivedEventArgs(message, type));
+            MessageReceivedEventArgs msg = new MessageReceivedEventArgs(message, type);
+            MessageReceived.Invoke(this, msg);
+            this.logs.Add(msg);
+
         }
     }
 }

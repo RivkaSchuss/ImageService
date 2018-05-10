@@ -4,6 +4,8 @@ using ImageService.Server;
 using Infrastructure;
 using Infrastructure.Enums;
 using Infrastructure.Event;
+using Infrastructure.Model;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -184,17 +186,9 @@ namespace ImageService.Model
                 CommandMessage msg = new CommandMessage();
                 msg.CommandID = (int)CommandEnum.LogCommand;
                 JObject jObj = new JObject();
-                EventLogEntryCollection entries = logger.Logger.Entries;
-                StringBuilder sb = new StringBuilder();
-                while (entries.GetEnumerator().MoveNext())
-                {
-                    EventLogEntry currentEntry = (EventLogEntry) entries.GetEnumerator().Current;
-                    sb.Append(currentEntry.ToString());
-                    sb.Append(';');
-                }
-                JArray arr = new JArray();
-                arr = JArray.FromObject(sb.ToString());
-                jObj["LogEntries"] = arr;
+                List<MessageReceivedEventArgs> logs = logger.Logs;
+                var json = JsonConvert.SerializeObject(logs);
+                jObj["LogEntries"] = json;
                 msg.CommandArgs = jObj;
                 result = true;
                 return msg.ToJSON();
