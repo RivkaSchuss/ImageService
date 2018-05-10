@@ -92,6 +92,37 @@ namespace ImageServiceWPF.Client
         public void Read()
         {
 
+            Task task = new Task(() =>
+            {
+                try
+                {
+                    while (this.isConnected)
+                    {
+                        stream = client.GetStream();
+                        StreamReader reader = new StreamReader(stream);
+                        string jSonString = reader.ReadLine();
+                        while (reader.Peek() > 0)
+                        {
+                            jSonString += reader.ReadLine();
+                        }
+                        CommandMessage msg = CommandMessage.ParseJSON(jSonString);
+                        this.DataReceived?.Invoke(this, msg);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            });
+            task.Start();
+            
+
+        }
+
+        /*
+        public void Read()
+        {
+
             Task<CommandMessage> task = new Task<CommandMessage>(() =>
             {
                 try
@@ -116,6 +147,7 @@ namespace ImageServiceWPF.Client
             this.DataReceived?.Invoke(this, task.Result);
 
         }
+        */
 
         public void Write(CommandReceivedEventArgs e)
         {
