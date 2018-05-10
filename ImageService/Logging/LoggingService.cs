@@ -1,6 +1,9 @@
-﻿using Infrastructure.Model;
+﻿using Infrastructure.Enums;
+using Infrastructure.Event;
+using Infrastructure.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -14,14 +17,15 @@ namespace ImageService.Logging
     /// <seealso cref="ImageService.Logging.ILoggingService" />
     public class LoggingService : ILoggingService
     {
-        private List<MessageReceivedEventArgs> logs;
+        private ObservableCollection<MessageReceivedEventArgs> logs;
+        public event EventHandler<CommandReceivedEventArgs> NewLogEntry;
 
         public LoggingService()
         {
-            logs = new List<MessageReceivedEventArgs>();
+            logs = new ObservableCollection<MessageReceivedEventArgs>();
         }
 
-        public List<MessageReceivedEventArgs> Logs
+        public ObservableCollection<MessageReceivedEventArgs> Logs
         {
             get
             {
@@ -42,7 +46,8 @@ namespace ImageService.Logging
             MessageReceivedEventArgs msg = new MessageReceivedEventArgs(message, type);
             MessageReceived.Invoke(this, msg);
             this.logs.Add(msg);
-
+            string[] args = { message, type.ToString() };
+            NewLogEntry?.Invoke(this, new CommandReceivedEventArgs((int) CommandEnum.LogCommand, args, null));
         }
     }
 }

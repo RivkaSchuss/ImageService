@@ -1,9 +1,12 @@
 ﻿using ImageService.Controller;
 using ImageService.Logging;
+using Infrastructure.Enums;
+using Infrastructure.Event;
 using Infrastructure.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -18,21 +21,20 @@ namespace ImageService.Server
         private TcpListener tcpListener;
         private IImageController m_controller;
         private ILoggingService m_logging;
-        private ObservableCollection<IClientHandler> clients;
+        private ObservableCollection<TcpClient> clients;
         private bool isStopped;
-        private ImageServer server;
 
-        public ServerConnection(IImageController m_controller, ILoggingService m_logging, int port, ImageServer server)
+        public ServerConnection(IImageController m_controller, ILoggingService m_logging, int port)
         {
             this.m_controller = m_controller;
             this.m_logging = m_logging;
+            m_logging.NewLogEntry += UpdateLog;
             this.port = port;
             this.isStopped = false;
-            this.clients = new ObservableCollection<IClientHandler>();
-            this.server = server;
+            this.clients = new ObservableCollection<TcpClient>();
         }
 
-        public ObservableCollection<IClientHandler> Clients
+        public ObservableCollection<TcpClient> Clients
         {
             get
             {
@@ -56,10 +58,8 @@ namespace ImageService.Server
                         TcpClient client = tcpListener.AcceptTcpClient();
                         m_logging.Log("Client Connected", MessageTypeEnum.INFO);
                         IClientHandler ch = new ClientHandler(m_logging);
-                        Clients.Add(ch);
-                        server.Clients = Clients;
-                        ch.HandleClient(client, m_controller, Clients.IndexOf(ch));
-                        //client.Close();
+                        Clients.Add(client);
+                        ch.HandleClient(client, m_controller, Clients);
                     }
                     catch (SocketException e)
                     {
@@ -71,11 +71,44 @@ namespace ImageService.Server
             task.Start();
         }
 
+        public void UpdateLog(object sender, CommandReceivedEventArgs e)
+        {
+            try
+            {
+                bool result;
+                foreach (TcpClient client in Clients)
+                {
+                    if (e.CommandID.Equals((int)CommandEnum.LogCommand))
+                    {
+                        NetworkStream stream = client.GetStream();
+                        StreamWriter writer = new StreamWriter(stream);
+                        string message = m_controller.ExecuteCommand(e.CommandID, e.Args, out result);
+                        writer.WriteLine(message);
+                        writer.Flush();
+                    }
+                }
+            } catch(Exception ex)
+            {
+                m_logging.Log("Failed to update log due to: " + ex.Message, MessageTypeEnum.FAIL);
+            }
+        }
+
         public void CloseCommunication()
         {
             //tell all clients that the server is closed
-            this.isStopped = true;
-            this.tcpListener.Stop();
+            try
+            {
+                foreach (TcpClient client in Clients)
+                {
+                    client.Close();
+                }
+                this.isStopped = true;
+                this.tcpListener.Stop();
+            }
+            catch (Exception e)
+            {
+                m_logging.Log("Failed to stop the server due to: " + e.Message, MessageTypeEnum.FAIL);
+            }
         }
     }
 }

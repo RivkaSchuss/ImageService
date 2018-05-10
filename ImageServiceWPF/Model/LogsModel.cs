@@ -17,7 +17,7 @@ namespace ImageServiceWPF.Model
 {
     class LogsModel : ILogsModel
     {
-        private List<MessageReceivedEventArgs> logEntries;
+        private ObservableCollection<MessageReceivedEventArgs> logEntries;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public LogsModel()
@@ -28,7 +28,7 @@ namespace ImageServiceWPF.Model
             this.Connection.Read();
         }
 
-        public List<MessageReceivedEventArgs> LogEntries
+        public ObservableCollection<MessageReceivedEventArgs> LogEntries
         {
             get
             {
@@ -62,7 +62,7 @@ namespace ImageServiceWPF.Model
                 if (message.CommandID.Equals((int)CommandEnum.LogCommand))
                 {
                     string listOfEntries = (string) message.CommandArgs["LogEntries"];
-                    List<MessageReceivedEventArgs> arr = JsonConvert.DeserializeObject<List<MessageReceivedEventArgs>>(listOfEntries);
+                    ObservableCollection<MessageReceivedEventArgs> arr = JsonConvert.DeserializeObject<ObservableCollection<MessageReceivedEventArgs>>(listOfEntries);
                     this.LogEntries = arr;
                 }
             }

@@ -27,7 +27,6 @@ namespace ImageService.Server
         private IImageController m_controller;
         private ILoggingService m_logging;
         private Dictionary<string, IDirectoryHandler> handlers;
-        private ObservableCollection<IClientHandler> clients;
 
         //endregion
 
@@ -71,12 +70,6 @@ namespace ImageService.Server
         public Dictionary<string, IDirectoryHandler> Handlers
         {
             get { return this.handlers; }
-        }
-
-        public ObservableCollection<IClientHandler> Clients
-        {
-            get { return this.clients; }
-            set { this.clients = value; }
         }
 
         /// <summary>

@@ -17,6 +17,7 @@ using Infrastructure.Event;
 using System.Threading;
 using ImageService.Logging;
 using Infrastructure.Model;
+using System.Collections.ObjectModel;
 
 namespace ImageService.Server
 {
@@ -31,7 +32,7 @@ namespace ImageService.Server
             this.m_logger = m_logger;
         }
 
-        public void HandleClient(TcpClient client, IImageController controller, int index)
+        public void HandleClient(TcpClient client, IImageController controller, ObservableCollection<TcpClient> clients)
         {
 
             new Task(() =>
@@ -52,10 +53,14 @@ namespace ImageService.Server
                         if (input != null)
                         {
                             CommandReceivedEventArgs commandReceived = JsonConvert.DeserializeObject<CommandReceivedEventArgs>(input);
+                            
                             if (commandReceived.CommandID.Equals((int)CommandEnum.CloseGUI))
                             {
-                                commandReceived.Args[0] = index.ToString();
+                                clients.Remove(client);
+                                client.Close();
+                                break;
                             }
+      
                             string message = controller.ExecuteCommand(commandReceived.CommandID, commandReceived.Args, out result);
                             writer.WriteLine(message);
                             writer.Flush();

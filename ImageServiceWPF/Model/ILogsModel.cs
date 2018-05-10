@@ -11,6 +11,6 @@ namespace ImageServiceWPF.Model
 {
     interface ILogsModel : INotifyPropertyChanged
     {
-        List<MessageReceivedEventArgs> LogEntries { get; set; }
+        ObservableCollection<MessageReceivedEventArgs> LogEntries { get; set; }
     }
 }

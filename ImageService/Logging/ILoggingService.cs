@@ -1,6 +1,8 @@
-﻿using Infrastructure.Model;
+﻿using Infrastructure.Event;
+using Infrastructure.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -17,7 +19,8 @@ namespace ImageService.Logging
         /// Occurs when [message received].
         /// </summary>
         event EventHandler<MessageReceivedEventArgs> MessageReceived;
-        List<MessageReceivedEventArgs> Logs { get; }
+        event EventHandler<CommandReceivedEventArgs> NewLogEntry;
+        ObservableCollection<MessageReceivedEventArgs> Logs { get; }
         /// <summary>
         /// Logs the specified message.
         /// </summary>
