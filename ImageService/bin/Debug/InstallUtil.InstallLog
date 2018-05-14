@@ -2237,6 +2237,7 @@ The file is located at C:\Users\IEUser\source\repos\ImageService\ImageService\bi
 The Commit phase completed successfully.
 
 The transacted install has completed.
+<<<<<<< HEAD
 
 
 The uninstall is beginning.
@@ -2380,3 +2381,5 @@ The file is located at C:\Users\IEUser\source\repos\ImageService\ImageService\bi
 The Commit phase completed successfully.
 
 The transacted install has completed.
+=======
+>>>>>>> 184917e1f7b2c5dc881168be7c66a41ff0b2c224

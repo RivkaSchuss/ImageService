@@ -21,7 +21,10 @@ namespace ImageService.Server
         private TcpListener tcpListener;
         private IImageController m_controller;
         private ILoggingService m_logging;
+<<<<<<< HEAD
         private IClientHandler ch;
+=======
+>>>>>>> 184917e1f7b2c5dc881168be7c66a41ff0b2c224
         private ObservableCollection<TcpClient> clients;
         private bool isStopped;
 
@@ -59,6 +62,10 @@ namespace ImageService.Server
                     {
                         TcpClient client = tcpListener.AcceptTcpClient();
                         m_logging.Log("Client Connected", MessageTypeEnum.INFO);
+<<<<<<< HEAD
+=======
+                        IClientHandler ch = new ClientHandler(m_logging);
+>>>>>>> 184917e1f7b2c5dc881168be7c66a41ff0b2c224
                         Clients.Add(client);
                         ch.HandleClient(client, m_controller, Clients);
                     }
@@ -74,6 +81,7 @@ namespace ImageService.Server
 
         public void UpdateLog(object sender, CommandReceivedEventArgs e)
         {
+<<<<<<< HEAD
             //new Task(() =>
             //{
                 try
@@ -98,6 +106,27 @@ namespace ImageService.Server
             //}).Start();
         }
         
+=======
+            try
+            {
+                bool result;
+                foreach (TcpClient client in Clients)
+                {
+                    if (e.CommandID.Equals((int)CommandEnum.LogCommand))
+                    {
+                        NetworkStream stream = client.GetStream();
+                        StreamWriter writer = new StreamWriter(stream);
+                        string message = m_controller.ExecuteCommand(e.CommandID, e.Args, out result);
+                        writer.WriteLine(message);
+                        writer.Flush();
+                    }
+                }
+            } catch(Exception ex)
+            {
+                m_logging.Log("Failed to update log due to: " + ex.Message, MessageTypeEnum.FAIL);
+            }
+        }
+>>>>>>> 184917e1f7b2c5dc881168be7c66a41ff0b2c224
 
         public void CloseCommunication()
         {

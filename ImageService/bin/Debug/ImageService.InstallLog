@@ -2175,6 +2175,7 @@ Affected parameters are:
    logtoconsole = 
    logfile = C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\ImageService.InstallLog
    assemblypath = C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\ImageService.exe
+<<<<<<< HEAD
 Uninstalling assembly 'C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\ImageService.exe'.
 Affected parameters are:
    logtoconsole = 
@@ -2314,3 +2315,5 @@ Affected parameters are:
    logtoconsole = 
    logfile = C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\ImageService.InstallLog
    assemblypath = C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\ImageService.exe
+=======
+>>>>>>> 184917e1f7b2c5dc881168be7c66a41ff0b2c224
