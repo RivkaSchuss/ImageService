@@ -89,14 +89,47 @@ namespace ImageServiceWPF.Client
             }
         }
 
+        
         public void Read()
         {
+            new Task(() =>
+            {
+                while (this.IsConnected)
+                {
+                    try
+                    {
+                        {
+                            stream = client.GetStream();
+                            StreamReader reader = new StreamReader(stream);
+                            string jSonString = reader.ReadLine();
+                            while (reader.Peek() > 0)
+                            {
+                                jSonString += reader.ReadLine();
+                            }
+                            CommandMessage msg = CommandMessage.ParseJSON(jSonString);
+                            this.DataReceived?.Invoke(this, msg);
+                            //return msg;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                        //return null;
+                    }
+                }
+            }).Start();
+            //this.DataReceived?.Invoke(this, task.Result);
+        }
+        
 
+        
+        /*
+         * public void Read()
+        {
             Task<CommandMessage> task = new Task<CommandMessage>(() =>
             {
                 try
                 {
-                    //while (this.isConnected)
                     {
                         stream = client.GetStream();
                         StreamReader reader = new StreamReader(stream);
@@ -106,8 +139,8 @@ namespace ImageServiceWPF.Client
                             jSonString += reader.ReadLine();
                         }
                         CommandMessage msg = CommandMessage.ParseJSON(jSonString);
-                        //this.DataReceived?.Invoke(this, msg);
-                        return msg;
+                            //this.DataReceived?.Invoke(this, msg);
+                            return msg;
                     }
                 }
                 catch (Exception e)
@@ -118,10 +151,9 @@ namespace ImageServiceWPF.Client
             });
             task.Start();
             this.DataReceived?.Invoke(this, task.Result);
-            //task.Start();
-            
-
         }
+        */
+        
 
         public void Write(CommandReceivedEventArgs e)
         {

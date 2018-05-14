@@ -14,6 +14,7 @@ using ImageServiceWPF.Client;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Infrastructure.Event;
+using System.Windows;
 
 namespace ImageServiceWPF.Model
 {
@@ -32,7 +33,7 @@ namespace ImageServiceWPF.Model
         {
             handlers = new ObservableCollection<string>();
             this.Connection.DataReceived += OnDataReceived;
-            CommandReceivedEventArgs request = new CommandReceivedEventArgs((int) CommandEnum.GetConfigCommand, null, null);
+            CommandReceivedEventArgs request = new CommandReceivedEventArgs((int)CommandEnum.GetConfigCommand, null, null);
             this.Connection.Write(request);
             this.Connection.Read();
         }
@@ -60,37 +61,45 @@ namespace ImageServiceWPF.Model
 
         public void OnDataReceived(object sender, CommandMessage message)
         {
-            try
+            if (message.CommandID.Equals((int)CommandEnum.GetConfigCommand))
             {
-                if (message.CommandID.Equals((int)CommandEnum.GetConfigCommand))
+                try
                 {
-                    this.OutputDirectory = (string)message.CommandArgs["OutputDirectory"];
-                    this.SourceName = (string)message.CommandArgs["SourceName"];
-                    this.LogName = (string)message.CommandArgs["LogName"];
-                    this.ThumbnailSize = (int)message.CommandArgs["ThumbnailSize"];
-                    JArray arr = (JArray)message.CommandArgs["Handlers"];
-                    string[] array = arr.Select(c => (string)c).ToArray();
-                    
-                    /*
-                    foreach (var item in array)
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
                     {
-                        this.handlers.Add(item);
-                    }
-                    */
-                    
+                        this.OutputDirectory = (string)message.CommandArgs["OutputDirectory"];
+                        this.SourceName = (string)message.CommandArgs["SourceName"];
+                        this.LogName = (string)message.CommandArgs["LogName"];
+                        this.ThumbnailSize = (int)message.CommandArgs["ThumbnailSize"];
+                        JArray arr = (JArray)message.CommandArgs["Handlers"];
+                        string[] array = arr.Select(c => (string)c).ToArray();
+                        foreach (var item in array)
+                        {
+                            this.handlers.Add(item);
+                        }
+                    }));
                 }
-                if (message.CommandID.Equals((int)CommandEnum.CloseCommand))
+                catch (Exception e)
                 {
-                    this.handlers.Remove((string)message.CommandArgs["HandlerRemoved"]);
+                    Console.WriteLine(e.Message);
                 }
             }
-
-            catch (Exception e)
+            if (message.CommandID.Equals((int)CommandEnum.CloseCommand))
             {
-                Console.WriteLine(e.Message);
+                try
+                {
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    {
+                        this.handlers.Remove((string)message.CommandArgs["HandlerRemoved"]);
+                    }));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
-        }   
-        
+        }
+
         public void NotifyPropertyChanged(string propName)
         {
             if (PropertyChanged != null)
@@ -161,4 +170,4 @@ namespace ImageServiceWPF.Model
         }
     }
 }
-    
+

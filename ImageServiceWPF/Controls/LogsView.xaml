@@ -15,6 +15,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Type" Width="Auto" IsReadOnly="True" Binding="{Binding Path=Status}">
                 <DataGridTextColumn.ElementStyle>
+                   
                         <Style TargetType="TextBlock">
                             <Setter Property="Background" Value="{Binding Path=Status, Converter={StaticResource LogConvert}}">
                             </Setter>

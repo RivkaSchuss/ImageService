@@ -12,6 +12,7 @@ using Infrastructure.Event;
 using Newtonsoft.Json.Linq;
 using Infrastructure.Model;
 using Newtonsoft.Json;
+using System.Windows;
 
 namespace ImageServiceWPF.Model
 {
@@ -57,19 +58,22 @@ namespace ImageServiceWPF.Model
     
         public void OnDataReceived(object sender, CommandMessage message)
         {
-            try
+            if (message.CommandID.Equals((int)CommandEnum.LogCommand))
             {
-                if (message.CommandID.Equals((int)CommandEnum.LogCommand))
+                try
                 {
-                    string listOfEntries = (string) message.CommandArgs["LogEntries"];
-                    ObservableCollection<MessageReceivedEventArgs> arr = JsonConvert.DeserializeObject<ObservableCollection<MessageReceivedEventArgs>>(listOfEntries);
-                    this.LogEntries = arr;
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    {
+                        string listOfEntries = (string)message.CommandArgs["LogEntries"];
+                        ObservableCollection<MessageReceivedEventArgs> arr = JsonConvert.DeserializeObject<ObservableCollection<MessageReceivedEventArgs>>(listOfEntries);
+                        this.LogEntries = arr;
+                    }));
                 }
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            } 
         }
 
       
