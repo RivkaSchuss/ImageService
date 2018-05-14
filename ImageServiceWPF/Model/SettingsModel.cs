@@ -15,6 +15,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Infrastructure.Event;
 using System.Windows;
+using System.Windows.Threading;
+using System.Threading;
 
 namespace ImageServiceWPF.Model
 {
@@ -27,15 +29,14 @@ namespace ImageServiceWPF.Model
         private string logName;
         private int thumbnailSize;
         private string selectedHandler;
-        private bool isConnected;
 
         public SettingsModel()
         {
             handlers = new ObservableCollection<string>();
             this.Connection.DataReceived += OnDataReceived;
             CommandReceivedEventArgs request = new CommandReceivedEventArgs((int)CommandEnum.GetConfigCommand, null, null);
-            //this.Connection.Write(request);
-            //this.Connection.Read();
+            this.Connection.Write(request);
+            this.Connection.Read();
         }
 
         public IClientConnection Connection
@@ -67,6 +68,7 @@ namespace ImageServiceWPF.Model
                 {
                     Application.Current.Dispatcher.Invoke(new Action(() =>
                     {
+                        //Console.WriteLine("I am here I am hereI am hereI am hereI am hereI am hereI am hereI am hereI am hereI am hereI am here");
                         this.OutputDirectory = (string)message.CommandArgs["OutputDirectory"];
                         this.SourceName = (string)message.CommandArgs["SourceName"];
                         this.LogName = (string)message.CommandArgs["LogName"];
@@ -77,6 +79,7 @@ namespace ImageServiceWPF.Model
                         {
                             this.handlers.Add(item);
                         }
+
                     }));
                 }
                 catch (Exception e)

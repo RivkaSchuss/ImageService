@@ -24,7 +24,8 @@ namespace ImageServiceWPF.Controls
         public SettingsView()
         {
             InitializeComponent();
-            this.DataContext = new SettingsViewModel();
+            ISettingsViewModel vm = new SettingsViewModel();
+            this.DataContext = vm;
         }
 
     }

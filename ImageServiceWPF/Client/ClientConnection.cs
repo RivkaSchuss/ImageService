@@ -102,64 +102,18 @@ namespace ImageServiceWPF.Client
                             stream = client.GetStream();
                             BinaryReader reader = new BinaryReader(stream);
                             string jSonString = reader.ReadString();
-                            //while (reader.Peek() > 0)
-                            //{
-                              //  jSonString += reader.ReadLine();
-                            //}
                             CommandMessage msg = CommandMessage.ParseJSON(jSonString);
                             this.DataReceived?.Invoke(this, msg);
-                            Console.WriteLine("shalom");
-                            //return msg;
                         }
                     }
                     catch (Exception e)
                     {
                         Console.WriteLine(e.Message);
-                        //return null;
                     }
                 }
             }).Start();
-            //this.DataReceived?.Invoke(this, task.Result);
         }
         
-        /*
-        public void Read()
-        {
-            Task<CommandMessage> task = new Task<CommandMessage>(() =>
-            {
-                try
-                {
-                    {
-                        
-            = client.GetStream();
-                        BinaryReader reader = new BinaryReader(stream);
-                        string jSonString = reader.ReadString();
-                        
-                        while (reader.Peek() > 0)
-                        {
-                            jSonString += reader.ReadLine();
-                        }
-                        
-                        CommandMessage msg = CommandMessage.ParseJSON(jSonString);
-                            this.DataReceived?.Invoke(this, msg);
-                        Console.WriteLine("hi");
-                            return msg;
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                    return null;
-                }
-            });
-            task.Start();
-            this.DataReceived?.Invoke(this, task.Result);
-        }
-        */
-        
-        
-        
-
         public void Write(CommandReceivedEventArgs e)
         {
             Task task = new Task(() =>
