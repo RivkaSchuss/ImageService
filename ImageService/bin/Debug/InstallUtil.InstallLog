@@ -2383,3 +2383,45 @@ The Commit phase completed successfully.
 The transacted install has completed.
 =======
 >>>>>>> 184917e1f7b2c5dc881168be7c66a41ff0b2c224
+
+
+The uninstall is beginning.
+See the contents of the log file for the C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\ImageService.exe assembly's progress.
+The file is located at C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\ImageService.InstallLog.
+
+The uninstall has completed.
+
+Running a transacted installation.
+
+Beginning the Install phase of the installation.
+See the contents of the log file for the C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\ImageService.exe assembly's progress.
+The file is located at C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\ImageService.InstallLog.
+
+The Install phase completed successfully, and the Commit phase is beginning.
+See the contents of the log file for the C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\ImageService.exe assembly's progress.
+The file is located at C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\ImageService.InstallLog.
+
+The Commit phase completed successfully.
+
+The transacted install has completed.
+
+
+The uninstall is beginning.
+See the contents of the log file for the C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\ImageService.exe assembly's progress.
+The file is located at C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\ImageService.InstallLog.
+
+The uninstall has completed.
+
+Running a transacted installation.
+
+Beginning the Install phase of the installation.
+See the contents of the log file for the C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\ImageService.exe assembly's progress.
+The file is located at C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\ImageService.InstallLog.
+
+The Install phase completed successfully, and the Commit phase is beginning.
+See the contents of the log file for the C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\ImageService.exe assembly's progress.
+The file is located at C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\ImageService.InstallLog.
+
+The Commit phase completed successfully.
+
+The transacted install has completed.

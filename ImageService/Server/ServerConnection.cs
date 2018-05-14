@@ -21,10 +21,7 @@ namespace ImageService.Server
         private TcpListener tcpListener;
         private IImageController m_controller;
         private ILoggingService m_logging;
-<<<<<<< HEAD
         private IClientHandler ch;
-=======
->>>>>>> 184917e1f7b2c5dc881168be7c66a41ff0b2c224
         private ObservableCollection<TcpClient> clients;
         private bool isStopped;
 
@@ -62,10 +59,7 @@ namespace ImageService.Server
                     {
                         TcpClient client = tcpListener.AcceptTcpClient();
                         m_logging.Log("Client Connected", MessageTypeEnum.INFO);
-<<<<<<< HEAD
-=======
                         IClientHandler ch = new ClientHandler(m_logging);
->>>>>>> 184917e1f7b2c5dc881168be7c66a41ff0b2c224
                         Clients.Add(client);
                         ch.HandleClient(client, m_controller, Clients);
                     }
@@ -81,9 +75,6 @@ namespace ImageService.Server
 
         public void UpdateLog(object sender, CommandReceivedEventArgs e)
         {
-<<<<<<< HEAD
-            //new Task(() =>
-            //{
                 try
                 {
                     bool result;
@@ -103,10 +94,9 @@ namespace ImageService.Server
                 {
                     m_logging.Log("Failed to update log due to: " + ex.Message, MessageTypeEnum.FAIL);
                 }
-            //}).Start();
         }
-        
-=======
+        public void UpdateLog(CommandReceivedEventArgs e)
+        { 
             try
             {
                 bool result;
@@ -126,7 +116,7 @@ namespace ImageService.Server
                 m_logging.Log("Failed to update log due to: " + ex.Message, MessageTypeEnum.FAIL);
             }
         }
->>>>>>> 184917e1f7b2c5dc881168be7c66a41ff0b2c224
+
 
         public void CloseCommunication()
         {

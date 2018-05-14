@@ -70,12 +70,14 @@ namespace ImageServiceWPF.Model
                     this.ThumbnailSize = (int)message.CommandArgs["ThumbnailSize"];
                     JArray arr = (JArray)message.CommandArgs["Handlers"];
                     string[] array = arr.Select(c => (string)c).ToArray();
+                    
                     /*
                     foreach (var item in array)
                     {
                         this.handlers.Add(item);
                     }
                     */
+                    
                 }
                 if (message.CommandID.Equals((int)CommandEnum.CloseCommand))
                 {

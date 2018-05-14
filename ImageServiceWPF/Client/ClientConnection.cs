@@ -92,41 +92,7 @@ namespace ImageServiceWPF.Client
         public void Read()
         {
 
-            Task task = new Task(() =>
-<<<<<<< HEAD
-=======
-            {
-                try
-                {
-                    while (this.isConnected)
-                    {
-                        stream = client.GetStream();
-                        StreamReader reader = new StreamReader(stream);
-                        string jSonString = reader.ReadLine();
-                        while (reader.Peek() > 0)
-                        {
-                            jSonString += reader.ReadLine();
-                        }
-                        CommandMessage msg = CommandMessage.ParseJSON(jSonString);
-                        this.DataReceived?.Invoke(this, msg);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-            });
-            task.Start();
-            
-
-        }
-
-        /*
-        public void Read()
-        {
-
             Task<CommandMessage> task = new Task<CommandMessage>(() =>
->>>>>>> 184917e1f7b2c5dc881168be7c66a41ff0b2c224
             {
                 try
                 {
@@ -140,19 +106,22 @@ namespace ImageServiceWPF.Client
                             jSonString += reader.ReadLine();
                         }
                         CommandMessage msg = CommandMessage.ParseJSON(jSonString);
-                        this.DataReceived?.Invoke(this, msg);
+                        //this.DataReceived?.Invoke(this, msg);
+                        return msg;
                     }
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e.Message);
+                    return null;
                 }
             });
             task.Start();
+            this.DataReceived?.Invoke(this, task.Result);
+            //task.Start();
             
 
         }
-        */
 
         public void Write(CommandReceivedEventArgs e)
         {
