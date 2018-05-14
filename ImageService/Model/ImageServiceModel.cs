@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
@@ -186,7 +187,7 @@ namespace ImageService.Model
                 CommandMessage msg = new CommandMessage();
                 msg.CommandID = (int)CommandEnum.LogCommand;
                 JObject jObj = new JObject();
-                List<MessageReceivedEventArgs> logs = logger.Logs;
+                ObservableCollection<MessageReceivedEventArgs> logs = logger.Logs;
                 var json = JsonConvert.SerializeObject(logs);
                 jObj["LogEntries"] = json;
                 msg.CommandArgs = jObj;

@@ -11,6 +11,6 @@ namespace ImageServiceWPF.VModel
 {
     interface ILogsViewModel : INotifyPropertyChanged
     {
-        List<MessageReceivedEventArgs> VM_LogEntries { get; }
+        ObservableCollection<MessageReceivedEventArgs> VM_LogEntries { get; }
     }
 }

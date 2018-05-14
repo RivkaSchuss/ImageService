@@ -92,28 +92,30 @@ namespace ImageServiceWPF.Client
         public void Read()
         {
 
-            Task<CommandMessage> task = new Task<CommandMessage>(() =>
+            Task task = new Task(() =>
             {
                 try
                 {
-                    stream = client.GetStream();
-                    StreamReader reader = new StreamReader(stream);
-                    string jSonString = reader.ReadLine();
-                    while (reader.Peek() > 0)
+                    //while (this.isConnected)
                     {
-                        jSonString += reader.ReadLine();
+                        stream = client.GetStream();
+                        StreamReader reader = new StreamReader(stream);
+                        string jSonString = reader.ReadLine();
+                        while (reader.Peek() > 0)
+                        {
+                            jSonString += reader.ReadLine();
+                        }
+                        CommandMessage msg = CommandMessage.ParseJSON(jSonString);
+                        this.DataReceived?.Invoke(this, msg);
                     }
-                    CommandMessage msg = CommandMessage.ParseJSON(jSonString);
-                    return msg;
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e.Message);
-                    return null;
                 }
             });
             task.Start();
-            this.DataReceived?.Invoke(this, task.Result);
+            
 
         }
 

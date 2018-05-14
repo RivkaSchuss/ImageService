@@ -29,7 +29,7 @@ namespace ImageServiceWPF.VModel
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 
-        public List<MessageReceivedEventArgs> VM_LogEntries
+        public ObservableCollection<MessageReceivedEventArgs> VM_LogEntries
         {
             get
             {

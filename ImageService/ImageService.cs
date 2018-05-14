@@ -129,7 +129,7 @@ namespace ImageService
                 IImageController m_controller = new ImageController(serviceModel);
                 server = new ImageServer(m_logging, m_controller, outputDir, Int32.Parse(thumbnailSize), handler);
                 m_controller.Server = server;
-                IServerConnection connection = new ServerConnection(m_controller, m_logging, 8000, server);
+                IServerConnection connection = new ServerConnection(m_controller, m_logging, 8000);
                 connection.Start();
             }
             catch (Exception e)

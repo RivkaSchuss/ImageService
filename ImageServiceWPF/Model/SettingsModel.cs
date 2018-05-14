@@ -70,17 +70,20 @@ namespace ImageServiceWPF.Model
                     this.ThumbnailSize = (int)message.CommandArgs["ThumbnailSize"];
                     JArray arr = (JArray)message.CommandArgs["Handlers"];
                     string[] array = arr.Select(c => (string)c).ToArray();
+                    /*
                     foreach (var item in array)
                     {
-                        this.Handlers.Add(item);
+                        this.handlers.Add(item);
                     }
+                    */
                 }
                 if (message.CommandID.Equals((int)CommandEnum.CloseCommand))
                 {
-                    this.Handlers.Remove((string)message.CommandArgs["HandlerRemoved"]);
+                    this.handlers.Remove((string)message.CommandArgs["HandlerRemoved"]);
                 }
             }
-            catch(Exception e)
+
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
