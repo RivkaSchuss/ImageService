@@ -42,14 +42,16 @@ namespace ImageService.Server
                     while (true)
                     {
                         NetworkStream stream = client.GetStream();
-                        StreamReader reader = new StreamReader(stream);
-                        StreamWriter writer = new StreamWriter(stream);
+                        BinaryReader reader = new BinaryReader(stream);
+                        BinaryWriter writer = new BinaryWriter(stream);
                         bool result;
-                        string input = reader.ReadLine();
+                        string input = reader.ReadString();
+                        /*
                         while (reader.Peek() > 0)
                         {
                             input += reader.ReadLine();
                         }
+                        */
                         if (input != null)
                         {
                             CommandReceivedEventArgs commandReceived = JsonConvert.DeserializeObject<CommandReceivedEventArgs>(input);
@@ -62,8 +64,8 @@ namespace ImageService.Server
                             }
       
                             string message = controller.ExecuteCommand(commandReceived.CommandID, commandReceived.Args, out result);
-                            writer.WriteLine(message);
-                            writer.Flush();
+                            writer.Write(message);
+                            //writer.Flush();
                         }
                     }
                 }

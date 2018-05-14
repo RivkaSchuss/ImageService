@@ -11,7 +11,7 @@
     </UserControl.Resources>
     <StackPanel>
         <Label HorizontalAlignment="Center" Content="Logs" FontSize="25" FontWeight="Bold" Foreground="Blue" Padding="10"/>
-        <DataGrid ItemsSource="{Binding VM_LogEntries}">
+        <DataGrid ItemsSource="{Binding VM_LogEntries}" AutoGenerateColumns="False" CanUserAddRows="False" VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" Width="Auto" Height="Auto">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Type" Width="Auto" IsReadOnly="True" Binding="{Binding Path=Status}">
                 <DataGridTextColumn.ElementStyle>

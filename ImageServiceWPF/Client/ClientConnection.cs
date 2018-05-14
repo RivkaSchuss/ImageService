@@ -94,20 +94,21 @@ namespace ImageServiceWPF.Client
         {
             new Task(() =>
             {
-                while (this.IsConnected)
+                //while (this.IsConnected)
                 {
                     try
                     {
                         {
                             stream = client.GetStream();
-                            StreamReader reader = new StreamReader(stream);
-                            string jSonString = reader.ReadLine();
-                            while (reader.Peek() > 0)
-                            {
-                                jSonString += reader.ReadLine();
-                            }
+                            BinaryReader reader = new BinaryReader(stream);
+                            string jSonString = reader.ReadString();
+                            //while (reader.Peek() > 0)
+                            //{
+                              //  jSonString += reader.ReadLine();
+                            //}
                             CommandMessage msg = CommandMessage.ParseJSON(jSonString);
                             this.DataReceived?.Invoke(this, msg);
+                            Console.WriteLine("shalom");
                             //return msg;
                         }
                     }
@@ -121,25 +122,27 @@ namespace ImageServiceWPF.Client
             //this.DataReceived?.Invoke(this, task.Result);
         }
         
-
-        
         /*
-         * public void Read()
+        public void Read()
         {
             Task<CommandMessage> task = new Task<CommandMessage>(() =>
             {
                 try
                 {
                     {
-                        stream = client.GetStream();
-                        StreamReader reader = new StreamReader(stream);
-                        string jSonString = reader.ReadLine();
+                        
+            = client.GetStream();
+                        BinaryReader reader = new BinaryReader(stream);
+                        string jSonString = reader.ReadString();
+                        
                         while (reader.Peek() > 0)
                         {
                             jSonString += reader.ReadLine();
                         }
+                        
                         CommandMessage msg = CommandMessage.ParseJSON(jSonString);
-                            //this.DataReceived?.Invoke(this, msg);
+                            this.DataReceived?.Invoke(this, msg);
+                        Console.WriteLine("hi");
                             return msg;
                     }
                 }
@@ -154,6 +157,8 @@ namespace ImageServiceWPF.Client
         }
         */
         
+        
+        
 
         public void Write(CommandReceivedEventArgs e)
         {
@@ -162,10 +167,10 @@ namespace ImageServiceWPF.Client
                 try
                 {
                     stream = client.GetStream();
-                    StreamWriter writer = new StreamWriter(stream);
+                    BinaryWriter writer = new BinaryWriter(stream);
                     string toSend = JsonConvert.SerializeObject(e);
-                    writer.WriteLine(toSend);
-                    writer.Flush();
+                    writer.Write(toSend);
+                    //writer.Flush();
                 }
                 catch (Exception ex)
                 {

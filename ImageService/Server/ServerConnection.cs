@@ -83,10 +83,10 @@ namespace ImageService.Server
                         if (e.CommandID.Equals((int)CommandEnum.LogCommand))
                         {
                             NetworkStream stream = client.GetStream();
-                            StreamWriter writer = new StreamWriter(stream);
+                            BinaryWriter writer = new BinaryWriter(stream);
                             string message = m_controller.ExecuteCommand(e.CommandID, e.Args, out result);
-                            writer.WriteLine(message);
-                            writer.Flush();
+                            writer.Write(message);
+                            //writer.Flush();
                         }
                     }
                 }
@@ -95,27 +95,7 @@ namespace ImageService.Server
                     m_logging.Log("Failed to update log due to: " + ex.Message, MessageTypeEnum.FAIL);
                 }
         }
-        public void UpdateLog(CommandReceivedEventArgs e)
-        { 
-            try
-            {
-                bool result;
-                foreach (TcpClient client in Clients)
-                {
-                    if (e.CommandID.Equals((int)CommandEnum.LogCommand))
-                    {
-                        NetworkStream stream = client.GetStream();
-                        StreamWriter writer = new StreamWriter(stream);
-                        string message = m_controller.ExecuteCommand(e.CommandID, e.Args, out result);
-                        writer.WriteLine(message);
-                        writer.Flush();
-                    }
-                }
-            } catch(Exception ex)
-            {
-                m_logging.Log("Failed to update log due to: " + ex.Message, MessageTypeEnum.FAIL);
-            }
-        }
+        
 
 
         public void CloseCommunication()

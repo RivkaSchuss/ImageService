@@ -34,8 +34,8 @@ namespace ImageServiceWPF.Model
             handlers = new ObservableCollection<string>();
             this.Connection.DataReceived += OnDataReceived;
             CommandReceivedEventArgs request = new CommandReceivedEventArgs((int)CommandEnum.GetConfigCommand, null, null);
-            this.Connection.Write(request);
-            this.Connection.Read();
+            //this.Connection.Write(request);
+            //this.Connection.Read();
         }
 
         public IClientConnection Connection
