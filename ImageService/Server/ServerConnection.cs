@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ImageService.Server
@@ -21,9 +22,10 @@ namespace ImageService.Server
         private TcpListener tcpListener;
         private IImageController m_controller;
         private ILoggingService m_logging;
-        private IClientHandler ch;
         private ObservableCollection<TcpClient> clients;
         private bool isStopped;
+        private IClientHandler ch;
+        private static Mutex m_mutex = new Mutex();
 
         public ServerConnection(IImageController m_controller, ILoggingService m_logging, int port)
         {
@@ -32,6 +34,7 @@ namespace ImageService.Server
             m_logging.NewLogEntry += UpdateLog;
             this.port = port;
             this.ch = new ClientHandler(m_logging);
+            this.ch.M_mutex = m_mutex;
             this.isStopped = false;
             this.clients = new ObservableCollection<TcpClient>();
         }
@@ -49,7 +52,7 @@ namespace ImageService.Server
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
             tcpListener = new TcpListener(ep);
             tcpListener.Start();
-            m_logging.Log("Waiting for connections...", MessageTypeEnum.INFO);
+            //m_logging.Log("Waiting for connections...", MessageTypeEnum.INFO);
 
             Task task = new Task(() =>
             {
@@ -58,10 +61,9 @@ namespace ImageService.Server
                     try
                     {
                         TcpClient client = tcpListener.AcceptTcpClient();
-                        m_logging.Log("Client Connected", MessageTypeEnum.INFO);
-                        IClientHandler ch = new ClientHandler(m_logging);
                         Clients.Add(client);
                         ch.HandleClient(client, m_controller, Clients);
+                        m_logging.Log("Client Connected", MessageTypeEnum.INFO);
                     }
                     catch (SocketException e)
                     {
@@ -75,27 +77,42 @@ namespace ImageService.Server
 
         public void UpdateLog(object sender, CommandReceivedEventArgs e)
         {
-                try
+
+            try
+            {
+                bool result;
+                foreach (TcpClient client in Clients)
                 {
-                    bool result;
-                    foreach (TcpClient client in Clients)
+                    new Task(() =>
                     {
-                        if (e.CommandID.Equals((int)CommandEnum.LogCommand))
+                        try
                         {
-                            NetworkStream stream = client.GetStream();
-                            BinaryWriter writer = new BinaryWriter(stream);
-                            string message = m_controller.ExecuteCommand(e.CommandID, e.Args, out result);
-                            writer.Write(message);
-                            //writer.Flush();
+                            if (e.CommandID.Equals((int)CommandEnum.LogCommand))
+                            {
+                                NetworkStream stream = client.GetStream();
+                                BinaryWriter writer = new BinaryWriter(stream);
+                                string message = m_controller.ExecuteCommand(e.CommandID, e.Args, out result);
+                                m_mutex.WaitOne();
+                                writer.Write(message);
+                                m_mutex.ReleaseMutex();
+                            }
                         }
-                    }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                            //this.clients.Remove(client);
+                            //m_logging.Log("Failed to update a specific client due to: " + ex.Message, MessageTypeEnum.FAIL);
+                        }
+                    }).Start();
                 }
-                catch (Exception ex)
-                {
-                    m_logging.Log("Failed to update log due to: " + ex.Message, MessageTypeEnum.FAIL);
-                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                //m_logging.Log("Failed to update log due to: " + ex.Message, MessageTypeEnum.FAIL);
+            }
         }
-        
+
 
 
         public void CloseCommunication()

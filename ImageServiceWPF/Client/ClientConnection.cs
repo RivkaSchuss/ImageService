@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Infrastructure;
 using Infrastructure.Enums;
@@ -20,6 +21,7 @@ namespace ImageServiceWPF.Client
         private static ClientConnection clientInstance;
         private TcpClient client;
         private IPEndPoint ep;
+        private static Mutex m_mutex = new Mutex();
 
         NetworkStream stream;
         private bool isConnected;
@@ -27,9 +29,12 @@ namespace ImageServiceWPF.Client
         private ClientConnection()
         {
             this.isConnected = this.Connect();
+            CommandReceivedEventArgs request = new CommandReceivedEventArgs((int)CommandEnum.GetConfigCommand, null, null);
+            //this.Initialize(request);
+            //this.Read();
         }
 
-        public void ReadWrite(CommandReceivedEventArgs request)
+        public void Initialize(CommandReceivedEventArgs request)
         {
             try
             {
@@ -37,7 +42,9 @@ namespace ImageServiceWPF.Client
                     this.Write(request);
                     stream = client.GetStream();
                     BinaryReader reader = new BinaryReader(stream);
+                    //m_mutex.WaitOne();
                     string jSonString = reader.ReadString();
+                    //m_mutex.ReleaseMutex();
                     CommandMessage msg = CommandMessage.ParseJSON(jSonString);
                     this.DataReceived?.Invoke(this, msg);
                 }
@@ -46,8 +53,8 @@ namespace ImageServiceWPF.Client
             {
                 Console.WriteLine(e.Message);
             }
-
         }
+
         public static ClientConnection Instance
         {
             //singleton implementation
@@ -130,7 +137,6 @@ namespace ImageServiceWPF.Client
                         Console.WriteLine(e.Message);
                     }
                 }
-
             });
             task.Start();
         }
@@ -146,7 +152,9 @@ namespace ImageServiceWPF.Client
                     stream = client.GetStream();
                     BinaryWriter writer = new BinaryWriter(stream);
                     string toSend = JsonConvert.SerializeObject(e);
+                    m_mutex.WaitOne();
                     writer.Write(toSend);
+                    m_mutex.ReleaseMutex();
                 }
                 catch (Exception ex)
                 {

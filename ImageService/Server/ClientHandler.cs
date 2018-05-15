@@ -32,6 +32,8 @@ namespace ImageService.Server
             this.m_logger = m_logger;
         }
 
+        public Mutex M_mutex { get; set; }
+
         public void HandleClient(TcpClient client, IImageController controller, ObservableCollection<TcpClient> clients)
         {
 
@@ -46,26 +48,19 @@ namespace ImageService.Server
                         BinaryWriter writer = new BinaryWriter(stream);
                         bool result;
                         string input = reader.ReadString();
-                        /*
-                        while (reader.Peek() > 0)
-                        {
-                            input += reader.ReadLine();
-                        }
-                        */
                         if (input != null)
                         {
                             CommandReceivedEventArgs commandReceived = JsonConvert.DeserializeObject<CommandReceivedEventArgs>(input);
-                            
                             if (commandReceived.CommandID.Equals((int)CommandEnum.CloseGUI))
                             {
                                 clients.Remove(client);
                                 client.Close();
                                 break;
                             }
-      
                             string message = controller.ExecuteCommand(commandReceived.CommandID, commandReceived.Args, out result);
+                            M_mutex.WaitOne();
                             writer.Write(message);
-                            //writer.Flush();
+                            M_mutex.ReleaseMutex();
                         }
                     }
                 }

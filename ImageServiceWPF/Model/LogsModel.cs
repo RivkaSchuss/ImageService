@@ -25,7 +25,7 @@ namespace ImageServiceWPF.Model
         {
             this.Connection.DataReceived += OnDataReceived;
             CommandReceivedEventArgs request = new CommandReceivedEventArgs((int)CommandEnum.LogCommand, null, null);
-            this.Connection.ReadWrite(request);
+            //this.Connection.Initialize(request);
             this.Connection.Read();
         }
 

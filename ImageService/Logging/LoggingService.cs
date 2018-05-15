@@ -47,7 +47,7 @@ namespace ImageService.Logging
             MessageReceived.Invoke(this, msg);
             this.logs.Add(msg);
             string[] args = { message, type.ToString() };
-            //NewLogEntry?.Invoke(this, new CommandReceivedEventArgs((int) CommandEnum.LogCommand, args, null));
+            NewLogEntry?.Invoke(this, new CommandReceivedEventArgs((int) CommandEnum.LogCommand, args, null));
         }
     }
 }
