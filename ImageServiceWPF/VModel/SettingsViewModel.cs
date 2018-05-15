@@ -23,12 +23,12 @@ namespace ImageServiceWPF.VModel
         
         public SettingsViewModel()
         {
-            this.RemoveCommand = new DelegateCommand<object>(this.OnRemove, this.CanRemove);
             this.model = new SettingsModel();
             this.model.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
             {
                 this.NotifyPropertyChanged("VM_" + e.PropertyName);
             };
+            this.RemoveCommand = new DelegateCommand<object>(this.OnRemove, this.CanRemove);
         }
 
         private void OnRemove(object obj)

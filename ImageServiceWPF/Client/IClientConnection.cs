@@ -17,5 +17,6 @@ namespace ImageServiceWPF.Client
         void Read();
         event EventHandler<CommandMessage> DataReceived;
         bool IsConnected { get; set; }
+        void ReadWrite(CommandReceivedEventArgs request);
     }
 }

@@ -29,6 +29,25 @@ namespace ImageServiceWPF.Client
             this.isConnected = this.Connect();
         }
 
+        public void ReadWrite(CommandReceivedEventArgs request)
+        {
+            try
+            {
+                {
+                    this.Write(request);
+                    stream = client.GetStream();
+                    BinaryReader reader = new BinaryReader(stream);
+                    string jSonString = reader.ReadString();
+                    CommandMessage msg = CommandMessage.ParseJSON(jSonString);
+                    this.DataReceived?.Invoke(this, msg);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+        }
         public static ClientConnection Instance
         {
             //singleton implementation
@@ -89,12 +108,12 @@ namespace ImageServiceWPF.Client
             }
         }
 
-        
+
         public void Read()
         {
-            new Task(() =>
+            Task task = new Task(() =>
             {
-                //while (this.IsConnected)
+                while (this.IsConnected)
                 {
                     try
                     {
@@ -111,9 +130,13 @@ namespace ImageServiceWPF.Client
                         Console.WriteLine(e.Message);
                     }
                 }
-            }).Start();
+
+            });
+            task.Start();
         }
-        
+
+
+
         public void Write(CommandReceivedEventArgs e)
         {
             Task task = new Task(() =>
@@ -124,7 +147,6 @@ namespace ImageServiceWPF.Client
                     BinaryWriter writer = new BinaryWriter(stream);
                     string toSend = JsonConvert.SerializeObject(e);
                     writer.Write(toSend);
-                    //writer.Flush();
                 }
                 catch (Exception ex)
                 {

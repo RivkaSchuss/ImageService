@@ -35,8 +35,10 @@ namespace ImageServiceWPF.Model
             handlers = new ObservableCollection<string>();
             this.Connection.DataReceived += OnDataReceived;
             CommandReceivedEventArgs request = new CommandReceivedEventArgs((int)CommandEnum.GetConfigCommand, null, null);
-            this.Connection.Write(request);
-            this.Connection.Read();
+            //this.Connection.Write(request);
+            this.Connection.ReadWrite(request);
+            //this.Connection.Read();
+            //this.OutputDirectory = "hi";
         }
 
         public IClientConnection Connection
@@ -62,6 +64,9 @@ namespace ImageServiceWPF.Model
 
         public void OnDataReceived(object sender, CommandMessage message)
         {
+            this.OutputDirectory = "hi";
+
+
             if (message.CommandID.Equals((int)CommandEnum.GetConfigCommand))
             {
                 try
@@ -81,6 +86,7 @@ namespace ImageServiceWPF.Model
                         }
 
                     }));
+
                 }
                 catch (Exception e)
                 {
