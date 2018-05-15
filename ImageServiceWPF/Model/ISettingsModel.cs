@@ -9,6 +9,10 @@ using ImageServiceWPF.Client;
 
 namespace ImageServiceWPF.Model
 {
+    /// <summary>
+    /// settings model interface
+    /// </summary>
+    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
     interface ISettingsModel : INotifyPropertyChanged
     {
 

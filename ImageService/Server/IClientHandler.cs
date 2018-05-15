@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace ImageService.Server
 {
+    /// <summary>
+    /// client handler interface
+    /// </summary>
     public interface IClientHandler
     {
         void HandleClient(TcpClient client, IImageController controller, ObservableCollection<TcpClient> clients);

@@ -16,6 +16,10 @@ using System.Threading.Tasks;
 
 namespace ImageService.Server
 {
+    /// <summary>
+    /// server connection class
+    /// </summary>
+    /// <seealso cref="ImageService.Server.IServerConnection" />
     class ServerConnection : IServerConnection
     {
         private int port;
@@ -27,6 +31,12 @@ namespace ImageService.Server
         private IClientHandler ch;
         private static Mutex m_mutex = new Mutex();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ServerConnection"/> class.
+        /// </summary>
+        /// <param name="m_controller">The m controller.</param>
+        /// <param name="m_logging">The m logging.</param>
+        /// <param name="port">The port.</param>
         public ServerConnection(IImageController m_controller, ILoggingService m_logging, int port)
         {
             this.m_controller = m_controller;
@@ -39,6 +49,12 @@ namespace ImageService.Server
             this.clients = new ObservableCollection<TcpClient>();
         }
 
+        /// <summary>
+        /// Gets the clients.
+        /// </summary>
+        /// <value>
+        /// The clients.
+        /// </value>
         public ObservableCollection<TcpClient> Clients
         {
             get
@@ -47,6 +63,9 @@ namespace ImageService.Server
             }
         }
 
+        /// <summary>
+        /// Starts this instance.
+        /// </summary>
         public void Start()
         {
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
@@ -75,6 +94,11 @@ namespace ImageService.Server
             task.Start();
         }
 
+        /// <summary>
+        /// Updates the log.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="CommandReceivedEventArgs"/> instance containing the event data.</param>
         public void UpdateLog(object sender, CommandReceivedEventArgs e)
         {
 
@@ -115,6 +139,9 @@ namespace ImageService.Server
 
 
 
+        /// <summary>
+        /// Closes the communication.
+        /// </summary>
         public void CloseCommunication()
         {
             //tell all clients that the server is closed

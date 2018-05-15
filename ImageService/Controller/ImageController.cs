@@ -31,9 +31,6 @@ namespace ImageService.Controller
             {
                 {(int)CommandEnum.NewFileCommand, new NewFileCommand(m_model) } ,
                 { (int)CommandEnum.GetConfigCommand, new GetConfigCommand(m_model) }
-                //,
-                //{ (int) CommandEnum.CloseCommand, new CloseCommand(m_model, Server.Handlers)} ,
-                //{ (int) CommandEnum.CloseGUI, new CloseGUI(m_model, Server) }
             };
         }
 
@@ -47,7 +44,6 @@ namespace ImageService.Controller
             {
                 this.server = value;
                 this.commands[((int)CommandEnum.CloseCommand)] = new CloseCommand(this.m_model, this.server);
-                this.commands[((int)CommandEnum.CloseGUI)] = new CloseGUI(this.m_model, this.server);
                 this.commands[((int)CommandEnum.LogCommand)] = new LogCommand(this.m_model, this.server);
             }
 

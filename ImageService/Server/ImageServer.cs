@@ -62,11 +62,23 @@ namespace ImageService.Server
             }
         }
 
+        /// <summary>
+        /// Gets the logging.
+        /// </summary>
+        /// <value>
+        /// The logging.
+        /// </value>
         public ILoggingService Logging
         {
             get { return this.m_logging; }
         }
 
+        /// <summary>
+        /// Gets the handlers.
+        /// </summary>
+        /// <value>
+        /// The handlers.
+        /// </value>
         public Dictionary<string, IDirectoryHandler> Handlers
         {
             get { return this.handlers; }
@@ -131,6 +143,10 @@ namespace ImageService.Server
             m_logging.Log("The " + e.Message + " directory has been closed.", MessageTypeEnum.INFO);
         }
 
+        /// <summary>
+        /// Closes the specified handler.
+        /// </summary>
+        /// <param name="handlerToDelete">The handler to delete.</param>
         public void CloseSpecifiedHandler(string handlerToDelete)
         {
             if (handlers.ContainsKey(handlerToDelete))

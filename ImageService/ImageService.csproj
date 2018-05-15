@@ -54,7 +54,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CloseCommand.cs" />
-    <Compile Include="Commands\CloseGUI.cs" />
     <Compile Include="Commands\GetConfigCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\LogCommand.cs" />

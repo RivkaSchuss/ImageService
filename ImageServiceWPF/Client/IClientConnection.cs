@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace ImageServiceWPF.Client
 {
+    /// <summary>
+    /// the client connection interface
+    /// </summary>
     public interface IClientConnection
     {
         bool Connect();

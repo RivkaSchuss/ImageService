@@ -21,6 +21,9 @@ namespace ImageServiceWPF.Controls
     /// </summary>
     public partial class LogsView : UserControl
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LogsView"/> class.
+        /// </summary>
         public LogsView()
         {
             InitializeComponent();

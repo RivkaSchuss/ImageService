@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 
 namespace ImageServiceWPF.VModel
 {
+    /// <summary>
+    /// log view model interface
+    /// </summary>
+    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
     interface ILogsViewModel : INotifyPropertyChanged
     {
         ObservableCollection<MessageReceivedEventArgs> VM_LogEntries { get; }

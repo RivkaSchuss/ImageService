@@ -15,6 +15,10 @@ using Newtonsoft.Json.Linq;
 
 namespace ImageServiceWPF.Client
 {
+    /// <summary>
+    /// client connection class
+    /// </summary>
+    /// <seealso cref="ImageServiceWPF.Client.IClientConnection" />
     public class ClientConnection : IClientConnection
     {
         public event EventHandler<CommandMessage> DataReceived;
@@ -26,14 +30,19 @@ namespace ImageServiceWPF.Client
         NetworkStream stream;
         private bool isConnected;
 
+        /// <summary>
+        /// Prevents a default instance of the <see cref="ClientConnection"/> class from being created.
+        /// </summary>
         private ClientConnection()
         {
             this.isConnected = this.Connect();
             CommandReceivedEventArgs request = new CommandReceivedEventArgs((int)CommandEnum.GetConfigCommand, null, null);
-            //this.Initialize(request);
-            //this.Read();
         }
 
+        /// <summary>
+        /// Initializes the specified request.
+        /// </summary>
+        /// <param name="request">The <see cref="CommandReceivedEventArgs"/> instance containing the event data.</param>
         public void Initialize(CommandReceivedEventArgs request)
         {
             try
@@ -42,9 +51,7 @@ namespace ImageServiceWPF.Client
                     this.Write(request);
                     stream = client.GetStream();
                     BinaryReader reader = new BinaryReader(stream);
-                    //m_mutex.WaitOne();
                     string jSonString = reader.ReadString();
-                    //m_mutex.ReleaseMutex();
                     CommandMessage msg = CommandMessage.ParseJSON(jSonString);
                     this.DataReceived?.Invoke(this, msg);
                 }
@@ -55,6 +62,12 @@ namespace ImageServiceWPF.Client
             }
         }
 
+        /// <summary>
+        /// Gets the instance.
+        /// </summary>
+        /// <value>
+        /// The instance.
+        /// </value>
         public static ClientConnection Instance
         {
             //singleton implementation
@@ -63,12 +76,17 @@ namespace ImageServiceWPF.Client
                 if (clientInstance == null)
                 {
                     clientInstance = new ClientConnection();
-                    //clientInstance.IsConnected = Instance.Channel
                 }
                 return clientInstance;
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is connected.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is connected; otherwise, <c>false</c>.
+        /// </value>
         public bool IsConnected
         {
             get
@@ -81,6 +99,10 @@ namespace ImageServiceWPF.Client
             }
         }
 
+        /// <summary>
+        /// Connects this instance.
+        /// </summary>
+        /// <returns></returns>
         public bool Connect()
         {
             try
@@ -100,6 +122,9 @@ namespace ImageServiceWPF.Client
             }
         }
 
+        /// <summary>
+        /// Disconnects this instance.
+        /// </summary>
         public void Disconnect()
         {
             try
@@ -116,6 +141,9 @@ namespace ImageServiceWPF.Client
         }
 
 
+        /// <summary>
+        /// Reads this instance.
+        /// </summary>
         public void Read()
         {
             Task task = new Task(() =>
@@ -143,6 +171,10 @@ namespace ImageServiceWPF.Client
 
 
 
+        /// <summary>
+        /// Writes the specified e.
+        /// </summary>
+        /// <param name="e">The <see cref="CommandReceivedEventArgs"/> instance containing the event data.</param>
         public void Write(CommandReceivedEventArgs e)
         {
             Task task = new Task(() =>

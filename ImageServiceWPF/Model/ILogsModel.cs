@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 
 namespace ImageServiceWPF.Model
 {
+    /// <summary>
+    /// log model interface
+    /// </summary>
+    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
     interface ILogsModel : INotifyPropertyChanged
     {
         ObservableCollection<MessageReceivedEventArgs> LogEntries { get; set; }

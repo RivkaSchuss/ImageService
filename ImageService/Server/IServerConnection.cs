@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace ImageService.Server
 {
+    /// <summary>
+    /// server connection interface
+    /// </summary>
     interface IServerConnection
     {
         void Start();

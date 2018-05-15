@@ -21,11 +21,19 @@ using System.Collections.ObjectModel;
 
 namespace ImageService.Server
 {
+    /// <summary>
+    /// client handler class
+    /// </summary>
+    /// <seealso cref="ImageService.Server.IClientHandler" />
     public class ClientHandler : IClientHandler
     {
         private CancellationTokenSource tokenSource;
         private ILoggingService m_logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ClientHandler"/> class.
+        /// </summary>
+        /// <param name="m_logger">The m logger.</param>
         public ClientHandler(ILoggingService m_logger)
         {
             this.tokenSource = new CancellationTokenSource();
@@ -34,6 +42,12 @@ namespace ImageService.Server
 
         public Mutex M_mutex { get; set; }
 
+        /// <summary>
+        /// Handles the client.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="controller">The controller.</param>
+        /// <param name="clients">The clients.</param>
         public void HandleClient(TcpClient client, IImageController controller, ObservableCollection<TcpClient> clients)
         {
 
@@ -72,6 +86,9 @@ namespace ImageService.Server
             },this.tokenSource.Token).Start();
         }
 
+        /// <summary>
+        /// Closes this instance.
+        /// </summary>
         public void Close()
         {
             this.tokenSource.Cancel();

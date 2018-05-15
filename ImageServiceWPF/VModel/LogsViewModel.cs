@@ -10,11 +10,18 @@ using Infrastructure.Model;
 
 namespace ImageServiceWPF.VModel
 {
+    /// <summary>
+    /// logs view model class
+    /// </summary>
+    /// <seealso cref="ImageServiceWPF.VModel.ILogsViewModel" />
     class LogsViewModel : ILogsViewModel
     {
         private ILogsModel model;
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LogsViewModel"/> class.
+        /// </summary>
         public LogsViewModel()
         {
             model = new LogsModel();
@@ -24,11 +31,21 @@ namespace ImageServiceWPF.VModel
             };
         }
 
+        /// <summary>
+        /// Notifies the property changed.
+        /// </summary>
+        /// <param name="propName">Name of the property.</param>
         private void NotifyPropertyChanged(string propName)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 
+        /// <summary>
+        /// Gets the vm log entries.
+        /// </summary>
+        /// <value>
+        /// The vm log entries.
+        /// </value>
         public ObservableCollection<MessageReceivedEventArgs> VM_LogEntries
         {
             get

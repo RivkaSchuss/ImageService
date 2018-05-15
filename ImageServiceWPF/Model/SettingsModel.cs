@@ -20,6 +20,10 @@ using System.Threading;
 
 namespace ImageServiceWPF.Model
 {
+    /// <summary>
+    /// settings model class
+    /// </summary>
+    /// <seealso cref="ImageServiceWPF.Model.ISettingsModel" />
     class SettingsModel : ISettingsModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -30,6 +34,9 @@ namespace ImageServiceWPF.Model
         private int thumbnailSize;
         private string selectedHandler;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SettingsModel"/> class.
+        /// </summary>
         public SettingsModel()
         {
             handlers = new ObservableCollection<string>();
@@ -37,12 +44,14 @@ namespace ImageServiceWPF.Model
             
             CommandReceivedEventArgs request = new CommandReceivedEventArgs((int)CommandEnum.GetConfigCommand, null, null);
             this.Connection.Initialize(request);
-            //this.Connection.Write(request);
-            //this.Connection.Initialize(request);
-            //this.Connection.Read();
-            //this.OutputDirectory = "hi";
         }
 
+        /// <summary>
+        /// Gets the connection.
+        /// </summary>
+        /// <value>
+        /// The connection.
+        /// </value>
         public IClientConnection Connection
         {
             get
@@ -51,6 +60,12 @@ namespace ImageServiceWPF.Model
             }
         }
 
+        /// <summary>
+        /// Gets or sets the handlers.
+        /// </summary>
+        /// <value>
+        /// The handlers.
+        /// </value>
         public ObservableCollection<string> Handlers
         {
             get
@@ -64,11 +79,13 @@ namespace ImageServiceWPF.Model
             }
         }
 
+        /// <summary>
+        /// Called when [data received].
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="message">The message.</param>
         public void OnDataReceived(object sender, CommandMessage message)
         {
-            this.OutputDirectory = "hi";
-
-
             if (message.CommandID.Equals((int)CommandEnum.GetConfigCommand))
             {
                 try
@@ -111,6 +128,10 @@ namespace ImageServiceWPF.Model
             }
         }
 
+        /// <summary>
+        /// Notifies the property changed.
+        /// </summary>
+        /// <param name="propName">Name of the property.</param>
         public void NotifyPropertyChanged(string propName)
         {
             if (PropertyChanged != null)
@@ -118,6 +139,12 @@ namespace ImageServiceWPF.Model
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
             }
         }
+        /// <summary>
+        /// Gets or sets the output directory.
+        /// </summary>
+        /// <value>
+        /// The output directory.
+        /// </value>
         public string OutputDirectory
         {
             set
@@ -130,6 +157,12 @@ namespace ImageServiceWPF.Model
                 return this.outputDirectory;
             }
         }
+        /// <summary>
+        /// Gets or sets the name of the source.
+        /// </summary>
+        /// <value>
+        /// The name of the source.
+        /// </value>
         public string SourceName
         {
             set
@@ -142,6 +175,12 @@ namespace ImageServiceWPF.Model
                 return this.sourceName;
             }
         }
+        /// <summary>
+        /// Gets or sets the name of the log.
+        /// </summary>
+        /// <value>
+        /// The name of the log.
+        /// </value>
         public string LogName
         {
             set
@@ -154,6 +193,12 @@ namespace ImageServiceWPF.Model
                 return this.logName;
             }
         }
+        /// <summary>
+        /// Gets or sets the size of the thumbnail.
+        /// </summary>
+        /// <value>
+        /// The size of the thumbnail.
+        /// </value>
         public int ThumbnailSize
         {
             set
@@ -167,6 +212,12 @@ namespace ImageServiceWPF.Model
             }
         }
 
+        /// <summary>
+        /// Gets or sets the selected handler.
+        /// </summary>
+        /// <value>
+        /// The selected handler.
+        /// </value>
         public string SelectedHandler
         {
             get

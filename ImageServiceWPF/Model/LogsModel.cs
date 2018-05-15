@@ -16,11 +16,18 @@ using System.Windows;
 
 namespace ImageServiceWPF.Model
 {
+    /// <summary>
+    /// logs model interface
+    /// </summary>
+    /// <seealso cref="ImageServiceWPF.Model.ILogsModel" />
     class LogsModel : ILogsModel
     {
         private ObservableCollection<MessageReceivedEventArgs> logEntries;
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LogsModel"/> class.
+        /// </summary>
         public LogsModel()
         {
             this.Connection.DataReceived += OnDataReceived;
@@ -29,6 +36,12 @@ namespace ImageServiceWPF.Model
             this.Connection.Read();
         }
 
+        /// <summary>
+        /// Gets or sets the log entries.
+        /// </summary>
+        /// <value>
+        /// The log entries.
+        /// </value>
         public ObservableCollection<MessageReceivedEventArgs> LogEntries
         {
             get
@@ -42,6 +55,12 @@ namespace ImageServiceWPF.Model
             }
         }
 
+        /// <summary>
+        /// Gets the connection.
+        /// </summary>
+        /// <value>
+        /// The connection.
+        /// </value>
         public IClientConnection Connection
         {
             get
@@ -51,11 +70,20 @@ namespace ImageServiceWPF.Model
         }
 
 
+        /// <summary>
+        /// Notifies the property changed.
+        /// </summary>
+        /// <param name="propName">Name of the property.</param>
         private void NotifyPropertyChanged(string propName)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
-    
+
+        /// <summary>
+        /// Called when [data received].
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="message">The message.</param>
         public void OnDataReceived(object sender, CommandMessage message)
         {
             if (message.CommandID.Equals((int)CommandEnum.LogCommand))

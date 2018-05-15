@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace ImageServiceWPF.VModel
 {
+    /// <summary>
+    /// settings view model interface
+    /// </summary>
     interface ISettingsViewModel
     {
         string VM_OutputDirectory { get; }

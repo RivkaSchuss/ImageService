@@ -114,6 +114,11 @@ namespace ImageService.Model
             }
         }
 
+        /// <summary>
+        /// Builds the configuration.
+        /// </summary>
+        /// <param name="result">if set to <c>true</c> [result].</param>
+        /// <returns></returns>
         public string BuildConfig(out bool result)
         {
             try
@@ -141,6 +146,12 @@ namespace ImageService.Model
             }
         }
 
+        /// <summary>
+        /// Builds the handler removed message.
+        /// </summary>
+        /// <param name="handlerRemoved">The handler removed.</param>
+        /// <param name="result">if set to <c>true</c> [result].</param>
+        /// <returns></returns>
         public string BuildHandlerRemovedMessage(string handlerRemoved, out bool result)
         {
             try
@@ -179,6 +190,12 @@ namespace ImageService.Model
             }
         }
 
+        /// <summary>
+        /// Updates the entries.
+        /// </summary>
+        /// <param name="server">The server.</param>
+        /// <param name="result">if set to <c>true</c> [result].</param>
+        /// <returns></returns>
         public string UpdateEntries(ImageServer server, out bool result)
         {
             try

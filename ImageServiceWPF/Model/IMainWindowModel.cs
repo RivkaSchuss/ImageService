@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace ImageServiceWPF.Model
 {
+    /// <summary>
+    /// main window model interface
+    /// </summary>
+    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
     interface IMainWindowModel :INotifyPropertyChanged
     {
         bool IsConnected { get; set; }
