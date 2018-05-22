@@ -101,7 +101,7 @@ namespace ImageServiceWPF.Model
                         string[] array = arr.Select(c => (string)c).ToArray();
                         foreach (var item in array)
                         {
-                            this.handlers.Add(item);
+                            this.Handlers.Add(item);
                         }
 
                     }));
@@ -118,7 +118,7 @@ namespace ImageServiceWPF.Model
                 {
                     Application.Current.Dispatcher.Invoke(new Action(() =>
                     {
-                        this.handlers.Remove((string)message.CommandArgs["HandlerRemoved"]);
+                        this.Handlers.Remove((string)message.CommandArgs["HandlerRemoved"]);
                     }));
                 }
                 catch (Exception e)
