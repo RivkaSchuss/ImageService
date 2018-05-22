@@ -70,11 +70,17 @@ namespace ImageService.Server
                                 clients.Remove(client);
                                 client.Close();
                                 break;
+                            } else
+                            {
+                                if (!this.SendToClient(controller, commandReceived, writer))
+                                {
+                                    clients.Remove(client);
+                                    client.Close();
+                                    break;
+                                }
                             }
-                            string message = controller.ExecuteCommand(commandReceived.CommandID, commandReceived.Args, out result);
-                            M_mutex.WaitOne();
-                            writer.Write(message);
-                            M_mutex.ReleaseMutex();
+                            
+                           
                         }
                     }
                 }
@@ -93,6 +99,32 @@ namespace ImageService.Server
         {
             this.tokenSource.Cancel();
         }
+
+
+        /// <summary>
+        /// Sends to client.
+        /// </summary>
+        /// <param name="controller">The controller.</param>
+        /// <param name="command">The <see cref="CommandReceivedEventArgs"/> instance containing the event data.</param>
+        /// <param name="writer">The writer.</param>
+        /// <returns></returns>
+        public Boolean SendToClient(IImageController controller, CommandReceivedEventArgs command, BinaryWriter writer)
+        {
+            try
+            {
+                bool result;
+                string message = controller.ExecuteCommand(command.CommandID, command.Args, out result);
+                M_mutex.WaitOne();
+                writer.Write(message);
+                M_mutex.ReleaseMutex();
+                return true;
+            } catch (Exception e)
+            {
+                m_logger.Log("Failed to send to client due to: "+ e.Message, MessageTypeEnum.FAIL);
+                return false;
+            }
+        }
+
 
 
     }
