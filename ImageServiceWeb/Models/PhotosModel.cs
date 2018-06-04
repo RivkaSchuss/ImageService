@@ -8,27 +8,28 @@ namespace ImageServiceWeb.Models
 {
     public class PhotosModel
     {
-        private List<Image> imageList;
+        
         //public event NotifyAboutChange NotifyEvent;
 
         public PhotosModel()
         {
-            imageList = new List<Image>();
+            ImageList = GetPhotos();
         }
 
         public List<Image> ImageList
         {
-            get
-            {
-                return this.imageList;
-            }
+            get; set;
         } 
 
         
 
-        public void GetPhotos()
+        public List<Image> GetPhotos()
         {
+            List<Image> photosList = new List<Image>();
 
+
+
+            return photosList;
         }
     }
 }

@@ -19,7 +19,7 @@ namespace ImageServiceWeb.Models
 
         [Required]
         [DataType(DataType.Text)]
-        [Display(Name = "Log Enteries")]
+        [Display(Name = "Log Entries")]
         public List<MessageReceivedEventArgs> LogEntries { get; set; }
     }
 }

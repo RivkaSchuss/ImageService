@@ -13,7 +13,7 @@ namespace ImageServiceWeb.Models
         private static IImageServiceClient Client { get; set; }
         public ImageWebModel()
         {
-            Students = GetStudents();
+            //Students = GetStudents();
             Client = ImageServiceClient.Instance;
             IsConnected = Client.IsConnected;
             NumOfPics = 0;
