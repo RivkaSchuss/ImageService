@@ -11,10 +11,20 @@ namespace ImageServiceWeb.Models
     {
         public delegate void NotifyAboutChange();
         private IImageServiceClient client;
+        private List<string> handlers;
 
         public ConfigModel()
         {
             client = ImageServiceClient.Instance;
+            handlers = new List<string>();
+        }
+
+        public List<string> Handlers
+        {
+            get
+            {
+                return this.handlers;
+            }
         }
 
 

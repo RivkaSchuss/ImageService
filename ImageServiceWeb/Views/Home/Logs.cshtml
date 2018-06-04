@@ -1,7 +1,50 @@
-﻿@model ImageServiceWeb.Models.LogsModel
+﻿@using Infrastructure.Model
+
+@model ImageServiceWeb.Models.LogsModel
 @{
     ViewBag.Title = "Logs";
 }
 
 <h2>Logs</h2>
+
+<div>
+    @using (Html.BeginForm("Logs", "Logs", FormMethod.Post))
+    {
+
+        <div>
+            <br />
+            @Html.DropDownList("typeFilter",
+                                  new SelectList(Enum.GetValues(typeof(MessageTypeEnum))),
+                                  "Log entry type",
+                                  new { @class = "form-control" })
+            <br />
+            <input type="submit" id="submitId" value="Filter" class="btn-info" />
+
+        </div>
+
+    }
+
+</div>
+
+<br />
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.LogEntries)
+        </th>
+    </tr>
+
+    @foreach (var item in Model.LogEntries)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Message)
+            </td>
+        </tr>
+    }
+
+</table>
 
