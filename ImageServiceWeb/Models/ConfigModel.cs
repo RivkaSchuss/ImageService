@@ -6,19 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web;
-using System.Windows;
-using System.Windows.Threading;
-using System.Threading;
-using Newtonsoft.Json.Linq;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.IO;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Windows;
+using Newtonsoft.Json.Linq;
 
 namespace ImageServiceWeb.Models
 {
@@ -50,22 +40,17 @@ namespace ImageServiceWeb.Models
             {
                 try
                 {
-                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    this.OutputDirectory = (string)message.CommandArgs["OutputDirectory"];
+                    this.SourceName = (string)message.CommandArgs["SourceName"];
+                    this.LogName = (string)message.CommandArgs["LogName"];
+                    this.ThumbnailSize = (int)message.CommandArgs["ThumbnailSize"];
+                    JArray arr = (JArray)message.CommandArgs["Handlers"];
+                    string[] array = arr.Select(c => (string)c).ToArray();
+                    foreach (var item in array)
                     {
-                        //Console.WriteLine("I am here I am hereI am hereI am hereI am hereI am hereI am hereI am hereI am hereI am hereI am here");
-                        this.OutputDirectory = (string)message.CommandArgs["OutputDirectory"];
-                        this.SourceName = (string)message.CommandArgs["SourceName"];
-                        this.LogName = (string)message.CommandArgs["LogName"];
-                        this.ThumbnailSize = (int)message.CommandArgs["ThumbnailSize"];
-                        JArray arr = (JArray)message.CommandArgs["Handlers"];
-                        string[] array = arr.Select(c => (string)c).ToArray();
-                        foreach (var item in array)
-                        {
-                            this.Handlers.Add(item);
-                        }
-
-                    }));
-
+                        this.Handlers.Add(item);
+                    }
+                
                 }
                 catch (Exception e)
                 {

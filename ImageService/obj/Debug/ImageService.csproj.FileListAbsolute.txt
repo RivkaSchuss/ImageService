@@ -21,11 +21,11 @@ C:\Users\USER\source\repos\ImageService\ImageService\obj\Debug\ImageService.pdb
 C:\Users\USER\source\repos\ImageService\ImageService\bin\Debug\Newtonsoft.Json.dll
 C:\Users\USER\source\repos\ImageService\ImageService\bin\Debug\Newtonsoft.Json.xml
 C:\Users\USER\source\repos\ImageService\ImageService\obj\Debug\ImageService.csproj.CopyComplete
-C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\ImageService.exe
-C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\Newtonsoft.Json.dll
-C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\Infrastructure.dll
 C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\ImageService.exe.config
+C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\ImageService.exe
 C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\ImageService.pdb
+C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\Infrastructure.dll
+C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\Newtonsoft.Json.dll
 C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\Infrastructure.pdb
 C:\Users\IEUser\source\repos\ImageService\ImageService\bin\Debug\Newtonsoft.Json.xml
 C:\Users\IEUser\source\repos\ImageService\ImageService\obj\Debug\ImageService.csprojResolveAssemblyReference.cache
