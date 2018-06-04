@@ -173,8 +173,8 @@ namespace Communication.Client
         /// <param name="e">The <see cref="CommandReceivedEventArgs"/> instance containing the event data.</param>
         public void Write(CommandReceivedEventArgs e)
         {
-            Task task = new Task(() =>
-            {
+            //Task task = new Task(() =>
+            //{
                 try
                 {
                     stream = client.GetStream();
@@ -189,8 +189,8 @@ namespace Communication.Client
                     Console.WriteLine(ex.Message);
                 }
 
-            });
-            task.Start();
+            //});
+            //task.Start();
         }
     }
 }
