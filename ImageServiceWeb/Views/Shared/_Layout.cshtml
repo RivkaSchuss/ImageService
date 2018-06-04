@@ -3,41 +3,42 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
-    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+    <title>@ViewBag.Title - Image Service</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <script src="~/Scripts/jquery-3.0.0.js"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("ImageService", "ImageWeb", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Image Web", "ImageWeb", "Home")</li>
-                    <li>@Html.ActionLink("Config", "Config", "Home")</li>
-                    <li>@Html.ActionLink("Photos", "Photos", "Home")</li>
-                    <li>@Html.ActionLink("Logs", "Logs", "Home")</li>
+    <div class="container body-content">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="@Url.Action("ImageWeb", "Home")">Image Web</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Config", "Home")">Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Photos", "Home")">Photos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Logs", "Home")">Logs</a>
+                    </li>
                 </ul>
             </div>
-        </div>
-    </div>
-
-    <div class="container body-content">
+        </nav>
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - Rivka and Yarin Web Application</p>
+            <p>&copy; @DateTime.Now.Year - Image Service.</p>
+            <p>Created by Rivka Schuss and Yarin Shaked.</p>
         </footer>
     </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", false)
 </body>
 </html>
