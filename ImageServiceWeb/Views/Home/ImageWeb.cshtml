@@ -1,32 +1,25 @@
-﻿
+﻿@model ImageServiceWeb.Models.ImageWebModel
 @{
     ViewBag.Title = "ImageWeb";
 }
 
 <h2>ImageWeb</h2>
+<h3>Server status: @ViewBag.IsConnected</h3>
+<h4>Number of pictures in outputDir: @ViewBag.NumOfPics</h4>
 Status: 
 Number of photos:
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model.)
+            @Html.DisplayNameFor(model => model.IsConnected)
         </th>
         <th>
-            @Html.DisplayNameFor()
-        </th>
-        <th>
-            @Html.DisplayNameFor()
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Phone)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Email)
+            @Html.DisplayNameFor(model => model.NumOfPics)
         </th>
         <th></th>
     </tr>
 
-    @foreach (var item in Model)
+    @*foreach (var item in Model.Students)
     {
         <tr>
             <td>
@@ -35,15 +28,7 @@ Number of photos:
             <td>
                 @Html.DisplayFor(modelItem => item.LastName)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Salary)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Phone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
+ 
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
                 @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
@@ -51,4 +36,5 @@ Number of photos:
             </td>
         </tr>
     }
+        *@
 

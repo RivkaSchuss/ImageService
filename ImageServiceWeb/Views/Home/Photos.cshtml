@@ -1,7 +1,31 @@
-﻿
+﻿@model ImageServiceWeb.Models.PhotosModel
 @{
     ViewBag.Title = "Photos";
 }
 
 <h2>Photos</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<table class="table">
+    <tr>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.ImageList)
+    {
+        <tr>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */})
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */})
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */})
+            </td>
+        </tr>
+    }
+</table>
+
+
+
 
