@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ImageServiceWeb.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,51 +9,36 @@ namespace ImageServiceWeb.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
-
+        private ConfigModel config = new ConfigModel();
+        private LogsModel logs = new LogsModel();
+        private PhotosModel photos = new PhotosModel();
+        private ImageWebModel imageWeb = new ImageWebModel();
         public ActionResult Config()
         {
             ViewBag.Message = "The App Configuration.";
 
-            return View();
+            return View(config);
         }
 
         public ActionResult ImageWeb()
         {
             ViewBag.Message = "The main home page.";
 
-            return View();
+            return View(imageWeb);
         }
 
         public ActionResult Logs()
         {
             ViewBag.Message = "The list of service logs.";
 
-            return View();
+            return View(logs);
         }
 
         public ActionResult Photos()
         {
             ViewBag.Message = "The photos saved.";
 
-            return View();
+            return View(photos);
         }
     }
 }

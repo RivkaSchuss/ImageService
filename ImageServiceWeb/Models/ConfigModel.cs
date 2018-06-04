@@ -19,6 +19,7 @@ namespace ImageServiceWeb.Models
 
         public ConfigModel()
         {
+            Console.WriteLine("config model constructor ********************************************");
             client = ImageServiceClient.Instance;
             handlers = new List<string>();
             this.client.DataReceived += NotifyChange;
