@@ -16,7 +16,7 @@ namespace ImageServiceWeb.Controllers
         public ActionResult Config()
         {
             ViewBag.Message = "The App Configuration.";
-
+           
             return View(config);
         }
 
@@ -24,6 +24,8 @@ namespace ImageServiceWeb.Controllers
         {
             ViewBag.Message = "The main home page.";
 
+            ViewBag.IsConnected = imageWeb.IsConnected;
+            ViewBag.NumOfPics = imageWeb.NumOfPics;
             return View(imageWeb);
         }
 
