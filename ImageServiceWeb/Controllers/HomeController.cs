@@ -9,10 +9,11 @@ namespace ImageServiceWeb.Controllers
 {
     public class HomeController : Controller
     {
-        private ConfigModel config = new ConfigModel();
-        private LogsModel logs = new LogsModel();
-        private PhotosModel photos = new PhotosModel();
-        private ImageWebModel imageWeb = new ImageWebModel();
+        public static ConfigModel config = new ConfigModel();
+        public static LogsModel logs = new LogsModel();
+        public static PhotosModel photos = new PhotosModel();
+        public static ImageWebModel imageWeb = new ImageWebModel();
+
         public ActionResult Config()
         {
             ViewBag.Message = "The App Configuration.";
@@ -41,6 +42,24 @@ namespace ImageServiceWeb.Controllers
             ViewBag.Message = "The photos saved.";
 
             return View(photos);
+        }
+
+        public ActionResult Confirm()
+        {
+            ViewBag.Message = "The photos saved.";
+
+            return View(config);
+        }
+
+        public ActionResult DeleteCancel()
+        {
+            return RedirectToAction("Config");
+        }
+
+        public ActionResult DeleteOK(string handlerToRemove)
+        {
+            config.RemoveHandler(handlerToRemove);
+            return RedirectToAction("Config");
         }
     }
 }

@@ -34,6 +34,20 @@ namespace ImageServiceWeb.Models
             }
         }
 
+        public void RemoveHandler(string handlerToRemove)
+        {
+            try
+            {
+                string[] args = { handlerToRemove };
+                CommandReceivedEventArgs eventArgs = new CommandReceivedEventArgs((int)CommandEnum.CloseCommand, args, null);
+                client.Write(eventArgs);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
         public void NotifyChange(object sender, CommandMessage message)
         {
             if (message.CommandID.Equals((int)CommandEnum.GetConfigCommand))
@@ -51,6 +65,17 @@ namespace ImageServiceWeb.Models
                         this.Handlers.Add(item);
                     }
                 
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
+            if (message.CommandID.Equals((int)CommandEnum.CloseCommand))
+            {
+                try
+                {
+                    this.Handlers.Remove((string)message.CommandArgs["HandlerRemoved"]);
                 }
                 catch (Exception e)
                 {

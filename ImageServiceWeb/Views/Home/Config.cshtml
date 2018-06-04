@@ -55,17 +55,14 @@
                     @Html.DisplayNameFor(model => model.Handlers)
                 </th>
             </tr>
-            @*foreach (var item in Model.Handlers)
+            @foreach (var item in Model.Handlers)
             {
-                <tr>
-
-                    <td>
-                        @Html.ActionLink(@item, "DeleteHandler", new { toBeDeletedHandler = item })
-                    </td>
-
-                </tr>
+            <tr>
+                <td>
+                    @Html.ActionLink(@item, "Confirm", new { handlerToBeDeleted = item })
+                </td>
+            </tr>
             }
-                *@
         </table>
     </div>
 }
