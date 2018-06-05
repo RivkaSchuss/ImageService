@@ -142,27 +142,20 @@ namespace Communication.Client
         /// </summary>
         public void Read()
         {
-            Task task = new Task(() =>
+            try
             {
-                while (this.IsConnected)
                 {
-                    try
-                    {
-                        {
-                            stream = client.GetStream();
-                            BinaryReader reader = new BinaryReader(stream);
-                            string jSonString = reader.ReadString();
-                            CommandMessage msg = CommandMessage.ParseJSON(jSonString);
-                            this.DataReceived?.Invoke(this, msg);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.Message);
-                    }
+                    stream = client.GetStream();
+                    BinaryReader reader = new BinaryReader(stream);
+                    string jSonString = reader.ReadString();
+                    CommandMessage msg = CommandMessage.ParseJSON(jSonString);
+                    this.DataReceived?.Invoke(this, msg);
                 }
-            });
-            task.Start();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
 
 
@@ -173,24 +166,19 @@ namespace Communication.Client
         /// <param name="e">The <see cref="CommandReceivedEventArgs"/> instance containing the event data.</param>
         public void Write(CommandReceivedEventArgs e)
         {
-            //Task task = new Task(() =>
-            //{
-                try
-                {
-                    stream = client.GetStream();
-                    BinaryWriter writer = new BinaryWriter(stream);
-                    string toSend = JsonConvert.SerializeObject(e);
-                    m_mutex.WaitOne();
-                    writer.Write(toSend);
-                    m_mutex.ReleaseMutex();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-
-            //});
-            //task.Start();
+            try
+            {
+                stream = client.GetStream();
+                BinaryWriter writer = new BinaryWriter(stream);
+                string toSend = JsonConvert.SerializeObject(e);
+                m_mutex.WaitOne();
+                writer.Write(toSend);
+                m_mutex.ReleaseMutex();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

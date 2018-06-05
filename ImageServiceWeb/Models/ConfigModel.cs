@@ -31,7 +31,8 @@ namespace ImageServiceWeb.Models
             if (!requested)
             {
                 CommandReceivedEventArgs request = new CommandReceivedEventArgs((int)CommandEnum.GetConfigCommand, null, null);
-                this.client.Initialize(request);
+                this.client.Write(request);
+                this.client.Read();
                 requested = true;
             }
         }
