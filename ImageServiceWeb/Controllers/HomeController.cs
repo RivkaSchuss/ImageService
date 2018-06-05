@@ -17,6 +17,7 @@ namespace ImageServiceWeb.Controllers
         public ActionResult Config()
         {
             ViewBag.Message = "The App Configuration.";
+            config.SendConfigRequest();
             return View(config);
         }
 
@@ -31,6 +32,7 @@ namespace ImageServiceWeb.Controllers
         public ActionResult Logs()
         {
             ViewBag.Message = "The list of service logs.";
+            logs.SendLogRequest();
             return View(logs);
         }
 

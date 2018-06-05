@@ -36,7 +36,7 @@
 
 </table>
 
-<th>Student Details</th>
+<h3>Student Details</h3>
 <table class="table">
     <thead class="thead-dark">
         <tr>
@@ -46,15 +46,14 @@
         </tr>
     </thead>
     <tbody>
+        @foreach (var student in Model.Students)
+    {
         <tr>
-            <td>Rivka</td>
-            <td>Schuss</td>
-            <td>TBA</td>
+            <td>@Html.DisplayName(student.FirstName.ToString())</td>
+            <td>@Html.DisplayName(student.LastName.ToString())</td>
+            <td>@Html.DisplayName(student.ID.ToString())</td> 
         </tr>
-        <tr>
-            <td>Yarin</td>
-            <td>Shaked</td>
-            <td>TBA</td>
-        </tr>
+}
+
     </tbody>
 </table>

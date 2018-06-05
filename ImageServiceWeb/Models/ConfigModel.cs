@@ -22,6 +22,10 @@ namespace ImageServiceWeb.Models
             client = ImageServiceClient.Instance;
             handlers = new List<string>();
             this.client.DataReceived += NotifyChange;
+        }
+
+        public void SendConfigRequest()
+        {
             CommandReceivedEventArgs request = new CommandReceivedEventArgs((int)CommandEnum.GetConfigCommand, null, null);
             this.client.Initialize(request);
         }

@@ -14,9 +14,9 @@
         <div>
             <br />
             @Html.DropDownList("typeFilter",
-                                  new SelectList(Enum.GetValues(typeof(MessageTypeEnum))),
-                                  "Log entry type",
-                                  new { @class = "form-control" })
+                                                      new SelectList(Enum.GetValues(typeof(MessageTypeEnum))),
+                                                      "Log entry type",
+                                                      new { @class = "form-control" })
             <br />
             <input type="submit" id="submitId" value="Filter" class="btn-info" />
 
@@ -27,26 +27,24 @@
 </div>
 
 <br />
+<h3>Log Entries</h3>
 <table class="table table-striped table-dark">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.LogEntries)
-        </th>
-    </tr>
-
-    @*
-    @foreach (var item in Model.LogEntries)
-    {
+    <thead class="thead-dark">
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Message)
-            </td>
+            <th scope="col">Status</th>
+            <th scope="col">Message</th>
         </tr>
-    }
-        *@
+    </thead>
+    <tbody>
+        @foreach (var entry in Model.LogEntries)
+        {
+            <tr>
+                <td>@Html.DisplayName(entry.Status.ToString())</td>
+                <td>@Html.DisplayName(entry.Message.ToString())</td>
+            </tr>
+        }
+
+    </tbody>
 
 </table>
 
