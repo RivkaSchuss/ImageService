@@ -35,7 +35,7 @@ namespace ImageServiceWeb.Models
 
             while ((line = file.ReadLine()) != null)
             {
-                string[] param = line.Split(',');
+                string[] param = line.Split(' ');
                 students.Add(new Student() { FirstName = param[0], LastName = param[1], ID = param[2] });
             }
             file.Close();

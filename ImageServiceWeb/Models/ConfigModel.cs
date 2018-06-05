@@ -16,18 +16,24 @@ namespace ImageServiceWeb.Models
     {
         private IImageServiceClient client;
         private List<string> handlers;
+        private bool requested;
 
         public ConfigModel()
         {
             client = ImageServiceClient.Instance;
             handlers = new List<string>();
             this.client.DataReceived += NotifyChange;
+            this.requested = false;
         }
 
         public void SendConfigRequest()
         {
-            CommandReceivedEventArgs request = new CommandReceivedEventArgs((int)CommandEnum.GetConfigCommand, null, null);
-            this.client.Initialize(request);
+            if (!requested)
+            {
+                CommandReceivedEventArgs request = new CommandReceivedEventArgs((int)CommandEnum.GetConfigCommand, null, null);
+                this.client.Initialize(request);
+                requested = true;
+            }
         }
 
         public List<string> Handlers
@@ -45,6 +51,7 @@ namespace ImageServiceWeb.Models
                 string[] args = { handlerToRemove };
                 CommandReceivedEventArgs eventArgs = new CommandReceivedEventArgs((int)CommandEnum.CloseCommand, args, null);
                 client.Write(eventArgs);
+                client.Read();
             }
             catch (Exception e)
             {
