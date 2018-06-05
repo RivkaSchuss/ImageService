@@ -30,6 +30,20 @@ namespace ImageServiceWeb.Models
             this.client.Read();
         }
 
+        public void FilterLogList(MessageTypeEnum filter)
+        {
+            this.FilteredEntries = new List<MessageReceivedEventArgs>();
+            foreach (MessageReceivedEventArgs message in this.LogEntries)
+            {
+                if (message.Status.Equals(filter))
+                {
+                    this.FilteredEntries.Add(message);
+                }
+            }
+            this.LogEntries = FilteredEntries;
+
+        }
+
         public void NotifyChange(object sender, CommandMessage message)
         {
             if (message.CommandID.Equals((int)CommandEnum.LogCommand))
@@ -38,7 +52,7 @@ namespace ImageServiceWeb.Models
                 {
                     string listOfEntries = (string)message.CommandArgs["LogEntries"];
                     ObservableCollection<MessageReceivedEventArgs> arr = JsonConvert.DeserializeObject<ObservableCollection<MessageReceivedEventArgs>>(listOfEntries);
-                    this.LogEntries = arr;
+                    this.LogEntries = new List<MessageReceivedEventArgs>(arr);
                 }
                 catch (Exception e)
                 {
@@ -50,6 +64,11 @@ namespace ImageServiceWeb.Models
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "Log Entries")]
-        public ObservableCollection<MessageReceivedEventArgs> LogEntries { get; set; }
+        public List<MessageReceivedEventArgs> LogEntries { get; set; }
+
+        [Required]
+        [DataType(DataType.Text)]
+        [Display(Name = "Filtered Entries")]
+        public List<MessageReceivedEventArgs> FilteredEntries { get; set; }
     }
 }

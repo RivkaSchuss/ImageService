@@ -1,4 +1,5 @@
 ﻿using ImageServiceWeb.Models;
+using Infrastructure.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +54,12 @@ namespace ImageServiceWeb.Controllers
         {
             config.RemoveHandler(handlerToRemove);
             return RedirectToAction("Config");
+        }
+
+        public ActionResult FilterLogs(MessageTypeEnum filter)
+        {
+            logs.FilterLogList(filter);
+            return View(logs);
         }
     }
 }
