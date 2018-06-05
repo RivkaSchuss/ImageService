@@ -16,14 +16,25 @@ namespace ImageServiceWeb.Models
     {
         private IImageServiceClient client;
         private List<string> handlers;
+        private bool requested;
 
         public ConfigModel()
         {
             client = ImageServiceClient.Instance;
             handlers = new List<string>();
             this.client.DataReceived += NotifyChange;
-            CommandReceivedEventArgs request = new CommandReceivedEventArgs((int)CommandEnum.GetConfigCommand, null, null);
-            this.client.Initialize(request);
+            this.requested = false;
+        }
+
+        public void SendConfigRequest()
+        {
+            if (!requested)
+            {
+                CommandReceivedEventArgs request = new CommandReceivedEventArgs((int)CommandEnum.GetConfigCommand, null, null);
+                this.client.Write(request);
+                this.client.Read();
+                requested = true;
+            }
         }
 
         public List<string> Handlers
@@ -31,6 +42,21 @@ namespace ImageServiceWeb.Models
             get
             {
                 return this.handlers;
+            }
+        }
+
+        public void RemoveHandler(string handlerToRemove)
+        {
+            try
+            {
+                string[] args = { handlerToRemove };
+                CommandReceivedEventArgs eventArgs = new CommandReceivedEventArgs((int)CommandEnum.CloseCommand, args, null);
+                client.Write(eventArgs);
+                client.Read();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
             }
         }
 
@@ -51,6 +77,17 @@ namespace ImageServiceWeb.Models
                         this.Handlers.Add(item);
                     }
                 
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
+            if (message.CommandID.Equals((int)CommandEnum.CloseCommand))
+            {
+                try
+                {
+                    this.Handlers.Remove((string)message.CommandArgs["HandlerRemoved"]);
                 }
                 catch (Exception e)
                 {

@@ -71,7 +71,7 @@ namespace ImageService.Server
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
             tcpListener = new TcpListener(ep);
             tcpListener.Start();
-            //m_logging.Log("Waiting for connections...", MessageTypeEnum.INFO);
+            m_logging.Log("Waiting for connections...", MessageTypeEnum.INFO);
 
             Task task = new Task(() =>
             {
@@ -81,8 +81,9 @@ namespace ImageService.Server
                     {
                         TcpClient client = tcpListener.AcceptTcpClient();
                         Clients.Add(client);
-                        ch.HandleClient(client, m_controller, Clients);
                         m_logging.Log("Client Connected", MessageTypeEnum.INFO);
+                        ch.HandleClient(client, m_controller, Clients);
+                        
                     }
                     catch (SocketException e)
                     {

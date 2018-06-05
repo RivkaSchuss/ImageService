@@ -51,8 +51,8 @@ namespace ImageService.Server
         public void HandleClient(TcpClient client, IImageController controller, ObservableCollection<TcpClient> clients)
         {
 
-            new Task(() =>
-            {
+            //new Task(() =>
+            //{
                 try
                 {
                     while (true)
@@ -60,7 +60,6 @@ namespace ImageService.Server
                         NetworkStream stream = client.GetStream();
                         BinaryReader reader = new BinaryReader(stream);
                         BinaryWriter writer = new BinaryWriter(stream);
-                        bool result;
                         string input = reader.ReadString();
                         if (input != null)
                         {
@@ -89,7 +88,7 @@ namespace ImageService.Server
                     this.tokenSource.Cancel();
                     m_logger.Log("Server failed due to: " + e.Message, MessageTypeEnum.FAIL);
                 }
-            },this.tokenSource.Token).Start();
+            //},this.tokenSource.Token).Start();
         }
 
         /// <summary>

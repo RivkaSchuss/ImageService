@@ -8,17 +8,15 @@
 <h2>Logs</h2>
 
 <div>
-    @using (Html.BeginForm("Logs", "Logs", FormMethod.Post))
+    @using (Html.BeginForm("Logs", "Home", FormMethod.Post))
     {
 
         <div>
-            <br />
-            @Html.DropDownList("typeFilter",
-                                  new SelectList(Enum.GetValues(typeof(MessageTypeEnum))),
-                                  "Log entry type",
-                                  new { @class = "form-control" })
-            <br />
-            <input type="submit" id="submitId" value="Filter" class="btn-info" />
+            @**
+                <br />
+                @Html.DropDownList("typeFilter", new SelectList(Enum.GetValues(typeof(MessageTypeEnum))), "Log entry type", new { @class = "form-control" })
+                <br />
+            *@
 
         </div>
 
@@ -26,27 +24,62 @@
 
 </div>
 
-<br />
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.LogEntries)
-        </th>
-    </tr>
+<script>
+    $("#submitFilter").click(function () {
+        var input = {
+            filter: $("#typeFilter").val()
+        };
+        $.post("@Url.Action("FilterLogs")", input, function (data) {
+            $("#Logs");
+        }, "json");
+    });
+</script>
 
-    @*
-    @foreach (var item in Model.LogEntries)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Message)
-            </td>
-        </tr>
+<script>
+    function filtering() {
+        var input, filter, table, tr, td, i;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
     }
-        *@
+</script>
+
+
+
+
+
+
+
+<h3>Log Entries</h3>
+<input type="text" id="myInput" onkeyup="filtering()" />
+<table class="table table-striped table-dark" id="myTable">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Status</th>
+            <th scope="col">Message</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var entry in Model.LogEntries)
+        {
+            <tr>
+                <td>@Html.DisplayFor(m => entry.Status)</td>
+                <td>@Html.DisplayFor(m => entry.Message)</td>
+            </tr>
+        }
+
+    </tbody>
 
 </table>
 

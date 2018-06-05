@@ -13,12 +13,11 @@ namespace ImageServiceWeb.Models
         private static IImageServiceClient Client { get; set; }
         public ImageWebModel()
         {
-            //Students = GetStudents();
             Client = ImageServiceClient.Instance;
             IsConnected = Client.IsConnected;
             NumOfPics = 0;
+            Students = GetStudents();
         }
-        
 
         [Required]
         [Display(Name = "Is Connected")]
@@ -31,12 +30,12 @@ namespace ImageServiceWeb.Models
         public static List<Student> GetStudents()
         {
             List<Student> students = new List<Student>();
-            StreamReader file = new StreamReader(System.Web.HttpContext.Current.Server.MapPath("~/App_Data/StudentsDetails.txt"));
+            StreamReader file = new StreamReader(System.Web.HttpContext.Current.Server.MapPath("~/App_Data/Details.txt"));
             string line;
 
             while ((line = file.ReadLine()) != null)
             {
-                string[] param = line.Split(',');
+                string[] param = line.Split(' ');
                 students.Add(new Student() { FirstName = param[0], LastName = param[1], ID = param[2] });
             }
             file.Close();
