@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using Communication.Client;
 using Infrastructure;
@@ -32,6 +33,7 @@ namespace ImageServiceWeb.Models
 
         public void FilterLogList(MessageTypeEnum filter)
         {
+            Console.WriteLine(filter);
             this.FilteredEntries = new List<MessageReceivedEventArgs>();
             foreach (MessageReceivedEventArgs message in this.LogEntries)
             {
@@ -41,7 +43,6 @@ namespace ImageServiceWeb.Models
                 }
             }
             this.LogEntries = FilteredEntries;
-
         }
 
         public void NotifyChange(object sender, CommandMessage message)
