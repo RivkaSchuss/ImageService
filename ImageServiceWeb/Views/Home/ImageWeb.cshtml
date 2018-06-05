@@ -3,36 +3,66 @@
     ViewBag.Title = "ImageWeb";
 }
 
-<h2>ImageWeb</h2>
-<h3>Server status: @ViewBag.IsConnected</h3>
-<h4>Number of pictures in outputDir: @ViewBag.NumOfPics</h4>
+<h2>Image Web</h2>
 <table class="table">
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.IsConnected)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.NumOfPics)
-        </th>
-        <th></th>
+        <th>Service Status</th>
+        <td class="text-md-center">
+            @if (Model.IsConnected)
+            {
+                <span style="font-weight: bold; font-size: large" class="badge badge-success">Active</span>
+            }
+            else
+            {
+                <span style="font-weight: bold; font-size: large" class="badge badge-warning">Inactive</span>
+            }
+        </td>
+    </tr>
+    <tr>
+        <th>Number of Stored Photos</th>
+        <td class="text-center">
+            @if (Model.NumOfPics > 0)
+            {
+                <span style="font-weight: normal; font-size: large">@Model.NumOfPics</span>
+            }
+            else
+            {
+                <span style="font-weight: normal; font-size: large">N/A</span>
+            }
+
+        </td>
     </tr>
 
-    @*foreach (var item in Model.Students)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
- 
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.ID })
-            </td>
-        </tr>
-    }
-        *@
 
+</table>
+
+<th>Student Details</th>
+<table class="table">
+    <tr>
+        <th>First Name</th>
+        <td class="text-md-center">
+            <span style="font-weight: normal; font-size: large">Rivka</span>
+        </td>
+        <td class="text-md-center">
+            <span style="font-weight: normal; font-size: large">Yarin</span>
+        </td>
+    </tr>
+    <tr>
+        <th>Last Name</th>
+        <td class="text-md-center">
+            <span style="font-weight: normal; font-size: large">Schuss</span>
+        </td>
+        <td class="text-md-center">
+            <span style="font-weight: normal; font-size: large">Shaked</span>
+        </td>
+    </tr>
+    <tr>
+        <th>ID Number</th>
+        <td class="text-md-center">
+            <span style="font-weight: normal; font-size: large">TBA</span>
+        </td>
+        <td class="text-md-center">
+            <span style="font-weight: normal; font-size: large">TBA</span>
+        </td>
+    </tr>
+</table>

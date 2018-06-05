@@ -1,69 +1,103 @@
 ﻿@model ImageServiceWeb.Models.ConfigModel
 @{
-    ViewBag.Title = "Config";
+    ViewBag.Title = "Settings";
 }
 
-<h2>Config</h2>
+<h2>Settings</h2>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<table class="table">
+    <tbody>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.OutputDirectory)</th>
+            <td>@Html.DisplayName(Model.OutputDirectory)</td>
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.LogName)</th>
+            <td>@Html.DisplayName(Model.LogName)</td>
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.SourceName)</th>
+            <td>@Html.DisplayName(Model.SourceName)</td>
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.ThumbnailSize)</th>
+            <td>
+                @{
+                    if (Model.ThumbnailSize > 0)
+                    {
+                        @Html.DisplayName(Model.ThumbnailSize.ToString())
+                    }
+                    else
+                    {
+                        <span style="font-weight: normal; font-size: large">N / A</span>
+                    }
+                }
+            </td>
+        </tr>
+    </tbody>
+</table>
 
-    <div class="form-horizontal">
-        <h4>Config Settings</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <table class="table">
+<h3>Directory Handlers</h3>
+<table class="table">
+    <tbody>
+        @foreach (var handler in Model.Handlers)
+        {
             <tr>
+                <td>@Html.DisplayName(handler)</td>
                 <td>
-                    @Html.LabelFor(m => m.OutputDirectory)
-                </td>
-                <td>
-                    @Html.DisplayFor(m => m.OutputDirectory)
+                    <input type="button" class="btn btn-danger btn-sm" value="Delete" data-toggle="modal" data-target="#deleteModal" data-handler="@handler" />
                 </td>
             </tr>
-            <tr>
-                <td>
-                    @Html.LabelFor(m => m.SourceName)
-                </td>
-                <td>
-                    @Html.DisplayFor(m => m.SourceName)
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    @Html.LabelFor(m => m.LogName)
-                </td>
-                <td>
-                    @Html.DisplayFor(m => m.LogName)
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    @Html.LabelFor(m => m.ThumbnailSize)
-                </td>
-                <td>
-                    @Html.DisplayFor(m => m.ThumbnailSize)
-                </td>
-            </tr>
+        }
 
-        </table>
+    </tbody>
 
-        <table class="table">
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Handlers)
-                </th>
-            </tr>
-            @foreach (var item in Model.Handlers)
-            {
-            <tr>
-                <td>
-                    @Html.ActionLink(@item, "Confirm", new { handlerToBeDeleted = item })
-                </td>
-            </tr>
-            }
-        </table>
+</table>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Are you sure?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this handler?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <input type="button" class="btn btn-primary" handler="" value="OK" onclick="" />
+
+            </div>
+        </div>
     </div>
-}
+</div>
+
+
+<script>
+
+    $('#deleteModal').on('shown.bs.modal',
+        function() {
+            $('#myInput').trigger('focus');
+        });
+
+    $('#deleteModal').on('show.bs.modal',
+        function(event) {
+            var button = $(event.relatedTarget);
+            var handler = button.data('handler');
+            var modal = $(this);
+            modal.find('.modal-footer input').attr('handler', handler);
+
+            
+            var url = '@Url.Action("Delete", "Home", new {handlerToRemove = "__param__"})';
+            var replaced = url.replace('__param__', handler);
+
+            
+            modal.find('.modal-footer input').click(function() { location.href = replaced });
+        });
+
+</script>
+
 
