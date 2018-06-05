@@ -9,22 +9,20 @@ namespace ImageServiceWeb.Controllers
 {
     public class HomeController : Controller
     {
-        private static ConfigModel config;
-        private static LogsModel logs;
-        private static PhotosModel photos;
-        private static ImageWebModel imageWeb;
+        private static ConfigModel config = new ConfigModel();
+        private static LogsModel logs = new LogsModel();
+        private static PhotosModel photos = new PhotosModel();
+        private static ImageWebModel imageWeb = new ImageWebModel();
 
         public ActionResult Config()
         {
             ViewBag.Message = "The App Configuration.";
-            config = new ConfigModel();
             return View(config);
         }
 
         public ActionResult ImageWeb()
         {
             ViewBag.Message = "The main home page.";
-            imageWeb = new ImageWebModel();
             ViewBag.IsConnected = imageWeb.IsConnected;
             ViewBag.NumOfPics = imageWeb.NumOfPics;
             return View(imageWeb);
@@ -33,14 +31,12 @@ namespace ImageServiceWeb.Controllers
         public ActionResult Logs()
         {
             ViewBag.Message = "The list of service logs.";
-            logs = new LogsModel();
             return View(logs);
         }
 
         public ActionResult Photos()
         {
             ViewBag.Message = "The photos saved.";
-            photos = new PhotosModel();
             return View(photos);
         }
 

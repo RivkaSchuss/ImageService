@@ -4,7 +4,7 @@
 }
 
 <h2>Image Web</h2>
-<table class="table">
+<table class="table table-striped table-dark">
     <tr>
         <th>Service Status</th>
         <td class="text-md-center">
@@ -38,31 +38,23 @@
 
 <th>Student Details</th>
 <table class="table">
-    <tr>
-        <th>First Name</th>
-        <td class="text-md-center">
-            <span style="font-weight: normal; font-size: large">Rivka</span>
-        </td>
-        <td class="text-md-center">
-            <span style="font-weight: normal; font-size: large">Yarin</span>
-        </td>
-    </tr>
-    <tr>
-        <th>Last Name</th>
-        <td class="text-md-center">
-            <span style="font-weight: normal; font-size: large">Schuss</span>
-        </td>
-        <td class="text-md-center">
-            <span style="font-weight: normal; font-size: large">Shaked</span>
-        </td>
-    </tr>
-    <tr>
-        <th>ID Number</th>
-        <td class="text-md-center">
-            <span style="font-weight: normal; font-size: large">TBA</span>
-        </td>
-        <td class="text-md-center">
-            <span style="font-weight: normal; font-size: large">TBA</span>
-        </td>
-    </tr>
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">ID Number</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Rivka</td>
+            <td>Schuss</td>
+            <td>TBA</td>
+        </tr>
+        <tr>
+            <td>Yarin</td>
+            <td>Shaked</td>
+            <td>TBA</td>
+        </tr>
+    </tbody>
 </table>
