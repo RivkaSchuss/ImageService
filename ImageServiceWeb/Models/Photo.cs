@@ -14,11 +14,11 @@ namespace ImageServiceWeb.Models
         {
             try
             {
-                ImageUrl = imageUrl;
+                ImageFullThumbnailUrl = imageUrl;
                 ImageFullUrl = imageUrl.Replace(@"Thumbnails\", string.Empty);
-                Name = Path.GetFileNameWithoutExtension(ImageUrl);
-                Month = Path.GetFileNameWithoutExtension(Path.GetDirectoryName(ImageUrl));
-                Year = Path.GetFileNameWithoutExtension(Path.GetDirectoryName((Path.GetDirectoryName(ImageUrl))));
+                Name = Path.GetFileNameWithoutExtension(ImageFullThumbnailUrl);
+                Month = Path.GetFileNameWithoutExtension(Path.GetDirectoryName(ImageFullThumbnailUrl));
+                Year = Path.GetFileNameWithoutExtension(Path.GetDirectoryName((Path.GetDirectoryName(ImageFullThumbnailUrl))));
                 string strDirName;
 
                 int intLocation, intLength;
@@ -55,7 +55,7 @@ namespace ImageServiceWeb.Models
         [Required]
         [DataType(DataType.ImageUrl)]
         [Display(Name = "ImageUrl")]
-        public string ImageUrl { get; set; }
+        public string ImageFullThumbnailUrl { get; set; }
 
         [Required]
         [DataType(DataType.ImageUrl)]

@@ -61,7 +61,7 @@ namespace ImageServiceWeb.Models
                         {
                             if (validExtensions.Contains(fileInfo.Extension.ToLower()))
                             {
-                                Photo im = ImageList.Find(x => (x.ImageUrl == fileInfo.FullName));
+                                Photo im = ImageList.Find(x => (x.ImageFullThumbnailUrl == fileInfo.FullName));
                                 if (im == null)
                                 {
                                     ImageList.Add(new Photo(fileInfo.FullName));
@@ -86,8 +86,15 @@ namespace ImageServiceWeb.Models
                 {
                     if (photo.ImageFullUrl.Equals(fullUrl))
                     {
-                        ImageList.Remove(photo);
-                        File.Delete(fullUrl);
+                        //ImageList.Remove(photo);
+                        //Image imageToBeDeleted = Image.FromFile(photo.ImageFullUrl);
+                        //imageToBeDeleted.Dispose();
+                        //Image thumbnailToBeDeleted = Image.FromFile(photo.ImageFullThumbnailUrl);
+                        //thumbnailToBeDeleted.Dispose();
+                        
+                        File.Delete(photo.ImageFullUrl);
+                        File.Delete(photo.ImageFullThumbnailUrl);
+                        break;
                     }
                 }
             }

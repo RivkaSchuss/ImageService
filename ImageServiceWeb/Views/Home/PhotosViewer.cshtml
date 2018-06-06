@@ -12,7 +12,7 @@
     <div class="caption">
         <h4>@Model.Name</h4>
         <p>Year: @Model.Year Month: @Model.Month</p>
-        <p> <a href="@Url.Action("DeletePhoto", new { fullUrl = Model.ImageFullUrl })" id="btnDelete" class="btn btn-danger btn-xs" role="button">Delete</a></p>
+        <p> <a href="@Url.Action("DeletePhoto", "Home", new { fullUrl = Model.ImageFullUrl })" id="btnDelete" class="btn btn-danger btn-xs" role="button">Delete</a></p>
     </div>
 </div>
 
