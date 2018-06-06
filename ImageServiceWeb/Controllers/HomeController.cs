@@ -26,6 +26,7 @@ namespace ImageServiceWeb.Controllers
         {
             ViewBag.Message = "The main home page.";
             ViewBag.IsConnected = imageWeb.IsConnected;
+            photos.SetPhotos();
             imageWeb.NumOfPics = photos.NumOfPics;
             ViewBag.NumOfPics = imageWeb.NumOfPics;
             return View(imageWeb);

@@ -12,6 +12,7 @@ namespace ImageServiceWeb.Models
 
         private string outputDir;
         private ConfigModel config;
+        private int counter = 0;
         public PhotosModel(ConfigModel config)
         {
             ImageList = new List<Photo>();
@@ -39,43 +40,43 @@ namespace ImageServiceWeb.Models
 
         public void SetPhotos()
         {
-            try
-            {
-                string thumbnailDir = outputDir + "\\Thumbnails";
-                if (!Directory.Exists(thumbnailDir))
+                try
                 {
-                    return;
-                }
-                DirectoryInfo di = new DirectoryInfo(thumbnailDir);
-
-                string[] validExtensions = { ".jpg", ".png", ".gif", ".bmp" };
-                foreach (DirectoryInfo yearDirInfo in di.GetDirectories())
-                {
-                    if (!Path.GetDirectoryName(yearDirInfo.FullName).EndsWith("Thumbnails"))
+                    string thumbnailDir = outputDir + "\\Thumbnails";
+                    if (!Directory.Exists(thumbnailDir))
                     {
-                        continue;
+                        return;
                     }
-                    foreach (DirectoryInfo monthDirInfo in yearDirInfo.GetDirectories())
-                    {
-                        foreach (FileInfo fileInfo in monthDirInfo.GetFiles())
-                        {
-                            if (validExtensions.Contains(fileInfo.Extension.ToLower()))
-                            {
-                                Photo im = ImageList.Find(x => (x.ImageFullThumbnailUrl == fileInfo.FullName));
-                                if (im == null)
-                                {
-                                    ImageList.Add(new Photo(fileInfo.FullName));
-                                }
+                    DirectoryInfo di = new DirectoryInfo(thumbnailDir);
 
+                    string[] validExtensions = { ".jpg", ".png", ".gif", ".bmp" };
+                    foreach (DirectoryInfo yearDirInfo in di.GetDirectories())
+                    {
+                        if (!Path.GetDirectoryName(yearDirInfo.FullName).EndsWith("Thumbnails"))
+                        {
+                            continue;
+                        }
+                        foreach (DirectoryInfo monthDirInfo in yearDirInfo.GetDirectories())
+                        {
+                            foreach (FileInfo fileInfo in monthDirInfo.GetFiles())
+                            {
+                                if (validExtensions.Contains(fileInfo.Extension.ToLower()))
+                                {
+                                    Photo im = ImageList.Find(x => (x.ImageFullThumbnailUrl == fileInfo.FullName));
+                                    if (im == null)
+                                    {
+                                        ImageList.Add(new Photo(fileInfo.FullName));
+                                    }
+
+                                }
                             }
                         }
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
         }
 
         public void DeletePhoto(string fullUrl)
@@ -86,12 +87,6 @@ namespace ImageServiceWeb.Models
                 {
                     if (photo.ImageFullUrl.Equals(fullUrl))
                     {
-                        //ImageList.Remove(photo);
-                        //Image imageToBeDeleted = Image.FromFile(photo.ImageFullUrl);
-                        //imageToBeDeleted.Dispose();
-                        //Image thumbnailToBeDeleted = Image.FromFile(photo.ImageFullThumbnailUrl);
-                        //thumbnailToBeDeleted.Dispose();
-                        
                         File.Delete(photo.ImageFullUrl);
                         File.Delete(photo.ImageFullThumbnailUrl);
                         this.ImageList.Remove(photo);
