@@ -21,13 +21,13 @@ namespace ImageServiceWeb.Models
                 config.SendConfigRequest();
             }
             outputDir = config.OutputDirectory;
-            
+
         }
 
         public List<Photo> ImageList
         {
             get; set;
-        } 
+        }
 
         public int NumOfPics
         {
@@ -69,6 +69,25 @@ namespace ImageServiceWeb.Models
 
                             }
                         }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        public void DeletePhoto(string fullUrl)
+        {
+            try
+            {
+                foreach (Photo photo in ImageList)
+                {
+                    if (photo.ImageFullUrl.Equals(fullUrl))
+                    {
+                        ImageList.Remove(photo);
+                        File.Delete(fullUrl);
                     }
                 }
             }

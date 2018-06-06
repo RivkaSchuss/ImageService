@@ -24,11 +24,14 @@
                 <div class="col-xs-18 col-sm-6 col-md-3">
 
                     <div class="thumbnail">
-                        <img src="@Url.Content(item.ImageRelativePath)" alt="" class="circular-image" width="242" height="200">
+                        <img src="@Url.Content(item.ImageRelativePathThumbnail)" alt="" class="circular-image" width="242" height="200">
                         <div class="caption">
                             <h4>@item.Name</h4>
                             <p>Year: @item.Year Month: @item.Month</p>
-                            <p><a href="@Url.Action("PhotosViewer", new { photoRelPath = item.ImageRelativePath })" id="btnView" class="btn btn-info btn-xs" role="button">View</a> <a href="@Url.Action("DeletePhoto", new { photoRelPath = item.ImageRelativePath })" id="btnDelete" class="btn btn-danger btn-xs" role="button">Delete</a></p>
+                            <p>
+                                <a href="@Url.Action("PhotosViewer", new { fullUrl = item.ImageFullUrl })" id="btnView" class="btn btn-info btn-xs" role="button">View</a>
+                                <a href="@Url.Action("PhotosDelete", new { fullUrl = item.ImageFullUrl })" id="btnDelete" class="btn btn-danger btn-xs" role="button">Delete</a>
+                            </p>
                         </div>
                     </div>
                 </div>

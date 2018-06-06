@@ -63,5 +63,23 @@ namespace ImageServiceWeb.Controllers
             logs.FilterLogList(filter);
             return View(logs);
         }
+
+        public ActionResult PhotosViewer(string fullUrl)
+        {
+            Photo photo = new Photo(fullUrl);
+            return View(photo);
+        }
+
+        public ActionResult PhotosDelete(string fullUrl)
+        {
+            Photo photo = new Photo(fullUrl);
+            return View(photo);
+        }
+
+        public ActionResult DeleteSpecificPhoto(string fullUrl)
+        {
+            photos.DeletePhoto(fullUrl);
+            return RedirectToAction("Photos");
+        }
     }
 }

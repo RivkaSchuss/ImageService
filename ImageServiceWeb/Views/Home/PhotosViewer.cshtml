@@ -5,3 +5,15 @@
 
 <h2>PhotosViewer</h2>
 
+
+
+<div class="circular-image">
+    <img src="@Url.Content(Model.ImageRelativePath)" alt="" class="circular-image" style="width:auto; height:auto; max-width:100%; max-height:100%;">
+    <div class="caption">
+        <h4>@Model.Name</h4>
+        <p>Year: @Model.Year Month: @Model.Month</p>
+        <p> <a href="@Url.Action("DeletePhoto", new { fullUrl = Model.ImageFullUrl })" id="btnDelete" class="btn btn-danger btn-xs" role="button">Delete</a></p>
+    </div>
+</div>
+
+

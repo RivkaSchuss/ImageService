@@ -5,3 +5,15 @@
 
 <h2>PhotosDelete</h2>
 
+<h3>Are you sure you want to delete this photo?</h3>
+<div class="thumbnail">
+    <img src="@Url.Content(Model.ImageRelativePathThumbnail)" alt="" class="circular-image" width="242" height="200">
+    <div class="caption">
+        <h4>@Model.Name</h4>
+        <p>
+            <a href="@Url.Action("Photos", "Home", new { fullUrl = Model.ImageFullUrl })" id="btnView" class="btn btn-info btn-xs" role="button">Cancel</a>
+            <a href="@Url.Action("DeleteSpecificPhoto", "Home", new { fullUrl = Model.ImageFullUrl })" id="btnDelete" class="btn btn-danger btn-xs" role="button">OK</a>
+        </p>
+    </div>
+</div>
+
