@@ -3,28 +3,48 @@
 
     ViewBag.Title = "Photos";
 }
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .circular-image {
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
 
-<h2>Photos</h2>
+    <h2>Photos</h2>
 
-
-@foreach (var item in Model.ImageList)
-{
     <div class="container" id="tourpackages-carousel">
 
         <div class="row">
-            <div class="col-xs-18 col-sm-6 col-md-3">
-                <div class="thumbnail">
-                    <img src="@Url.Content(item.ImageRelativePath)" alt="" class="img-circle" width="242" height="200">
-                    <div class="caption">
-                        <h4>@item.Name</h4>
-                        <p>Year: @item.Year Month: @item.Month</p>
-                        <p><a href="@Url.Action("PhotosViewer", new { photoRelPath = item.ImageRelativePath})" id="btnView" class="btn btn-info btn-xs" role="button">View</a> <a href="@Url.Action("DeletePhoto", new { photoRelPath = item.ImageRelativePath})" id="btnDelete" class="btn btn-danger btn-xs" role="button">Delete</a></p>
+            @foreach (var item in Model.ImageList)
+            {
+                <div class="col-xs-18 col-sm-6 col-md-3">
+
+                    <div class="thumbnail">
+                        <img src="@Url.Content(item.ImageRelativePath)" alt="" class="circular-image" width="242" height="200">
+                        <div class="caption">
+                            <h4>@item.Name</h4>
+                            <p>Year: @item.Year Month: @item.Month</p>
+                            <p><a href="@Url.Action("PhotosViewer", new { photoRelPath = item.ImageRelativePath })" id="btnView" class="btn btn-info btn-xs" role="button">View</a> <a href="@Url.Action("DeletePhoto", new { photoRelPath = item.ImageRelativePath })" id="btnDelete" class="btn btn-danger btn-xs" role="button">Delete</a></p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
         </div>
     </div>
-}
+
+</body>
+</html>
+
+
+
+
+
+
+
 
 
 
