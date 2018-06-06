@@ -12,7 +12,7 @@ namespace ImageServiceWeb.Controllers
     {
         private static ConfigModel config = new ConfigModel();
         private static LogsModel logs = new LogsModel();
-        private static PhotosModel photos = new PhotosModel();
+        private static PhotosModel photos = new PhotosModel(config);
         private static ImageWebModel imageWeb = new ImageWebModel();
 
         public ActionResult Config()
@@ -26,6 +26,7 @@ namespace ImageServiceWeb.Controllers
         {
             ViewBag.Message = "The main home page.";
             ViewBag.IsConnected = imageWeb.IsConnected;
+            imageWeb.NumOfPics = photos.NumOfPics;
             ViewBag.NumOfPics = imageWeb.NumOfPics;
             return View(imageWeb);
         }
@@ -40,6 +41,7 @@ namespace ImageServiceWeb.Controllers
         public ActionResult Photos()
         {
             ViewBag.Message = "The photos saved.";
+            photos.SetPhotos();
             return View(photos);
         }
 

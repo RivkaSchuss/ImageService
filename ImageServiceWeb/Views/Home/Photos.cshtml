@@ -1,32 +1,32 @@
 ﻿@model ImageServiceWeb.Models.PhotosModel
 @{
+
     ViewBag.Title = "Photos";
 }
 
 <h2>Photos</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 
-<table class="table table-striped table-dark">
-    <tr>
-        <th></th>
-    </tr>
+@foreach (var item in Model.ImageList)
+{
+    <div class="container" id="tourpackages-carousel">
 
-    @*
-    @foreach (var item in Model.ImageList)
-    {
-        <tr>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */})
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */})
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */})
-            </td>
-        </tr>
-    }
-        *@
-</table>
+        <div class="row">
+            <div class="col-xs-18 col-sm-6 col-md-3">
+                <div class="thumbnail">
+                    <img src="@Url.Content(item.ImageRelativePath)" alt="" class="img-circle" width="242" height="200">
+                    <div class="caption">
+                        <h4>@item.Name</h4>
+                        <p>Year: @item.Year Month: @item.Month</p>
+                        <p><a href="@Url.Action("PhotosViewer", new { photoRelPath = item.ImageRelativePath})" id="btnView" class="btn btn-info btn-xs" role="button">View</a> <a href="@Url.Action("DeletePhoto", new { photoRelPath = item.ImageRelativePath})" id="btnDelete" class="btn btn-danger btn-xs" role="button">Delete</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
 
 
 

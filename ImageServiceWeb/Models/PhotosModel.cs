@@ -10,57 +10,72 @@ namespace ImageServiceWeb.Models
     public class PhotosModel
     {
 
-        //public event NotifyAboutChange NotifyEvent;
         private string outputDir;
-        private static ConfigModel config;
-        public PhotosModel()
+        private ConfigModel config;
+        public PhotosModel(ConfigModel config)
         {
-            ImageList = GetPhotos();
-            config = new ConfigModel();
+            ImageList = new List<Photo>();
+            this.config = config;
+            if (!config.Requested)
+            {
+                config.SendConfigRequest();
+            }
             outputDir = config.OutputDirectory;
+            
         }
 
-        public List<Image> ImageList
+        public List<Photo> ImageList
         {
             get; set;
         } 
 
-        
-
-        public List<Image> GetPhotos()
+        public int NumOfPics
         {
-            List<Image> photosList = new List<Image>();
-            string thumbnailDir = outputDir + "\\Thumbnails";
-            if (!Directory.Exists(thumbnailDir))
+            get
             {
-                return null;
+                return this.ImageList.Count;
             }
-            DirectoryInfo di = new DirectoryInfo(thumbnailDir);
+        }
 
-            string[] validExtensions = { ".jpg", ".png", ".gif", ".bmp" };
-            foreach (DirectoryInfo yearDirInfo in di.GetDirectories())
+        public void SetPhotos()
+        {
+            try
             {
-                if (!Path.GetDirectoryName(yearDirInfo.FullName).EndsWith("Thumbnails"))
+                string thumbnailDir = outputDir + "\\Thumbnails";
+                if (!Directory.Exists(thumbnailDir))
                 {
-                    continue;
+                    return;
                 }
-                foreach (DirectoryInfo monthDirInfo in yearDirInfo.GetDirectories())
+                DirectoryInfo di = new DirectoryInfo(thumbnailDir);
+
+                string[] validExtensions = { ".jpg", ".png", ".gif", ".bmp" };
+                foreach (DirectoryInfo yearDirInfo in di.GetDirectories())
                 {
-
-
-                    foreach (FileInfo fileInfo in monthDirInfo.GetFiles())
+                    if (!Path.GetDirectoryName(yearDirInfo.FullName).EndsWith("Thumbnails"))
                     {
-                        if (validExtensions.Contains(fileInfo.Extension.ToLower()))
+                        continue;
+                    }
+                    foreach (DirectoryInfo monthDirInfo in yearDirInfo.GetDirectories())
+                    {
+                        foreach (FileInfo fileInfo in monthDirInfo.GetFiles())
                         {
-                            
-                            //photosList.Add(new Image(fileInfo.FullName));
+                            if (validExtensions.Contains(fileInfo.Extension.ToLower()))
+                            {
+                                Photo im = ImageList.Find(x => (x.ImageUrl == fileInfo.FullName));
+                                if (im == null)
+                                {
+                                    ImageList.Add(new Photo(fileInfo.FullName));
+                                }
+
+                            }
                         }
                     }
                 }
             }
-
-
-            return photosList;
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
     }
 }

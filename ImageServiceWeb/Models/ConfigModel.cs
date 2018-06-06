@@ -33,7 +33,19 @@ namespace ImageServiceWeb.Models
                 CommandReceivedEventArgs request = new CommandReceivedEventArgs((int)CommandEnum.GetConfigCommand, null, null);
                 this.client.Write(request);
                 this.client.Read();
-                requested = true;
+                Requested = true;
+            }
+        }
+
+        public bool Requested
+        {
+            get
+            {
+                return this.requested;
+            }
+            set
+            {
+                this.requested = value;
             }
         }
 
