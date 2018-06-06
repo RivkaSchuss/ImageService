@@ -41,6 +41,7 @@ namespace ImageServiceWeb.Controllers
         public ActionResult Photos()
         {
             ViewBag.Message = "The photos saved.";
+            photos.ImageList.Clear();
             photos.SetPhotos();
             return View(photos);
         }

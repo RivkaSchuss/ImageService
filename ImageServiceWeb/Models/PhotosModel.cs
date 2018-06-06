@@ -94,6 +94,7 @@ namespace ImageServiceWeb.Models
                         
                         File.Delete(photo.ImageFullUrl);
                         File.Delete(photo.ImageFullThumbnailUrl);
+                        this.ImageList.Remove(photo);
                         break;
                     }
                 }
