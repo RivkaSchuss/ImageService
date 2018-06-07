@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Communication.Client
 {
+    /// <summary>
+    /// client interface
+    /// </summary>
     public interface IImageServiceClient
     {
         bool Connect();

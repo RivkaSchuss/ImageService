@@ -1,0 +1,37 @@
+﻿@model ImageServiceWeb.Models.Photo
+@{
+    ViewBag.Title = "PhotosDelete";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .question {
+            font-weight:bold 400;
+            text-align:center;
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h2 class="question">
+        Are you sure you want to delete this photo?
+    </h2>
+    <center>
+        <div class="thumbnail">
+            <img src="@Url.Content(Model.ImageRelativePathThumbnail)" alt="" class="circular-image" width="242" height="200">
+            <div class="caption">
+                <h4>@Model.Name</h4>
+                <p>
+                    <a href="@Url.Action("Photos", "Home", new { fullUrl = Model.ImageFullUrl })" id="btnView" class="btn btn-info btn-xs" role="button">Cancel</a>
+                    <a href="@Url.Action("DeleteSpecificPhoto", "Home", new { fullUrl = Model.ImageFullUrl })" id="btnDelete" class="btn btn-danger btn-xs" role="button">OK</a>
+                </p>
+            </div>
+        </div>
+    </center>
+    </body>
+</html>
+
+

@@ -14,16 +14,25 @@ using Newtonsoft.Json;
 
 namespace ImageServiceWeb.Models
 {
+    /// <summary>
+    /// the logs model
+    /// </summary>
     public class LogsModel
     {
         private IImageServiceClient client;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LogsModel"/> class.
+        /// </summary>
         public LogsModel()
         {
             client = ImageServiceClient.Instance;
             client.DataReceived += NotifyChange;
         }
 
+        /// <summary>
+        /// Sends the log request.
+        /// </summary>
         public void SendLogRequest()
         {
             CommandReceivedEventArgs request = new CommandReceivedEventArgs((int)CommandEnum.LogCommand, null, null);
@@ -31,20 +40,11 @@ namespace ImageServiceWeb.Models
             this.client.Read();
         }
 
-        public void FilterLogList(MessageTypeEnum filter)
-        {
-            Console.WriteLine(filter);
-            this.FilteredEntries = new List<MessageReceivedEventArgs>();
-            foreach (MessageReceivedEventArgs message in this.LogEntries)
-            {
-                if (message.Status.Equals(filter))
-                {
-                    this.FilteredEntries.Add(message);
-                }
-            }
-            this.LogEntries = FilteredEntries;
-        }
-
+        /// <summary>
+        /// invoked when a new command has been read from the service, sets the log entries
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="message">The message.</param>
         public void NotifyChange(object sender, CommandMessage message)
         {
             if (message.CommandID.Equals((int)CommandEnum.LogCommand))
@@ -66,10 +66,5 @@ namespace ImageServiceWeb.Models
         [DataType(DataType.Text)]
         [Display(Name = "Log Entries")]
         public List<MessageReceivedEventArgs> LogEntries { get; set; }
-
-        [Required]
-        [DataType(DataType.Text)]
-        [Display(Name = "Filtered Entries")]
-        public List<MessageReceivedEventArgs> FilteredEntries { get; set; }
     }
 }
