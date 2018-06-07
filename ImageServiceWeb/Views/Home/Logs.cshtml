@@ -7,48 +7,29 @@
 
 <h2>Logs</h2>
 
-<div>
-    @using (Html.BeginForm("Logs", "Home", FormMethod.Post))
-    {
-
-        <div>
-            @**
-                <br />
-                @Html.DropDownList("typeFilter", new SelectList(Enum.GetValues(typeof(MessageTypeEnum))), "Log entry type", new { @class = "form-control" })
-                <br />
-            *@
-
-        </div>
-
+<style>
+    input[type=checkbox] {
+        transform: scale(3.5);
     }
-
-</div>
-
-<script>
-    $("#submitFilter").click(function () {
-        var input = {
-            filter: $("#typeFilter").val()
-        };
-        $.post("@Url.Action("FilterLogs")", input, function (data) {
-            $("#Logs");
-        }, "json");
-    });
-</script>
+</style>
 
 <script>
-    function filtering() {
-        var input, filter, table, tr, td, i;
-        input = document.getElementById("myInput");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("myTable");
-        tr = table.getElementsByTagName("tr");
+    function filtering(option) {
+        var table = document.getElementById("myTable");
+        var tr = table.getElementsByTagName("tr");
+        var allOrNone = "none";
+        var td, i;
+
+        if ($(option).is(':checked')) {
+            allOrNone = "";
+        }
+
         for (i = 0; i < tr.length; i++) {
             td = tr[i].getElementsByTagName("td")[0];
+
             if (td) {
-                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
+                if (td.id === option.value) {
+                    tr[i].style.display = allOrNone;
                 }
             }
         }
@@ -56,13 +37,13 @@
 </script>
 
 
-
-
-
-
+<div style="font-size: 30px; text-align: center;">
+    <input value="INFO" type="checkbox" checked="checked" id="INFO" onchange="filtering(this)">&emsp;Information &emsp;&emsp;
+    <input value="WARNING" type="checkbox" checked="checked" id="WARNING" onchange="filtering(this)">&emsp;Warnings &emsp;&emsp;
+    <input value="FAIL" type="checkbox" checked="checked" id="FAIL" onchange="filtering(this)">&emsp;Errors
+</div>
 
 <h3>Log Entries</h3>
-<input type="text" id="myInput" onkeyup="filtering()" />
 <table class="table table-striped table-dark" id="myTable">
     <thead class="thead-dark">
         <tr>
@@ -74,7 +55,7 @@
         @foreach (var entry in Model.LogEntries)
         {
             <tr>
-                <td>@Html.DisplayFor(m => entry.Status)</td>
+                <td id=@entry.Status>@Html.DisplayFor(m => entry.Status)</td>
                 <td>@Html.DisplayFor(m => entry.Message)</td>
             </tr>
         }

@@ -14,6 +14,7 @@ namespace ImageServiceWeb.Controllers
         private static LogsModel logs = new LogsModel();
         private static PhotosModel photos = new PhotosModel(config);
         private static ImageWebModel imageWeb = new ImageWebModel();
+        private static string m_handlerRequested = null;
 
         public ActionResult Config()
         {
@@ -54,9 +55,20 @@ namespace ImageServiceWeb.Controllers
             return View(config);
         }
 
-        public ActionResult Delete(string handlerToRemove)
+        public ActionResult ConfirmDeleteHandler(string handlerToRemove)
         {
-            config.RemoveHandler(handlerToRemove);
+            m_handlerRequested = handlerToRemove;
+            return View();
+        }
+
+        public ActionResult DeleteOK()
+        {
+            config.RemoveHandler(m_handlerRequested);
+            return RedirectToAction("Config");
+        }
+
+        public ActionResult DeleteCancel()
+        {
             return RedirectToAction("Config");
         }
 

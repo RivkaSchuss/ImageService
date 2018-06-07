@@ -247,6 +247,7 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Home\PhotosViewer.cshtml" />
     <Content Include="Views\Home\PhotosDelete.cshtml" />
+    <Content Include="Views\Home\ConfirmDeleteHandler.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="outputDir\" />
