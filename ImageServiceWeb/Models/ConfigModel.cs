@@ -12,12 +12,18 @@ using Newtonsoft.Json.Linq;
 
 namespace ImageServiceWeb.Models
 {
+    /// <summary>
+    /// the config model.
+    /// </summary>
     public class ConfigModel
     {
         private IImageServiceClient client;
         private List<string> handlers;
         private bool requested;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConfigModel"/> class.
+        /// </summary>
         public ConfigModel()
         {
             client = ImageServiceClient.Instance;
@@ -26,6 +32,9 @@ namespace ImageServiceWeb.Models
             this.requested = false;
         }
 
+        /// <summary>
+        /// Sends the configuration request.
+        /// </summary>
         public void SendConfigRequest()
         {
             if (!requested)
@@ -37,6 +46,12 @@ namespace ImageServiceWeb.Models
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the configurations have been requested
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if requested; otherwise, <c>false</c>.
+        /// </value>
         public bool Requested
         {
             get
@@ -49,6 +64,12 @@ namespace ImageServiceWeb.Models
             }
         }
 
+        /// <summary>
+        /// Gets the handlers.
+        /// </summary>
+        /// <value>
+        /// The handlers.
+        /// </value>
         public List<string> Handlers
         {
             get
@@ -57,6 +78,10 @@ namespace ImageServiceWeb.Models
             }
         }
 
+        /// <summary>
+        /// Removes the handler.
+        /// </summary>
+        /// <param name="handlerToRemove">The handler to remove.</param>
         public void RemoveHandler(string handlerToRemove)
         {
             try
@@ -72,6 +97,11 @@ namespace ImageServiceWeb.Models
             }
         }
 
+        /// <summary>
+        /// invoked when there has been a new command read from the service
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="message">The message.</param>
         public void NotifyChange(object sender, CommandMessage message)
         {
             if (message.CommandID.Equals((int)CommandEnum.GetConfigCommand))

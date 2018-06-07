@@ -8,9 +8,16 @@ using Communication.Client;
 
 namespace ImageServiceWeb.Models
 {
+    /// <summary>
+    /// the image web model
+    /// </summary>
     public class ImageWebModel
     {
         private static IImageServiceClient Client { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImageWebModel"/> class.
+        /// </summary>
         public ImageWebModel()
         {
             Client = ImageServiceClient.Instance;
@@ -27,6 +34,10 @@ namespace ImageServiceWeb.Models
         [Display(Name = "Number of Pictures")]
         public int NumOfPics { get; set; }
 
+        /// <summary>
+        /// Gets the students details from the file within the app data
+        /// </summary>
+        /// <returns></returns>
         public static List<Student> GetStudents()
         {
             List<Student> students = new List<Student>();
@@ -47,6 +58,9 @@ namespace ImageServiceWeb.Models
         [Display(Name = "Students")]
         public List<Student> Students { get; set; }
 
+        /// <summary>
+        /// definition of each student.
+        /// </summary>
         public class Student
         {
             [Required]

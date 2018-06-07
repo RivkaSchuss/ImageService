@@ -44,10 +44,8 @@
         @foreach (var handler in Model.Handlers)
         {
             <tr>
-                @*<td>@Html.DisplayName(handler)</td>*@
                 <td>
                     @Html.ActionLink(@handler, "ConfirmDeleteHandler", new { handlerToRemove = handler })
-                    @*<input type="button" class="btn btn-danger btn-sm" value="Delete" id="deletebtn" data-handler="@handler" />*@
                 </td>
             </tr>
         }
@@ -56,19 +54,6 @@
 
 </table>
 
-<script>
-        $(document).ready(function () {
-             $("#deletebtn").onclick(function (event) {
-        var button = $(event.relatedTarget);
-        var handlerRemove = button.data('handler');
-
-
-        @Url.Action("ConfirmDeleteHandler",  new { handlerToRemove = "handlerRemove" })
-        var replaced = url.replace('handlerRemove', handlerRemove);
-    });
-        });
-
-</script>
 
 
 

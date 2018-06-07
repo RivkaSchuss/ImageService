@@ -53,41 +53,42 @@ namespace ImageService.Server
 
             //new Task(() =>
             //{
-                try
+            try
+            {
+                while (true)
                 {
-                    while (true)
+                    NetworkStream stream = client.GetStream();
+                    BinaryReader reader = new BinaryReader(stream);
+                    BinaryWriter writer = new BinaryWriter(stream);
+                    string input = reader.ReadString();
+                    if (input != null)
                     {
-                        NetworkStream stream = client.GetStream();
-                        BinaryReader reader = new BinaryReader(stream);
-                        BinaryWriter writer = new BinaryWriter(stream);
-                        string input = reader.ReadString();
-                        if (input != null)
+                        CommandReceivedEventArgs commandReceived = JsonConvert.DeserializeObject<CommandReceivedEventArgs>(input);
+                        if (commandReceived.CommandID.Equals((int)CommandEnum.CloseGUI))
                         {
-                            CommandReceivedEventArgs commandReceived = JsonConvert.DeserializeObject<CommandReceivedEventArgs>(input);
-                            if (commandReceived.CommandID.Equals((int)CommandEnum.CloseGUI))
+                            clients.Remove(client);
+                            client.Close();
+                            break;
+                        }
+                        else
+                        {
+                            if (!this.SendToClient(controller, commandReceived, writer))
                             {
                                 clients.Remove(client);
                                 client.Close();
                                 break;
-                            } else
-                            {
-                                if (!this.SendToClient(controller, commandReceived, writer))
-                                {
-                                    clients.Remove(client);
-                                    client.Close();
-                                    break;
-                                }
                             }
-                            
-                           
                         }
+
+
                     }
                 }
-                catch (Exception e)
-                {
-                    this.tokenSource.Cancel();
-                    m_logger.Log("Server failed due to: " + e.Message, MessageTypeEnum.FAIL);
-                }
+            }
+            catch (Exception e)
+            {
+                clients.Remove(client);
+                client.Close();
+            }
             //},this.tokenSource.Token).Start();
         }
 
@@ -117,9 +118,10 @@ namespace ImageService.Server
                 writer.Write(message);
                 M_mutex.ReleaseMutex();
                 return true;
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
-                m_logger.Log("Failed to send to client due to: "+ e.Message, MessageTypeEnum.FAIL);
+                m_logger.Log("Failed to send to client due to: " + e.Message, MessageTypeEnum.FAIL);
                 return false;
             }
         }

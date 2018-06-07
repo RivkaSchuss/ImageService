@@ -8,8 +8,15 @@ using System.Web;
 
 namespace ImageServiceWeb.Models
 {
+    /// <summary>
+    /// the photo model
+    /// </summary>
     public class Photo
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Photo"/> class, parses and gets all appropriate paths.
+        /// </summary>
+        /// <param name="imageUrl">The image URL.</param>
         public Photo(string imageUrl)
         {
             try

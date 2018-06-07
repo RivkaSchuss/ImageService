@@ -55,8 +55,12 @@
         @foreach (var entry in Model.LogEntries)
         {
             <tr>
-                <td id=@entry.Status>@Html.DisplayFor(m => entry.Status)</td>
-                <td>@Html.DisplayFor(m => entry.Message)</td>
+                <td id=@entry.Status>
+                    @Html.DisplayFor(m => entry.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => entry.Message)
+                </td>
             </tr>
         }
 

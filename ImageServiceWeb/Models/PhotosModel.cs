@@ -7,12 +7,19 @@ using System.Web;
 
 namespace ImageServiceWeb.Models
 {
+    /// <summary>
+    /// the photos model
+    /// </summary>
     public class PhotosModel
     {
 
         private string outputDir;
         private ConfigModel config;
         private int counter = 0;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PhotosModel"/> class.
+        /// </summary>
+        /// <param name="config">The configuration.</param>
         public PhotosModel(ConfigModel config)
         {
             ImageList = new List<Photo>();
@@ -25,11 +32,23 @@ namespace ImageServiceWeb.Models
 
         }
 
+        /// <summary>
+        /// Gets or sets the image list.
+        /// </summary>
+        /// <value>
+        /// The image list.
+        /// </value>
         public List<Photo> ImageList
         {
             get; set;
         }
 
+        /// <summary>
+        /// Gets the number of pics.
+        /// </summary>
+        /// <value>
+        /// The number of pics.
+        /// </value>
         public int NumOfPics
         {
             get
@@ -38,6 +57,9 @@ namespace ImageServiceWeb.Models
             }
         }
 
+        /// <summary>
+        /// Sets the photos from the output directory
+        /// </summary>
         public void SetPhotos()
         {
                 try
@@ -79,6 +101,10 @@ namespace ImageServiceWeb.Models
                 }
         }
 
+        /// <summary>
+        /// Deletes the photo from the folder and from the list of photos
+        /// </summary>
+        /// <param name="fullUrl">The full URL.</param>
         public void DeletePhoto(string fullUrl)
         {
             try
