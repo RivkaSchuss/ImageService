@@ -11,7 +11,6 @@ C:\Users\rschu\source\repos\ImageService\ImageService\obj\Debug\ImageService.pdb
 C:\Users\USER\source\repos\ImageService\ImageService\bin\Debug\ImageService.exe
 C:\Users\USER\source\repos\ImageService\ImageService\bin\Debug\ImageService.exe.config
 C:\Users\USER\source\repos\ImageService\ImageService\bin\Debug\ImageService.pdb
-C:\Users\USER\source\repos\ImageService\ImageService\obj\Debug\ImageService.csprojResolveAssemblyReference.cache
 C:\Users\USER\source\repos\ImageService\ImageService\obj\Debug\ImageService.ImageService.resources
 C:\Users\USER\source\repos\ImageService\ImageService\obj\Debug\ImageService.ProjectInstaller.resources
 C:\Users\USER\source\repos\ImageService\ImageService\obj\Debug\ImageService.csproj.GenerateResource.cache
@@ -36,3 +35,6 @@ C:\Users\IEUser\source\repos\ImageService\ImageService\obj\Debug\ImageService.cs
 C:\Users\IEUser\source\repos\ImageService\ImageService\obj\Debug\ImageService.csproj.CopyComplete
 C:\Users\IEUser\source\repos\ImageService\ImageService\obj\Debug\ImageService.exe
 C:\Users\IEUser\source\repos\ImageService\ImageService\obj\Debug\ImageService.pdb
+C:\Users\USER\source\repos\ImageService\ImageService\bin\Debug\Infrastructure.dll
+C:\Users\USER\source\repos\ImageService\ImageService\bin\Debug\Infrastructure.pdb
+C:\Users\USER\source\repos\ImageService\ImageService\obj\Debug\ImageService.csprojAssemblyReference.cache

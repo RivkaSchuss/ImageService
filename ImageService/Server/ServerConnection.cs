@@ -47,6 +47,7 @@ namespace ImageService.Server
             this.ch.M_mutex = m_mutex;
             this.isStopped = false;
             this.clients = new ObservableCollection<TcpClient>();
+            this.Start();
         }
 
         /// <summary>
