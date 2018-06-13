@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using ImageService.Logging;
 using Infrastructure.Model;
 
@@ -20,13 +22,15 @@ namespace ImageService.Server
         private TcpListener tcpListener;
         private string handlerPath;
 
-        public AndroidConnection(ILoggingService m_logging, int port, string handlerPath)
+        public AndroidConnection(ILoggingService m_logging, int port)
         {
             this.m_logging = m_logging;
             this.port = port;
-            this.handlerPath = handlerPath;
             this.isStopped = false;
             this.Start();
+            string[] handlers = ConfigurationManager.AppSettings["Handler"].Split(';');
+            this.handlerPath = handlers[0];
+
 
         }
         public void Start()
@@ -49,13 +53,21 @@ namespace ImageService.Server
                             while (true)
                             {
                                 NetworkStream stream = client.GetStream();
-                                StreamReader reader = new StreamReader(stream);
+                                BinaryReader reader = new BinaryReader(stream);
                                 BinaryWriter writer = new BinaryWriter(stream);
-                                byte[] bytes = new byte[500000];
+                                byte[] picBytes = new byte[500000];
+                                byte[] nameBytes = new byte[50000];
                                 try
                                 {
-                                    int numBytes = stream.Read(bytes, 0, 500000);
-                                    byteArrayToImage(bytes);
+                                    int numBytesPic = stream.Read(picBytes, 0, 500000);
+                                    //int numBytesName = stream.Read(nameBytes, 0, 50000);
+                                   //if (picBytes != null && nameBytes != null)
+                                    {
+                                        //   string picName = Encoding.UTF8.GetString(nameBytes);
+                                        //char[] stRead = reader.ReadString();
+                                        //string picName = HttpUtility.UrlDecode(stRead, System.Text.Encoding.UTF8);
+                                        //byteArrayToImage(picBytes, picName);
+                                    }
                                 } catch (Exception e)
                                 {
                                     this.m_logging.Log(e.Message, MessageTypeEnum.FAIL);
@@ -77,14 +89,15 @@ namespace ImageService.Server
             task.Start();
         }
 
-        public void byteArrayToImage(byte[] byteArray)
+        public void byteArrayToImage(byte[] byteArray, string picName)
         {
             //Image image = (Bitmap)((new ImageConverter()).ConvertFrom(byteArray));
-            //using (var ms = new MemoryStream(byteArray))
-            //{
-              //  Image image = Image.FromStream(ms);
-                File.WriteAllBytes(@"C:\Users\USER\Pictures\pics1\pic.jpg" , byteArray);
-            //}
+            using (var ms = new MemoryStream(byteArray))
+            {
+                Image image = Image.FromStream(ms);
+                //string imgName = image.
+                File.WriteAllBytes(handlerPath + "\\" + picName , byteArray);
+            }
            
         }
     }

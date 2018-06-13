@@ -130,7 +130,7 @@ namespace ImageService
                 server = new ImageServer(m_logging, m_controller, outputDir, Int32.Parse(thumbnailSize), handler);
                 m_controller.Server = server;
                 //IServerConnection connection = new ServerConnection(m_controller, m_logging, 8600);
-                AndroidConnection androidConnection = new AndroidConnection(m_logging, 8600, handler);
+                AndroidConnection androidConnection = new AndroidConnection(m_logging, 8600);
             }
             catch (Exception e)
             {
