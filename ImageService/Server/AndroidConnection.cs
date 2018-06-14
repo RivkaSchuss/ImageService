@@ -50,25 +50,26 @@ namespace ImageService.Server
                         m_logging.Log("Client Connected", MessageTypeEnum.INFO);
                         try
                         {
+                            NetworkStream stream = client.GetStream();
+                            BinaryReader reader = new BinaryReader(stream);
+                            BinaryWriter writer = new BinaryWriter(stream);
+                            byte[] nameArrayBytes = new byte[4096];
+                            byte[] imageArrayBytes = new byte[1000000];
+
                             while (true)
                             {
-                                NetworkStream stream = client.GetStream();
-                                BinaryReader reader = new BinaryReader(stream);
-                                BinaryWriter writer = new BinaryWriter(stream);
-                                byte[] picBytes = new byte[500000];
-                                byte[] nameBytes = new byte[50000];
                                 try
                                 {
-                                    int numBytesPic = stream.Read(picBytes, 0, 500000);
-                                    //int numBytesName = stream.Read(nameBytes, 0, 50000);
-                                   //if (picBytes != null && nameBytes != null)
-                                    {
-                                        //   string picName = Encoding.UTF8.GetString(nameBytes);
-                                        //char[] stRead = reader.ReadString();
-                                        //string picName = HttpUtility.UrlDecode(stRead, System.Text.Encoding.UTF8);
-                                        //byteArrayToImage(picBytes, picName);
-                                    }
-                                } catch (Exception e)
+                                    int bytesRead = stream.Read(nameArrayBytes, 0, nameArrayBytes.Length);
+                                    string picName = Encoding.ASCII.GetString(nameArrayBytes, 0, bytesRead);
+
+                                    if (picName == "End\n") { break; }
+
+                                    bytesRead = stream.Read(imageArrayBytes, 0, imageArrayBytes.Length);
+                                    File.WriteAllBytes(handlerPath + "\\" + picName, imageArrayBytes);
+                                    //byteArrayToImage(imageArrayBytes, picName);
+                                }
+                                catch (Exception e)
                                 {
                                     this.m_logging.Log(e.Message, MessageTypeEnum.FAIL);
                                 }
@@ -87,18 +88,6 @@ namespace ImageService.Server
                 m_logging.Log("Server Stopped", MessageTypeEnum.INFO);
             });
             task.Start();
-        }
-
-        public void byteArrayToImage(byte[] byteArray, string picName)
-        {
-            //Image image = (Bitmap)((new ImageConverter()).ConvertFrom(byteArray));
-            using (var ms = new MemoryStream(byteArray))
-            {
-                Image image = Image.FromStream(ms);
-                //string imgName = image.
-                File.WriteAllBytes(handlerPath + "\\" + picName , byteArray);
-            }
-           
         }
     }
 }
