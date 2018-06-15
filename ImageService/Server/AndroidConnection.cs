@@ -50,24 +50,44 @@ namespace ImageService.Server
                         m_logging.Log("Client Connected", MessageTypeEnum.INFO);
                         try
                         {
-                            NetworkStream stream = client.GetStream();
-                            BinaryReader reader = new BinaryReader(stream);
-                            BinaryWriter writer = new BinaryWriter(stream);
-                            byte[] nameArrayBytes = new byte[4096];
-                            byte[] imageArrayBytes = new byte[1000000];
+                            
+                           // BinaryReader reader = new BinaryReader(stream);
+                            //BinaryWriter writer = new BinaryWriter(stream);
+                            
 
                             while (true)
                             {
                                 try
                                 {
-                                    int bytesRead = stream.Read(nameArrayBytes, 0, nameArrayBytes.Length);
-                                    string picName = Encoding.ASCII.GetString(nameArrayBytes, 0, bytesRead);
+                                    NetworkStream stream = client.GetStream();
+                                    byte[] bytes = new byte[4096];
+                                    
+                                    //gets the size of the picture.
+                                    int bytesRead = stream.Read(bytes, 0, bytes.Length);
+                                    string picSize = Encoding.ASCII.GetString(bytes, 0, bytesRead);
+                                    
+                                    if (picSize == "End\n") { break; }
+                                    bytes = new byte[int.Parse(picSize)];
 
-                                    if (picName == "End\n") { break; }
+                                    //gets the name of the picture.
+                                    bytesRead = stream.Read(bytes, 0, bytes.Length);
+                                    string picName = Encoding.ASCII.GetString(bytes, 0, bytesRead);
 
-                                    bytesRead = stream.Read(imageArrayBytes, 0, imageArrayBytes.Length);
-                                    File.WriteAllBytes(handlerPath + "\\" + picName, imageArrayBytes);
-                                    //byteArrayToImage(imageArrayBytes, picName);
+                                    //gets the image.
+                                    int bytesReadFirst = stream.Read(bytes, 0, bytes.Length);
+                                    int tempBytes = bytesReadFirst;
+                                    byte[] bytesCurrent;
+                                    while(tempBytes < bytes.Length)
+                                    {
+                                        bytesCurrent = new byte[int.Parse(picSize)];
+                                        bytesRead = stream.Read(bytesCurrent, 0, bytesCurrent.Length);
+                                        transferBytes(bytes, bytesCurrent, tempBytes);
+                                        tempBytes += bytesRead;
+                                    }
+
+                                    //converts to an image file.
+                                    byteArrayToImage(bytes, picName);
+                                
                                 }
                                 catch (Exception e)
                                 {
@@ -89,5 +109,26 @@ namespace ImageService.Server
             });
             task.Start();
         }
+
+        public void byteArrayToImage(byte[] byteArray, string picName)
+        {
+            //Image image = (Bitmap)((new ImageConverter()).ConvertFrom(byteArray));
+            using (var ms = new MemoryStream(byteArray))
+            {
+                //Image image = Image.FromStream(ms);
+                //string imgName = image.
+                File.WriteAllBytes(handlerPath + "\\" + picName , byteArray);
+            }
+           
+        }
+
+        public void transferBytes(byte[] origin, byte[] toCopy, int start)
+        {
+            for (int i = start; i < origin.Length; i++)
+            {
+                origin[i] = toCopy[i - start];
+            }  
+        }    
+        
     }
 }
