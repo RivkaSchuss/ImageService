@@ -21,6 +21,7 @@ namespace ImageService.Server
         private Boolean isStopped;
         private TcpListener tcpListener;
         private string handlerPath;
+        private string outputDir;
 
         public AndroidConnection(ILoggingService m_logging, int port)
         {
@@ -30,6 +31,7 @@ namespace ImageService.Server
             this.Start();
             string[] handlers = ConfigurationManager.AppSettings["Handler"].Split(';');
             this.handlerPath = handlers[0];
+            this.outputDir = ConfigurationManager.AppSettings["OutputDir"];
 
 
         }
@@ -50,10 +52,6 @@ namespace ImageService.Server
                         m_logging.Log("Client Connected", MessageTypeEnum.INFO);
                         try
                         {
-                            
-                           // BinaryReader reader = new BinaryReader(stream);
-                            //BinaryWriter writer = new BinaryWriter(stream);
-                            
 
                             while (true)
                             {
@@ -112,15 +110,37 @@ namespace ImageService.Server
 
         public void byteArrayToImage(byte[] byteArray, string picName)
         {
-            //Image image = (Bitmap)((new ImageConverter()).ConvertFrom(byteArray));
-            using (var ms = new MemoryStream(byteArray))
+            DirectoryInfo outputD = new DirectoryInfo(outputDir);
+            foreach (DirectoryInfo year in outputD.EnumerateDirectories())
             {
-                //Image image = Image.FromStream(ms);
-                //string imgName = image.
-                File.WriteAllBytes(handlerPath + "\\" + picName , byteArray);
+                foreach (DirectoryInfo month in year.EnumerateDirectories())
+                {
+                    foreach (FileInfo file in month.EnumerateFiles())
+                    {
+                        if (file.Name.Equals(picName))
+                        {
+                            try
+                            {
+                                File.Delete(file.FullName);
+                                String thumbnailsPath = outputDir + "\\" + "Thumbnails" + "\\"
+                                    + year.Name + "\\" + month.Name + "\\" + picName;
+                                File.Delete(thumbnailsPath);
+                            }
+                            catch (Exception e)
+                            {
+                                m_logging.Log(e.Message, MessageTypeEnum.FAIL);
+                            }
+                            break;
+                        }
+                    }
+                }
             }
-           
+            File.WriteAllBytes(handlerPath + "\\" + picName, byteArray);
         }
+       
+            
+           
+        
 
         public void transferBytes(byte[] origin, byte[] toCopy, int start)
         {
