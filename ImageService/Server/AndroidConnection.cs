@@ -14,6 +14,9 @@ using Infrastructure.Model;
 
 namespace ImageService.Server
 {
+    /// <summary>
+    /// The Android Connection class
+    /// </summary>
     class AndroidConnection
     {
         private int port;
@@ -23,6 +26,11 @@ namespace ImageService.Server
         private string handlerPath;
         private string outputDir;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AndroidConnection"/> class.
+        /// </summary>
+        /// <param name="m_logging">The m logging.</param>
+        /// <param name="port">The port.</param>
         public AndroidConnection(ILoggingService m_logging, int port)
         {
             this.m_logging = m_logging;
@@ -35,8 +43,12 @@ namespace ImageService.Server
 
 
         }
+        /// <summary>
+        /// Starts the server.
+        /// </summary>
         public void Start()
         {
+            //starts the connection
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
             tcpListener = new TcpListener(ep);
             tcpListener.Start();
@@ -108,6 +120,11 @@ namespace ImageService.Server
             task.Start();
         }
 
+        /// <summary>
+        /// converts the byte array to an image and saves it.
+        /// </summary>
+        /// <param name="byteArray">The byte array.</param>
+        /// <param name="picName">Name of the pic.</param>
         public void byteArrayToImage(byte[] byteArray, string picName)
         {
             DirectoryInfo outputD = new DirectoryInfo(outputDir);
@@ -117,13 +134,16 @@ namespace ImageService.Server
                 {
                     foreach (FileInfo file in month.EnumerateFiles())
                     {
+                        //if the file already exists
                         if (file.Name.Equals(picName))
                         {
                             try
                             {
+                                //delete the image
                                 File.Delete(file.FullName);
                                 String thumbnailsPath = outputDir + "\\" + "Thumbnails" + "\\"
                                     + year.Name + "\\" + month.Name + "\\" + picName;
+                                //delete the thumbnail
                                 File.Delete(thumbnailsPath);
                             }
                             catch (Exception e)
@@ -137,11 +157,14 @@ namespace ImageService.Server
             }
             File.WriteAllBytes(handlerPath + "\\" + picName, byteArray);
         }
-       
-            
-           
-        
 
+
+        /// <summary>
+        /// Transfers the bytes.
+        /// </summary>
+        /// <param name="origin">The origin.</param>
+        /// <param name="toCopy">To copy.</param>
+        /// <param name="start">The start.</param>
         public void transferBytes(byte[] origin, byte[] toCopy, int start)
         {
             for (int i = start; i < origin.Length; i++)
